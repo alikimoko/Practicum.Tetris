@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Practicum2.Tetris
 {
+
+    enum Colors : byte { Blank, Grey, Blue, Green, Red, Yellow, Purple, Orange } 
+
     class Block
     {
 
