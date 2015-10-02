@@ -63,6 +63,7 @@ namespace Practicum2.Tetris
         /// <param name="numOfRows">The number of rows that has been cleared.</param>
         public void moveRows(byte lowestRow, byte numOfRows)
         {
+            //TODO: wat als 1 rij wel,1 rij niet dan weer wel?
             int i;
             
             // move the rows to the new lowest position
@@ -83,6 +84,7 @@ namespace Practicum2.Tetris
                     fieldStruc[i][j] = false;
                     fieldCol[i][j] = 0;
                 }
+                i--;
             }
         }
 

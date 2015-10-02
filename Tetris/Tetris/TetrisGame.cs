@@ -35,8 +35,7 @@ namespace Practicum.Tetris
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            view = GraphicsDevice.Viewport;
-            view.Height = 500;view.Width = 500;
+            
         }
 
         /// <summary>
@@ -46,10 +45,15 @@ namespace Practicum.Tetris
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
-
+        { 
             base.Initialize();
+            // TODO: Add initialization logic here
+            view = GraphicsDevice.Viewport;
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferHeight = 500;
+            graphics.PreferredBackBufferWidth = 500;
+            graphics.ApplyChanges();
+           
         }
 
         /// <summary>
