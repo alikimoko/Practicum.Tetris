@@ -11,13 +11,16 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Practicum.Tetris
 {
+
+    enum Colors : byte { Blank, Grey, Blue, Green, Red, Yellow, Purple, Orange }
+    
     /// <summary>
     /// This is the main type for your game
     /// </summary>
     public class TetrisGame : Game
     {
 
-        enum Colors : byte { Blank, Grey, Blue, Green, Red, Yellow, Purple, Orange }
+        Viewport view;
 
         static void Main()
         {
@@ -32,6 +35,8 @@ namespace Practicum.Tetris
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            view = GraphicsDevice.Viewport;
+            view.Height = 500;view.Width = 500;
         }
 
         /// <summary>
