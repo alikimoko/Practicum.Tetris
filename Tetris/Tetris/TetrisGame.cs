@@ -37,10 +37,14 @@ namespace Practicum.Tetris
         // objects
         PlayingField field;
 
+        //variables
+
+
         public TetrisGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            
             
         }
 
@@ -60,6 +64,8 @@ namespace Practicum.Tetris
             graphics.ApplyChanges();
 
             gameState = 0; reserveGameState = 0;
+
+            field = new PlayingField(12, 20);
            
         }
 
@@ -103,9 +109,11 @@ namespace Practicum.Tetris
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.LightGray);
+            spriteBatch.Begin();
+            
 
 
-
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
