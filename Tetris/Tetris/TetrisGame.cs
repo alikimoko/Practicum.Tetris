@@ -19,9 +19,7 @@ namespace Practicum.Tetris
     /// </summary>
     public class TetrisGame : Game
     {
-
-        Viewport view;
-
+        
         static void Main()
         {
             TetrisGame game = new TetrisGame();
@@ -30,6 +28,7 @@ namespace Practicum.Tetris
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Viewport view;
 
         public TetrisGame()
         {
@@ -49,7 +48,6 @@ namespace Practicum.Tetris
             base.Initialize();
             // TODO: Add initialization logic here
             view = GraphicsDevice.Viewport;
-            graphics.IsFullScreen = false;
             graphics.PreferredBackBufferHeight = 500;
             graphics.PreferredBackBufferWidth = 500;
             graphics.ApplyChanges();
