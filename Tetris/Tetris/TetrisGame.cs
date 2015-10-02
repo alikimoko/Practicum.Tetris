@@ -17,6 +17,8 @@ namespace Practicum.Tetris
     public class TetrisGame : Game
     {
 
+        enum Colors : byte { Blank, Grey, Blue, Green, Red, Yellow, Purple, Orange }
+
         static void Main()
         {
             TetrisGame game = new TetrisGame();

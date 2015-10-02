@@ -16,15 +16,14 @@ namespace Practicum2.Tetris
         /// <summary>
         /// Creates the second level arrays.
         /// </summary>
-        /// <param name="height">The length of the second level arrays.</param>
-        public void finishArrays(byte height)
+        public void finishArrays()
         {
             for(int i = 0; i < fieldStruc.Length; i++)
             {
-                fieldStruc[i] = new bool[height];
-                fieldCol[i] = new byte[height];
+                fieldStruc[i] = new bool[width];
+                fieldCol[i] = new byte[width];
 
-                for (int j = 0; j < height; j++)
+                for (int j = 0; j < width; j++)
                 {
                     fieldStruc[i][j] = false;
                     fieldCol[i][j] = 0; 
@@ -42,12 +41,50 @@ namespace Practicum2.Tetris
             this.width = width <= 4 ? (byte)4 : width;
             this.height = (height < width || height <= 6) ? (byte)6 : height;
 
-            fieldStruc = new bool[this.width][];
-            fieldCol = new byte[this.width][];
+            fieldStruc = new bool[this.height][];
+            fieldCol = new byte[this.height][];
 
-            finishArrays(this.height);
+            finishArrays();
         }
 
+        /// <summary>
+        /// Moves the rows after the row has been cleared.
+        /// </summary>
+        /// <param name="rowNum">The row that has been cleared.</param>
+        public void moveRows(byte rowNum)
+        {
+            moveRows(rowNum, 1);
+        }
+
+        /// <summary>
+        /// Moves the rows after a number of rows has been cleared.
+        /// </summary>
+        /// <param name="lowestRow">The row lowest in the field that has been cleared.</param>
+        /// <param name="numOfRows">The number of rows that has been cleared.</param>
+        public void moveRows(byte lowestRow, byte numOfRows)
+        {
+            int i;
+            
+            // move the rows to the new lowest position
+            for(i = lowestRow-numOfRows; i>=numOfRows; i--)
+            {
+                fieldStruc[i + numOfRows] = fieldStruc[i];
+                fieldCol[i + numOfRows] = fieldCol[i];
+            }
+
+            // make empty rows at the top
+            while (i >= 0)
+            {
+                fieldStruc[i] = new bool[width];
+                fieldCol[i] = new byte[width];
+
+                for (int j = 0; j < width; j++)
+                {
+                    fieldStruc[i][j] = false;
+                    fieldCol[i][j] = 0;
+                }
+            }
+        }
 
     }
 }
