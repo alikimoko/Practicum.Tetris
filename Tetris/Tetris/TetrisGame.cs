@@ -26,9 +26,16 @@ namespace Practicum.Tetris
             game.Run();
         }
 
+        // game
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Viewport view;
+
+        //gamestate
+        byte gameState, reserveGameState;
+
+        // objects
+        PlayingField field;
 
         public TetrisGame()
         {
@@ -51,6 +58,8 @@ namespace Practicum.Tetris
             graphics.PreferredBackBufferHeight = 500;
             graphics.PreferredBackBufferWidth = 500;
             graphics.ApplyChanges();
+
+            gameState = 0; reserveGameState = 0;
            
         }
 
@@ -82,11 +91,7 @@ namespace Practicum.Tetris
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
-            // TODO: Add your update logic here
+            gameState = reserveGameState;
 
             base.Update(gameTime);
         }
@@ -97,9 +102,9 @@ namespace Practicum.Tetris
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.LightGray);
 
-            // TODO: Add your drawing code here
+
 
             base.Draw(gameTime);
         }

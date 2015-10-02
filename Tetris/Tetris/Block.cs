@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Practicum2.Tetris
+namespace Practicum.Tetris
 {
 
     class Block
@@ -105,6 +105,9 @@ namespace Practicum2.Tetris
         public Block(bool x1y1, bool x2y1, bool x3y1, bool x4y1, bool x1y2, bool x2y2, bool x3y2, bool x4y2, bool x1y3, bool x2y3, bool x3y3, bool x4y3, bool x1y4, bool x2y4, bool x3y4, bool x4y4, byte color)
             : this(x1y1, x2y1, x3y1, x4y1, x1y2, x2y2, x3y2, x4y2, x1y3, x2y3, x3y3, x4y3, x1y4, x2y4, x3y4, x4y4, true)
         {
+
+            this.color = color;
+
             for(int i = 0; i < blockStruc.Length; i++)
             {
                 for(int j = 0; j<blockStruc[i].Length; j++)
