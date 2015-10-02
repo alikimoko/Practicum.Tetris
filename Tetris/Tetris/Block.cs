@@ -11,8 +11,9 @@ namespace Practicum2.Tetris
 
         bool isColor;
         byte color;
-        bool[][] blockStruc;
-        byte[][] blockCol;
+        bool[][] blockStruc = new bool[4][];
+        byte[][] blockCol = new byte[4][];
+        byte offsetX, offsetY;
 
         /// <summary>
         /// Creates the second level arrays.
