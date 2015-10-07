@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 namespace Practicum.Tetris
 {
 
-    enum Colors : byte { Blank, Grey, Blue, Green, Red, Yellow, Purple, Orange }
+    enum Colors : byte { Blank, Blue, Green, Red, Yellow, Purple, Orange }
     
     /// <summary>
     /// This is the main type for your game
