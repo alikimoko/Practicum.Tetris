@@ -8,6 +8,7 @@ namespace Practicum.Tetris
     class PlayingField
     {
 
+        public bool isColor;
         byte width, height;
 
         bool[][] fieldStruc;
