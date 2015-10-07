@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 namespace Practicum.Tetris
 {
 
-    enum Colors : byte { Blank, Blue, Green, Red, Yellow, Purple, Orange }
+    enum Colors : byte { Blank, Blue, Green, Orange, Purple, Red, Yellow }
     
     /// <summary>
     /// This is the main type for your game
@@ -36,16 +36,22 @@ namespace Practicum.Tetris
 
         // objects
         PlayingField field;
+        Block tetrisBlock;
 
         //variables
+        byte fieldWidth, fieldHeight;
 
+        //timers
+        int moveTimer = 0;
+        int moveTimerLim;
+
+        //sprites
+        Texture2D[] blockSprites;
 
         public TetrisGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            
-            
         }
 
         /// <summary>
@@ -65,8 +71,14 @@ namespace Practicum.Tetris
 
             gameState = 0; reserveGameState = 0;
 
-            field = new PlayingField(12, 20);
-           
+            fieldWidth = 12; fieldHeight = 20;
+            field = new PlayingField(fieldWidth, fieldHeight);
+
+            tetrisBlock = new Block(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false);
+
+            //timers
+            moveTimerLim = 1000;
+
         }
 
         /// <summary>
@@ -78,7 +90,14 @@ namespace Practicum.Tetris
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            blockSprites = new Texture2D[] { Content.Load<Texture2D>("noBlock"),
+                                             Content.Load<Texture2D>("blockBlue"),
+                                             Content.Load<Texture2D>("blockGreen"),
+                                             Content.Load<Texture2D>("blockOrange"),
+                                             Content.Load<Texture2D>("blockPurple"),
+                                             Content.Load<Texture2D>("blockRed"),
+                                             Content.Load<Texture2D>("blockYellow") };
+
         }
 
         /// <summary>
@@ -99,6 +118,16 @@ namespace Practicum.Tetris
         {
             gameState = reserveGameState;
 
+            //movement tick
+            if (moveTimer >= moveTimerLim)
+            {
+                moveTimer = moveTimer % moveTimerLim;
+
+                //move block
+                tetrisBlock.moveDown();
+
+            } else { moveTimer += gameTime.ElapsedGameTime.Milliseconds; }
+
             base.Update(gameTime);
         }
 
@@ -110,8 +139,31 @@ namespace Practicum.Tetris
         {
             GraphicsDevice.Clear(Color.LightGray);
             spriteBatch.Begin();
-            
 
+            for(int i = 0; i < fieldHeight; i++)
+            {
+                for(int j = 0; j < fieldWidth; j++)
+                {
+                    if (field.checkGrid(i, j))
+                    {
+                        if (field.isColor) { spriteBatch.Draw(blockSprites[field.checkGrid2(i, j)], new Vector2(j * 20, i * 20), Color.White); }
+                        else { spriteBatch.Draw(blockSprites[1], new Vector2(j * 20, i * 20), Color.White); }
+                    }
+                    else { spriteBatch.Draw(blockSprites[0], new Vector2(j * 20, i * 20), Color.White); }
+                }
+            }
+            
+            for(int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    if (tetrisBlock.checkGrid(i, j))
+                    {
+                        if (tetrisBlock.isColor) { spriteBatch.Draw(blockSprites[tetrisBlock.checkGrid2(i, j)], new Vector2((tetrisBlock.offsetX + j) * 20, (tetrisBlock.offsetY + i) * 20), Color.White); }
+                        else { spriteBatch.Draw(blockSprites[1], new Vector2((tetrisBlock.offsetX + j) * 20, (tetrisBlock.offsetY + i) * 20), Color.White); }
+                    }
+                }
+            }
 
             spriteBatch.End();
             base.Draw(gameTime);

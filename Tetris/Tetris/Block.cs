@@ -9,11 +9,11 @@ namespace Practicum.Tetris
     class Block
     {
 
-        bool isColor;
+        public bool isColor;
         byte color;
         bool[][] blockStruc = new bool[4][];
         byte[][] blockCol = new byte[4][];
-        byte offsetX, offsetY;
+        public sbyte offsetX, offsetY;
 
         /// <summary>
         /// Creates the second level arrays.
@@ -80,6 +80,7 @@ namespace Practicum.Tetris
             blockStruc[0][3] = x1y4; blockStruc[1][3] = x2y4; blockStruc[2][3] = x3y4; blockStruc[3][3] = x4y4;
 
             this.isColor = isColor;
+            offsetX = 0; offsetY = 0;
         }
 
         /// <summary>
@@ -117,5 +118,23 @@ namespace Practicum.Tetris
                 }
             }
         }
+
+        public void moveDown()
+        {
+            offsetY += 1;
+        }
+
+        public bool checkGrid(int y, int x)
+        {
+
+            return blockStruc[y][x];
+        }
+
+        public byte checkGrid2(int y, int x)
+        {
+
+            return blockCol[y][x];
+        }
+
     }
 }
