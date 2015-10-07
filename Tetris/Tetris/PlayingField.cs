@@ -88,5 +88,10 @@ namespace Practicum.Tetris
             }
         }
 
+        public bool checkGrid(byte x, byte y){
+        
+        return fieldStruc[x][y];
+        }
+        
     }
 }
