@@ -14,7 +14,7 @@ namespace Practicum.Tetris
         bool[][] blockStruc = new bool[4][];
         byte[][] blockCol = new byte[4][];
         public sbyte offsetX, offsetY;
-
+        private static int prevBlock;
         /// <summary>
         /// Creates the second level arrays.
         /// </summary>
@@ -26,7 +26,45 @@ namespace Practicum.Tetris
                 blockCol[i] = new byte[4];
             }
         }
-
+        public static Block createBlock(int blockKind = -1, bool isColor=false)
+        {
+            Block block = new Block(false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false);
+            
+            if (blockKind == -1)
+            {
+                Random random = new Random();
+                
+                do
+                {
+                    blockKind = random.Next(10);
+                } while (blockKind == prevBlock);
+            }
+            prevBlock = blockKind;
+            switch (blockKind)
+                {
+                    case 0:
+                        //square
+                        block = new Block(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false, isColor);
+                        break;
+                    case 1:
+                        //horizontal line
+                        block = new Block(false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, isColor);
+                        break;
+                    case 2:
+                        //vertical line
+                        block = new Block(false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, isColor);
+                        break;
+                    //alle andere blokken hier ook toevoegen... (case 3-case 9)
+                    default:
+                        //default is square dus als er iets mis gaat wordt t een vierkant
+                        block = new Block(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false, isColor);
+                        break;
+                    
+                }
+            
+            
+            return block;
+        }
         /// <summary>
         /// Creates a new tetris block structure.
         /// </summary>
