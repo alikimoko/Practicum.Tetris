@@ -14,7 +14,7 @@ namespace Practicum.Tetris
         
         }
 
-        public override void turnLeft(){ }
+        public override void turnLeft() { }
 
         public override void turnRight() { }
         
