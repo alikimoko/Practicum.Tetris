@@ -13,6 +13,11 @@ namespace Practicum.Tetris
         {
         
         }
+
+        public override void turnLeft()
+        {
+            
+        }
     }
     class blockLineH:Block
     {
@@ -22,6 +27,7 @@ namespace Practicum.Tetris
         {
         
         }
+
 
     }
     class blockLineV:Block
