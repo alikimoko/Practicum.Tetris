@@ -36,7 +36,7 @@ namespace Practicum.Tetris
                 
                 do
                 {
-                    blockKind = random.Next(10);
+                    blockKind = random.Next(9);
                 } while (blockKind == prevBlock);
             }
             prevBlock = blockKind;
@@ -44,16 +44,36 @@ namespace Practicum.Tetris
                 {
                     case 0:
                         //square
-                        block = new Block(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false, isColor);
+                        block = new blockSquare(isColor);
                         break;
                     case 1:
                         //horizontal line
-                        block = new Block(false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, isColor);
+                        block = new blockLineH(isColor);
                         break;
                     case 2:
                         //vertical line
-                        block = new Block(false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, isColor);
+                        block = new blockLineV(isColor);
                         break;
+                    case 3:
+                        block = new blockZ(isColor);
+                        break;
+                    case 4:
+                        block = new blockReverseZ(isColor);
+                        break;
+                    case 5:
+                        block = new blockFlatL(isColor);
+                        break;
+                    case 6:
+                        block = new blockFlatReverseL(isColor);
+                        break;
+                    case 7:
+                        block = new blockC(isColor);
+                        break;
+                    case 8:
+                        block = new blockRoof(isColor);
+                        break;
+                    
+                    
                     //alle andere blokken hier ook toevoegen... (case 3-case 9)
                     default:
                         //default is square dus als er iets mis gaat wordt t een vierkant
