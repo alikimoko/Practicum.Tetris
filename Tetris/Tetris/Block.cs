@@ -28,8 +28,8 @@ namespace Practicum.Tetris
         }
         public static Block createBlock(int blockKind = -1, bool isColor=false)
         {
-            Block block = new Block(false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-            
+            Block block;
+
             if (blockKind == -1)
             {
                 Random random = new Random();

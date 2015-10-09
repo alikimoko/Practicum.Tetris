@@ -100,5 +100,50 @@ namespace Practicum.Tetris
             return fieldCol[y][x];
         }
 
+        /// <summary>
+        /// Checks if the block can move in a given direction.
+        /// </summary>
+        /// <param name="blockToMove">The block that should be checked.</param>
+        /// <param name="direction">The direction of the displacement. 0 = down, 1 = left, 2 = right</param>
+        /// <returns></returns>
+        public bool canBlockMove(Block blockToMove, byte direction)
+        {
+            sbyte displaceX = 0, displaceY = 0;
+
+            switch (direction)
+            {
+                case 0:
+                    displaceY = 1;
+                    break;
+                case 1:
+                    displaceX = -1;
+                    break;
+                case 2:
+                    displaceX = 1;
+                    break;
+            }
+
+            // check cels after displacement
+            for(int y = 0; y < 4; y++)
+            {
+                for(int x = 0; x < 4; x++)
+                {
+                    // already occupied?
+                    if(checkGrid(blockToMove.offsetY + y + displaceY, blockToMove.offsetX + x + displaceX) &&
+                       blockToMove.checkGrid(y, x))
+                    { return false; }
+
+                    // at edge of playing field?
+                    if(blockToMove.checkGrid(y,x) && (blockToMove.offsetY + y + displaceY >= height ||
+                                                      blockToMove.offsetX + x + displaceX >= width ||
+                                                      blockToMove.offsetX + x + displaceX < 0))
+                    { return false; }
+
+                }
+            }
+
+            return true;
+        }
+
     }
 }
