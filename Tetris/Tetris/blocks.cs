@@ -5,13 +5,18 @@ using System.Text;
 
 namespace Practicum.Tetris
 {
-    class blockSquare:Block
+    class blockSquare:TetrisBlock
     {
        
-        public blockSquare(bool isColor = false)
-            : base(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false, isColor) 
+        public blockSquare(byte color)
+            : base(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false, color) 
         {
         
+        }
+        public blockSquare()
+            : base(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false)
+        {
+
         }
 
         public override void turnLeft() { }
@@ -19,77 +24,126 @@ namespace Practicum.Tetris
         public override void turnRight() { }
         
     }
-    class blockLineH:Block
+    class blockLineH:TetrisBlock
     {
         
-        public blockLineH(bool isColor = false)
-            : base(false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, isColor) 
+        public blockLineH(byte color)
+            : base(false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, color) 
         {
         
         }
 
+        public blockLineH()
+            : base(false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false)
+        {
+
+        }
+
 
     }
-    class blockLineV:Block
+    class blockLineV:TetrisBlock
     {
 
-        public blockLineV(bool isColor = false)
-            : base(false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, isColor) 
+        public blockLineV(byte color)
+            : base(false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, color) 
         {
         
         }
+
+        public blockLineV()
+            : base(false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false)
+        {
+
+        }
     }
-    class blockZ:Block
+    class blockZ:TetrisBlock
     {
     
-        public blockZ(bool isColor = false)
-            : base(false, false, false, false, false, true, true, false, false, false, true, true, false, false, false, false, isColor) 
+        public blockZ(byte color)
+            : base(false, false, false, false, false, true, true, false, false, false, true, true, false, false, false, false, color) 
         {
         
         }
+
+        public blockZ()
+            : base(false, false, false, false, false, true, true, false, false, false, true, true, false, false, false, false)
+        {
+
+        }
     }
-    class blockReverseZ : Block
+    class blockReverseZ : TetrisBlock
     {
-        public blockReverseZ(bool isColor = false)
-            : base(false, false, false, false, false, false, true, true, false, true, true, false, false, false, false, false, isColor)
+        public blockReverseZ(byte color)
+            : base(false, false, false, false, false, false, true, true, false, true, true, false, false, false, false, false, color)
+        {
+
+        }
+        
+        public blockReverseZ()
+            : base(false, false, false, false, false, false, true, true, false, true, true, false, false, false, false, false)
+        {
+
+        }
+
+
+    }
+    class blockFlatReverseL:TetrisBlock
+    {
+
+        public blockFlatReverseL(byte color)
+            : base(false, false, false, false, false, true, false, false, false, true, true, true, false, false, false, false, color) 
+        {
+        
+        }
+        
+        public blockFlatReverseL()
+            : base(false, false, false, false, false, true, false, false, false, true, true, true, false, false, false, false)
         {
 
         }
 
     }
-    class blockFlatReverseL:Block
+    class blockFlatL:TetrisBlock
     {
+        public blockFlatL(byte color)
+            : base(false, false, false, false, false, false, true, false, true, true, true, false, false, false, false, false, color) 
+        {
+        
+        }
+        
+        public blockFlatL()
+            : base(false, false, false, false, false, false, true, false, true, true, true, false, false, false, false, false)
+        {
 
-        public blockFlatReverseL(bool isColor = false)
-            : base(false, false, false, false, false, true, false, false, false, true, true, true, false, false, false, false, isColor) 
+        }
+    }
+    class blockC:TetrisBlock
+    {
+        public blockC(byte color)
+            : base(false, false, false, false, false, true, true, false, false, false, true, false, false, false, false, false, color) 
         {
         
         }
 
-    }
-    class blockFlatL:Block
-    {
-        public blockFlatL(bool isColor = false)
-            : base(false, false, false, false, false, false, true, false, true, true, true, false, false, false, false, false, isColor) 
+        public blockC()
+            : base(false, false, false, false, false, true, true, false, false, false, true, false, false, false, false, false)
         {
-        
-        }
-    }
-    class blockC:Block
-    {
-        public blockC(bool isColor = false)
-            : base(false, false, false, false, false, true, true, false, false, false, true, false, false, false, false, false, isColor) 
-        {
-        
+
         }
     
     }
-    class blockRoof:Block
+    class blockRoof:TetrisBlock
     {
-        public blockRoof(bool isColor = false)
-            : base(false, false, false, false, false, false, true, false, false, true, true, true, false, false, false, false, isColor) 
+        public blockRoof(byte color)
+            : base(false, false, false, false, false, false, true, false, false, true, true, true, false, false, false, false, color) 
         {
         
+        }
+
+        public blockRoof()
+            : base(false, false, false, false, false, false, true, false, false, true, true, true, false, false, false, false)
+        {
+
         }
     }
 }
