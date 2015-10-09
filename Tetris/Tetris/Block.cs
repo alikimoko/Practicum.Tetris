@@ -9,7 +9,7 @@ namespace Practicum.Tetris
     class Block
     {
 
-        public bool isColor;
+        bool isColor;
         byte color;
         bool[][] blockStruc = new bool[4][];
         byte[][] blockCol = new byte[4][];

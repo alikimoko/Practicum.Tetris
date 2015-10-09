@@ -40,10 +40,12 @@ namespace Practicum.Tetris
 
         //variables
         byte fieldWidth, fieldHeight;
+        bool isColor;
+        int score = 0;
 
         //timers
         int moveTimer = 0;
-        int moveTimerLim;
+        int moveTimerLim, moveTimerLimBase;
 
         //sprites
         Texture2D[] blockSprites;
@@ -63,21 +65,26 @@ namespace Practicum.Tetris
         protected override void Initialize()
         { 
             base.Initialize();
-            // TODO: Add initialization logic here
+
+            // window sizing
             view = GraphicsDevice.Viewport;
             graphics.PreferredBackBufferHeight = 500;
             graphics.PreferredBackBufferWidth = 500;
             graphics.ApplyChanges();
 
+            // gamestates
             gameState = 0; reserveGameState = 0;
+            isColor = false;
 
+            // field
             fieldWidth = 12; fieldHeight = 20;
             field = new PlayingField(fieldWidth, fieldHeight);
 
+            // blocks
             tetrisBlock = new Block(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false);
 
             //timers
-            moveTimerLim = 1000;
+            moveTimerLim = 1000; moveTimerLimBase = 1000;
 
         }
 
@@ -146,7 +153,7 @@ namespace Practicum.Tetris
                 {
                     if (field.checkGrid(i, j))
                     {
-                        if (field.isColor) { spriteBatch.Draw(blockSprites[field.checkGrid2(i, j)], new Vector2(j * 20, i * 20), Color.White); }
+                        if (isColor) { spriteBatch.Draw(blockSprites[field.checkGrid2(i, j)], new Vector2(j * 20, i * 20), Color.White); }
                         else { spriteBatch.Draw(blockSprites[1], new Vector2(j * 20, i * 20), Color.White); }
                     }
                     else { spriteBatch.Draw(blockSprites[0], new Vector2(j * 20, i * 20), Color.White); }
@@ -159,7 +166,7 @@ namespace Practicum.Tetris
                 {
                     if (tetrisBlock.checkGrid(i, j))
                     {
-                        if (tetrisBlock.isColor) { spriteBatch.Draw(blockSprites[tetrisBlock.checkGrid2(i, j)], new Vector2((tetrisBlock.offsetX + j) * 20, (tetrisBlock.offsetY + i) * 20), Color.White); }
+                        if (isColor) { spriteBatch.Draw(blockSprites[tetrisBlock.checkGrid2(i, j)], new Vector2((tetrisBlock.offsetX + j) * 20, (tetrisBlock.offsetY + i) * 20), Color.White); }
                         else { spriteBatch.Draw(blockSprites[1], new Vector2((tetrisBlock.offsetX + j) * 20, (tetrisBlock.offsetY + i) * 20), Color.White); }
                     }
                 }
@@ -168,5 +175,16 @@ namespace Practicum.Tetris
             spriteBatch.End();
             base.Draw(gameTime);
         }
+
+        /// <summary>
+        /// Keeps score and fastens block movement.
+        /// </summary>
+        /// <param name="points">The earned points.</param>
+        public void scorePoints(int points)
+        {
+            score += points;
+            moveTimerLim = moveTimerLimBase - (score / 100);
+        }
+
     }
 }
