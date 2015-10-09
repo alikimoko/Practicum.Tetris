@@ -81,7 +81,7 @@ namespace Practicum.Tetris
             field = new PlayingField(fieldWidth, fieldHeight);
 
             // blocks
-            tetrisBlock = new TetrisBlock(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false);
+            tetrisBlock = TetrisBlock.createBlock();
 
             //timers
             moveTimerLim = 1000; moveTimerLimBase = 1000;

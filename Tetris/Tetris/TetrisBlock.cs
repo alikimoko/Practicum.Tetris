@@ -136,10 +136,10 @@ namespace Practicum.Tetris
 
         private void fillStruct(bool x1y1, bool x2y1, bool x3y1, bool x4y1, bool x1y2, bool x2y2, bool x3y2, bool x4y2, bool x1y3, bool x2y3, bool x3y3, bool x4y3, bool x1y4, bool x2y4, bool x3y4, bool x4y4)
         {
-            fieldStruc[0][0] = x1y1; fieldStruc[1][0] = x2y1; fieldStruc[2][0] = x3y1; fieldStruc[3][0] = x4y1;
-            fieldStruc[0][1] = x1y2; fieldStruc[1][1] = x2y2; fieldStruc[2][1] = x3y2; fieldStruc[3][1] = x4y2;
-            fieldStruc[0][2] = x1y3; fieldStruc[1][2] = x2y3; fieldStruc[2][2] = x3y3; fieldStruc[3][2] = x4y3;
-            fieldStruc[0][3] = x1y4; fieldStruc[1][3] = x2y4; fieldStruc[2][3] = x3y4; fieldStruc[3][3] = x4y4;
+            fieldStruc[0][0] = x1y1; fieldStruc[0][1] = x2y1; fieldStruc[0][2] = x3y1; fieldStruc[0][3] = x4y1;
+            fieldStruc[1][0] = x1y2; fieldStruc[1][1] = x2y2; fieldStruc[1][2] = x3y2; fieldStruc[1][3] = x4y2;
+            fieldStruc[2][0] = x1y3; fieldStruc[2][1] = x2y3; fieldStruc[2][2] = x3y3; fieldStruc[2][3] = x4y3;
+            fieldStruc[3][0] = x1y4; fieldStruc[3][1] = x2y4; fieldStruc[3][2] = x3y4; fieldStruc[3][3] = x4y4;
         }
 
         private void colorBlock(byte color)

@@ -9,12 +9,18 @@ namespace Practicum.Tetris
     {
        
         public blockSquare(byte color)
-            : base(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false, color) 
+            : base(false, false, false, false,
+                   false, true,  true,  false,
+                   false, true,  true,  false,
+                   false, false, false, false, color) 
         {
         
         }
         public blockSquare()
-            : base(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false)
+            : base(false, false, false, false,
+                   false, true,  true,  false,
+                   false, true,  true,  false,
+                   false, false, false, false)
         {
 
         }
@@ -28,13 +34,19 @@ namespace Practicum.Tetris
     {
         
         public blockLineH(byte color)
-            : base(false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, color) 
+            : base(false, false, false, false,
+                   false, false, false, false,
+                   true,  true,  true,  true,
+                   false, false, false, false, color) 
         {
         
         }
 
         public blockLineH()
-            : base(false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false)
+            : base(false, false, false, false,
+                   false, false, false, false,
+                   true,  true,  true,  true,
+                   false, false, false, false)
         {
 
         }
@@ -45,13 +57,19 @@ namespace Practicum.Tetris
     {
 
         public blockLineV(byte color)
-            : base(false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, color) 
+            : base(false, true, false, false,
+                   false, true, false, false,
+                   false, true, false, false,
+                   false, true, false, false, color) 
         {
         
         }
 
         public blockLineV()
-            : base(false, true, false, false, false, true, false, false, false, true, false, false, false, true, false, false)
+            : base(false, true, false, false,
+                   false, true, false, false,
+                   false, true, false, false,
+                   false, true, false, false)
         {
 
         }
@@ -60,13 +78,19 @@ namespace Practicum.Tetris
     {
     
         public blockZ(byte color)
-            : base(false, false, false, false, false, true, true, false, false, false, true, true, false, false, false, false, color) 
+            : base(false, false, false, false,
+                   false, true,  true,  false,
+                   false, false, true,  true,
+                   false, false, false, false, color) 
         {
         
         }
 
         public blockZ()
-            : base(false, false, false, false, false, true, true, false, false, false, true, true, false, false, false, false)
+            : base(false, false, false, false,
+                   false, true,  true,  false,
+                   false, false, true,  true,
+                   false, false, false, false)
         {
 
         }
@@ -74,13 +98,19 @@ namespace Practicum.Tetris
     class blockReverseZ : TetrisBlock
     {
         public blockReverseZ(byte color)
-            : base(false, false, false, false, false, false, true, true, false, true, true, false, false, false, false, false, color)
+            : base(false, false, false, false,
+                   false, false, true,  true,
+                   false, true,  true,  false,
+                   false, false, false, false, color)
         {
 
         }
         
         public blockReverseZ()
-            : base(false, false, false, false, false, false, true, true, false, true, true, false, false, false, false, false)
+            : base(false, false, false, false,
+                   false, false, true,  true,
+                   false, true,  true,  false,
+                   false, false, false, false)
         {
 
         }
@@ -91,13 +121,19 @@ namespace Practicum.Tetris
     {
 
         public blockFlatReverseL(byte color)
-            : base(false, false, false, false, false, true, false, false, false, true, true, true, false, false, false, false, color) 
+            : base(false, false, false, false,
+                   false, true,  false, false,
+                   false, true,  true,  true,
+                   false, false, false, false, color) 
         {
         
         }
         
         public blockFlatReverseL()
-            : base(false, false, false, false, false, true, false, false, false, true, true, true, false, false, false, false)
+            : base(false, false, false, false,
+                   false, true,  false, false,
+                   false, true,  true,  true,
+                   false, false, false, false)
         {
 
         }
@@ -106,13 +142,19 @@ namespace Practicum.Tetris
     class blockFlatL:TetrisBlock
     {
         public blockFlatL(byte color)
-            : base(false, false, false, false, false, false, true, false, true, true, true, false, false, false, false, false, color) 
+            : base(false, false, false, false,
+                   false, false, true,  false,
+                   true,  true,  true,  false,
+                   false, false, false, false, color) 
         {
         
         }
         
         public blockFlatL()
-            : base(false, false, false, false, false, false, true, false, true, true, true, false, false, false, false, false)
+            : base(false, false, false, false,
+                   false, false, true,  false,
+                   true,  true,  true,  false,
+                   false, false, false, false)
         {
 
         }
@@ -120,13 +162,19 @@ namespace Practicum.Tetris
     class blockC:TetrisBlock
     {
         public blockC(byte color)
-            : base(false, false, false, false, false, true, true, false, false, false, true, false, false, false, false, false, color) 
+            : base(false, false, false, false, 
+                   false, true,  true,  false,
+                   false, false, true,  false,
+                   false, false, false, false, color) 
         {
         
         }
 
         public blockC()
-            : base(false, false, false, false, false, true, true, false, false, false, true, false, false, false, false, false)
+            : base(false, false, false, false,
+                   false, true,  true,  false,
+                   false, false, true,  false,
+                   false, false, false, false)
         {
 
         }
@@ -135,13 +183,19 @@ namespace Practicum.Tetris
     class blockRoof:TetrisBlock
     {
         public blockRoof(byte color)
-            : base(false, false, false, false, false, false, true, false, false, true, true, true, false, false, false, false, color) 
+            : base(false, false, false, false,
+                   false, false, true,  false,
+                   false, true,  true,  true,
+                   false, false, false, false, color) 
         {
         
         }
 
         public blockRoof()
-            : base(false, false, false, false, false, false, true, false, false, true, true, true, false, false, false, false)
+            : base(false, false, false, false,
+                   false, false, true,  false,
+                   false, true,  true,  true,
+                   false, false, false, false)
         {
 
         }
