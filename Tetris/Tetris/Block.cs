@@ -215,5 +215,27 @@ namespace Practicum.Tetris
                 }
             }
         }
+
+        public virtual void turnRight()
+        {
+            bool[][] tempBlockStruc = new bool[4][];
+            for (int i = 0; i < 4; i++)
+            {
+                tempBlockStruc[i] = new bool[4];
+            }
+
+            tempBlockStruc[0][0] = blockStruc[0][3]; tempBlockStruc[1][0] = blockStruc[0][2]; tempBlockStruc[2][0] = blockStruc[0][1]; tempBlockStruc[3][0] = blockStruc[0][0];
+            tempBlockStruc[0][1] = blockStruc[1][3]; tempBlockStruc[1][1] = blockStruc[1][2]; tempBlockStruc[2][1] = blockStruc[1][1]; tempBlockStruc[3][1] = blockStruc[1][0];
+            tempBlockStruc[0][2] = blockStruc[2][3]; tempBlockStruc[1][2] = blockStruc[2][2]; tempBlockStruc[2][2] = blockStruc[2][1]; tempBlockStruc[3][2] = blockStruc[2][0];
+            tempBlockStruc[0][3] = blockStruc[3][3]; tempBlockStruc[1][3] = blockStruc[3][2]; tempBlockStruc[2][3] = blockStruc[3][1]; tempBlockStruc[3][3] = blockStruc[3][0];
+
+            for (int i = 0; i < blockStruc.Length; i++)
+            {
+                for (int j = 0; j < blockStruc[i].Length; j++)
+                {
+                    blockStruc[i][j] = tempBlockStruc[i][j];
+                }
+            }
+        }
     }
 }
