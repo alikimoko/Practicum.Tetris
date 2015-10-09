@@ -106,7 +106,7 @@ namespace Practicum.Tetris
         /// <param name="blockToMove">The block that should be checked.</param>
         /// <param name="direction">The direction of the displacement. 0 = down, 1 = left, 2 = right</param>
         /// <returns></returns>
-        public bool canBlockMove(Block blockToMove, byte direction)
+        public bool canBlockMove(TetrisBlock blockToMove, byte direction)
         {
             sbyte displaceX = 0, displaceY = 0;
 
@@ -129,17 +129,17 @@ namespace Practicum.Tetris
                 for(int x = 0; x < 4; x++)
                 {
                     // at edge of playing field?
-                    if(blockToMove.checkGrid(y,x) && (blockToMove.offsetY + y + displaceY >= height ||
-                                                      blockToMove.offsetX + x + displaceX >= width ||
-                                                      blockToMove.offsetX + x + displaceX < 0))
+                    if(blockToMove.checkGrid(y,x) && (blockToMove.OffsetY + y + displaceY >= height ||
+                                                      blockToMove.OffsetX + x + displaceX >= width ||
+                                                      blockToMove.OffsetX + x + displaceX < 0))
                     { return false; }
 
                     // already occupied?
-                    if (blockToMove.offsetY + y + displaceY < height &&
-                        blockToMove.offsetX + x + displaceX < width &&
-                        blockToMove.offsetX + x + displaceX >= 0)
+                    if (blockToMove.OffsetY + y + displaceY < height &&
+                        blockToMove.OffsetX + x + displaceX < width &&
+                        blockToMove.OffsetX + x + displaceX >= 0)
                     { // only empty rows can get outside the field (index out of bounds exeption if this doesn't happen)
-                        if (checkGrid(blockToMove.offsetY + y + displaceY, blockToMove.offsetX + x + displaceX) &&
+                        if (checkGrid(blockToMove.OffsetY + y + displaceY, blockToMove.OffsetX + x + displaceX) &&
                             blockToMove.checkGrid(y, x))
                         { return false; }
                     }

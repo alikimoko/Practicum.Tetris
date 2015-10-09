@@ -61,12 +61,8 @@ namespace Practicum.Tetris
                     
                     default:
                         //default is square dus als er iets mis gaat wordt t een vierkant
-<<<<<<< HEAD
                         block = color == 0 ? new TetrisBlock(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false)
                                            : new TetrisBlock(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false, color);
-=======
-                        block = new blockSquare(isColor);
->>>>>>> origin/master
                         break;
                     
                 }
@@ -80,32 +76,7 @@ namespace Practicum.Tetris
             fillStruct(x1y1, x2y1, x3y1, x4y1, x1y2, x2y2, x3y2, x4y2, x1y3, x2y3, x3y3, x4y3, x1y4, x2y4, x3y4, x4y4);
         }
 
-<<<<<<< HEAD
         public TetrisBlock(bool x1y1, bool x2y1, bool x3y1, bool x4y1, bool x1y2, bool x2y2, bool x3y2, bool x4y2, bool x1y3, bool x2y3, bool x3y3, bool x4y3, bool x1y4, bool x2y4, bool x3y4, bool x4y4, byte color) : base(4, 4, true)
-=======
-        /// <summary>
-        /// Creates a new tetris block structure wich may allow color differences.
-        /// </summary>
-        /// <param name="x1y1">Is there a block at the internal x = 1, y = 1 coördinate?</param>
-        /// <param name="x2y1">Is there a block at the internal x = 2, y = 1 coördinate?</param>
-        /// <param name="x3y1">Is there a block at the internal x = 3, y = 1 coördinate?</param>
-        /// <param name="x4y1">Is there a block at the internal x = 4, y = 1 coördinate?</param>
-        /// <param name="x1y2">Is there a block at the internal x = 1, y = 2 coördinate?</param>
-        /// <param name="x2y2">Is there a block at the internal x = 2, y = 2 coördinate?</param>
-        /// <param name="x3y2">Is there a block at the internal x = 3, y = 2 coördinate?</param>
-        /// <param name="x4y2">Is there a block at the internal x = 4, y = 2 coördinate?</param>
-        /// <param name="x1y3">Is there a block at the internal x = 1, y = 3 coördinate?</param>
-        /// <param name="x2y3">Is there a block at the internal x = 2, y = 3 coördinate?</param>
-        /// <param name="x3y3">Is there a block at the internal x = 3, y = 3 coördinate?</param>
-        /// <param name="x4y3">Is there a block at the internal x = 4, y = 3 coördinate?</param>
-        /// <param name="x1y4">Is there a block at the internal x = 1, y = 4 coördinate?</param>
-        /// <param name="x2y4">Is there a block at the internal x = 2, y = 4 coördinate?</param>
-        /// <param name="x3y4">Is there a block at the internal x = 3, y = 4 coördinate?</param>
-        /// <param name="x4y4">Is there a block at the internal x = 4, y = 4 coördinate?</param>
-        /// <param name="color">The color of the block.</param>
-        public TetrisBlock(bool x1y1, bool x2y1, bool x3y1, bool x4y1, bool x1y2, bool x2y2, bool x3y2, bool x4y2, bool x1y3, bool x2y3, bool x3y3, bool x4y3, bool x1y4, bool x2y4, bool x3y4, bool x4y4, byte color)
-            : this(x1y1, x2y1, x3y1, x4y1, x1y2, x2y2, x3y2, x4y2, x1y3, x2y3, x3y3, x4y3, x1y4, x2y4, x3y4, x4y4, true)
->>>>>>> origin/master
         {
             this.color = color;
 

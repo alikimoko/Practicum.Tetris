@@ -36,7 +36,7 @@ namespace Practicum.Tetris
 
         // objects
         PlayingField field;
-        Block tetrisBlock;
+        TetrisBlock tetrisBlock;
 
         //variables
         byte fieldWidth, fieldHeight;
@@ -81,7 +81,7 @@ namespace Practicum.Tetris
             field = new PlayingField(fieldWidth, fieldHeight);
 
             // blocks
-            tetrisBlock = new Block(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false);
+            tetrisBlock = new TetrisBlock(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false);
 
             //timers
             moveTimerLim = 1000; moveTimerLimBase = 1000;
@@ -172,8 +172,8 @@ namespace Practicum.Tetris
                 {
                     if (tetrisBlock.checkGrid(i, j))
                     {
-                        if (isColor) { spriteBatch.Draw(blockSprites[tetrisBlock.checkGrid2(i, j)], new Vector2((tetrisBlock.offsetX + j) * 20, (tetrisBlock.offsetY + i) * 20), Color.White); }
-                        else { spriteBatch.Draw(blockSprites[1], new Vector2((tetrisBlock.offsetX + j) * 20, (tetrisBlock.offsetY + i) * 20), Color.White); }
+                        if (isColor) { spriteBatch.Draw(blockSprites[tetrisBlock.checkGrid2(i, j)], new Vector2((tetrisBlock.OffsetX + j) * 20, (tetrisBlock.OffsetY + i) * 20), Color.White); }
+                        else { spriteBatch.Draw(blockSprites[1], new Vector2((tetrisBlock.OffsetX + j) * 20, (tetrisBlock.OffsetY + i) * 20), Color.White); }
                     }
                 }
             }
