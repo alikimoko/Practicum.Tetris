@@ -128,16 +128,23 @@ namespace Practicum.Tetris
             {
                 for(int x = 0; x < 4; x++)
                 {
-                    // already occupied?
-                    if(checkGrid(blockToMove.offsetY + y + displaceY, blockToMove.offsetX + x + displaceX) &&
-                       blockToMove.checkGrid(y, x))
-                    { return false; }
-
                     // at edge of playing field?
                     if(blockToMove.checkGrid(y,x) && (blockToMove.offsetY + y + displaceY >= height ||
                                                       blockToMove.offsetX + x + displaceX >= width ||
                                                       blockToMove.offsetX + x + displaceX < 0))
                     { return false; }
+
+                    // already occupied?
+                    if (blockToMove.offsetY + y + displaceY < height &&
+                        blockToMove.offsetX + x + displaceX < width &&
+                        blockToMove.offsetX + x + displaceX >= 0)
+                    { // only empty rows can get outside the field (index out of bounds exeption if this doesn't happen)
+                        if (checkGrid(blockToMove.offsetY + y + displaceY, blockToMove.offsetX + x + displaceX) &&
+                            blockToMove.checkGrid(y, x))
+                        { return false; }
+                    }
+                    
+                    
 
                 }
             }

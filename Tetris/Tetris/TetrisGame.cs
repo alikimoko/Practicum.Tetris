@@ -131,7 +131,13 @@ namespace Practicum.Tetris
                 moveTimer = moveTimer % moveTimerLim;
 
                 //move block
-                tetrisBlock.moveDown();
+                if(field.canBlockMove(tetrisBlock, 0))
+                { tetrisBlock.moveDown(); }
+                else
+                {
+                    // code for copying block to field and reseting the block
+                }
+                
 
             } else { moveTimer += gameTime.ElapsedGameTime.Milliseconds; }
 
