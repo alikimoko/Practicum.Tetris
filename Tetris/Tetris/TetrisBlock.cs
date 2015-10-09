@@ -7,12 +7,14 @@ namespace Practicum.Tetris
         private sbyte offsetX, offsetY;
         public sbyte OffsetX { get { return offsetX; } }
         public sbyte OffsetY { get { return offsetY; } }
+        public bool[][] FieldStruct { get { return fieldStruc; } }
+        public byte[][] FieldCol { get { return fieldCol; } }
 
         private byte color;
         public byte Color { get { return color; } }
 
         private static int prevBlock;
-        public static TetrisBlock createBlock(int blockKind = -1, byte color = 0)
+        public static TetrisBlock createBlock(byte color = 0, int blockKind = -1)
         {
             TetrisBlock block;
 
@@ -87,18 +89,6 @@ namespace Practicum.Tetris
         public void moveDown()
         {
             offsetY += 1;
-        }
-
-        public bool checkGrid(int y, int x)
-        {
-
-            return fieldStruc[y][x];
-        }
-
-        public byte checkGrid2(int y, int x)
-        {
-
-            return fieldCol[y][x];
         }
 
         public virtual void turnLeft()

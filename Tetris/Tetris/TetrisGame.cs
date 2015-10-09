@@ -153,27 +153,27 @@ namespace Practicum.Tetris
             GraphicsDevice.Clear(Color.LightGray);
             spriteBatch.Begin();
 
-            for(int i = 0; i < fieldHeight; i++)
+            for(int y = 0; y < fieldHeight; y++)
             {
-                for(int j = 0; j < fieldWidth; j++)
+                for(int x = 0; x < fieldWidth; x++)
                 {
-                    if (field.checkGrid(i, j))
+                    if (field.checkGridStruct(y, x))
                     {
-                        if (isColor) { spriteBatch.Draw(blockSprites[field.checkGrid2(i, j)], new Vector2(j * 20, i * 20), Color.White); }
-                        else { spriteBatch.Draw(blockSprites[1], new Vector2(j * 20, i * 20), Color.White); }
+                        if (isColor) { spriteBatch.Draw(blockSprites[field.checkGridCol(y, x)], new Vector2(y * 20, x * 20), Color.White); }
+                        else { spriteBatch.Draw(blockSprites[1], new Vector2(x * 20, y * 20), Color.White); }
                     }
-                    else { spriteBatch.Draw(blockSprites[0], new Vector2(j * 20, i * 20), Color.White); }
+                    else { spriteBatch.Draw(blockSprites[0], new Vector2(x * 20, y * 20), Color.White); }
                 }
             }
             
-            for(int i = 0; i < 4; i++)
+            for(int y = 0; y < 4; y++)
             {
-                for (int j = 0; j < 4; j++)
+                for (int x = 0; x < 4; x++)
                 {
-                    if (tetrisBlock.checkGrid(i, j))
+                    if (tetrisBlock.checkGridStruct(y, x))
                     {
-                        if (isColor) { spriteBatch.Draw(blockSprites[tetrisBlock.checkGrid2(i, j)], new Vector2((tetrisBlock.OffsetX + j) * 20, (tetrisBlock.OffsetY + i) * 20), Color.White); }
-                        else { spriteBatch.Draw(blockSprites[1], new Vector2((tetrisBlock.OffsetX + j) * 20, (tetrisBlock.OffsetY + i) * 20), Color.White); }
+                        if (isColor) { spriteBatch.Draw(blockSprites[tetrisBlock.checkGridCol(y, x)], new Vector2((tetrisBlock.OffsetX + x) * 20, (tetrisBlock.OffsetY + y) * 20), Color.White); }
+                        else { spriteBatch.Draw(blockSprites[1], new Vector2((tetrisBlock.OffsetX + x) * 20, (tetrisBlock.OffsetY + y) * 20), Color.White); }
                     }
                 }
             }

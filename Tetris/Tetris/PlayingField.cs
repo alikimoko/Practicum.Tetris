@@ -5,47 +5,19 @@ using System.Text;
 
 namespace Practicum.Tetris
 {
-    class PlayingField
+    class PlayingField : GridObject
     {
-
-        bool isColor;
-        byte width, height;
-
-        bool[][] fieldStruc;
-        byte[][] fieldCol;
-
-        /// <summary>
-        /// Creates the second level arrays.
-        /// </summary>
-        public void finishArrays()
-        {
-            for(int i = 0; i < fieldStruc.Length; i++)
-            {
-                fieldStruc[i] = new bool[width];
-                fieldCol[i] = new byte[width];
-
-                for (int j = 0; j < width; j++)
-                {
-                    fieldStruc[i][j] = false;
-                    fieldCol[i][j] = 0; 
-                }
-            }
-        }
 
         /// <summary>
         /// Create a new playing field.
         /// </summary>
         /// <param name="width">The width of the playing field in cels.</param>
         /// <param name="height">The height of the playing field in cels.</param>
-        public PlayingField(byte width, byte height)
+        /// <param name="isColor">Are colors enabled?</param>
+        public PlayingField(byte width, byte height, bool isColor = false) : base(width, height, isColor)
         {
-            this.width = width <= 4 ? (byte)4 : width;
-            this.height = (height < width || height <= 6) ? (byte)6 : height;
-
-            fieldStruc = new bool[this.height][];
-            fieldCol = new byte[this.height][];
-
-            finishArrays();
+            // get an empty playing field
+            reset();
         }
 
         /// <summary>
@@ -89,24 +61,16 @@ namespace Practicum.Tetris
             }
         }
 
-        public bool checkGrid(int y, int x){
-        
-        return fieldStruc[y][x];
-        }
 
-        public byte checkGrid2(int y, int x)
+        public bool canBlockMove(TetrisBlock blockToMove, sbyte direction = -1)
         {
-
-            return fieldCol[y][x];
+            return canBlockMove(blockToMove.FieldStruct, blockToMove.OffsetX, blockToMove.OffsetY, direction);
         }
 
-        /// <summary>
-        /// Checks if the block can move in a given direction.
-        /// </summary>
+        /// <summary>Checks if the block can move in a given direction.</summary>
         /// <param name="blockToMove">The block that should be checked.</param>
         /// <param name="direction">The direction of the displacement. 0 = down, 1 = left, 2 = right</param>
-        /// <returns></returns>
-        public bool canBlockMove(TetrisBlock blockToMove, byte direction)
+        public bool canBlockMove(bool[][] block, sbyte offsetX, sbyte offsetY, sbyte direction = -1)
         {
             sbyte displaceX = 0, displaceY = 0;
 
@@ -121,6 +85,9 @@ namespace Practicum.Tetris
                 case 2:
                     displaceX = 1;
                     break;
+                default:
+                    // stay at the same place (for rotation checking)
+                    break;
             }
 
             // check cels after displacement
@@ -129,27 +96,37 @@ namespace Practicum.Tetris
                 for(int x = 0; x < 4; x++)
                 {
                     // at edge of playing field?
-                    if(blockToMove.checkGrid(y,x) && (blockToMove.OffsetY + y + displaceY >= height ||
-                                                      blockToMove.OffsetX + x + displaceX >= width ||
-                                                      blockToMove.OffsetX + x + displaceX < 0))
+                    if(checkGridStruct(block, y,x) && (offsetY + y + displaceY >= height ||
+                                                       offsetX + x + displaceX >= width ||
+                                                       offsetX + x + displaceX < 0))
                     { return false; }
 
                     // already occupied?
-                    if (blockToMove.OffsetY + y + displaceY < height &&
-                        blockToMove.OffsetX + x + displaceX < width &&
-                        blockToMove.OffsetX + x + displaceX >= 0)
+                    if (offsetY + y + displaceY < height &&
+                        offsetX + x + displaceX < width &&
+                        offsetX + x + displaceX >= 0)
                     { // only empty rows can get outside the field (index out of bounds exeption if this doesn't happen)
-                        if (checkGrid(blockToMove.OffsetY + y + displaceY, blockToMove.OffsetX + x + displaceX) &&
-                            blockToMove.checkGrid(y, x))
+                        if (checkGridStruct(offsetY + y + displaceY, offsetX + x + displaceX) &&
+                            checkGridStruct(block, y, x))
                         { return false; }
                     }
-                    
-                    
-
                 }
             }
 
             return true;
+        }
+
+        /// <summary>Completely cleares the playing field.</summary>
+        public void reset()
+        {
+            for(int y = 0; y < height; y++)
+            {
+                for(int x = 0; x < width; x++)
+                {
+                    fieldStruc[y][x] = false;
+                    if(isColor) { fieldCol[y][x] = 0; }
+                }
+            }
         }
 
     }
