@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Practicum.Tetris
 {
-    class blockSquare:Block
+    class blockSquare:TetrisBlock
     {
        
         public blockSquare(bool isColor = false)
@@ -19,7 +19,7 @@ namespace Practicum.Tetris
         public override void turnRight() { }
         
     }
-    class blockLineH:Block
+    class blockLineH:TetrisBlock
     {
         
         public blockLineH(bool isColor = false)
@@ -30,7 +30,7 @@ namespace Practicum.Tetris
 
 
     }
-    class blockLineV:Block
+    class blockLineV:TetrisBlock
     {
 
         public blockLineV(bool isColor = false)
@@ -39,7 +39,7 @@ namespace Practicum.Tetris
         
         }
     }
-    class blockZ:Block
+    class blockZ:TetrisBlock
     {
     
         public blockZ(bool isColor = false)
@@ -48,7 +48,7 @@ namespace Practicum.Tetris
         
         }
     }
-    class blockReverseZ : Block
+    class blockReverseZ : TetrisBlock
     {
         public blockReverseZ(bool isColor = false)
             : base(false, false, false, false, false, false, true, true, false, true, true, false, false, false, false, false, isColor)
@@ -57,7 +57,7 @@ namespace Practicum.Tetris
         }
 
     }
-    class blockFlatReverseL:Block
+    class blockFlatReverseL:TetrisBlock
     {
 
         public blockFlatReverseL(bool isColor = false)
@@ -67,7 +67,7 @@ namespace Practicum.Tetris
         }
 
     }
-    class blockFlatL:Block
+    class blockFlatL:TetrisBlock
     {
         public blockFlatL(bool isColor = false)
             : base(false, false, false, false, false, false, true, false, true, true, true, false, false, false, false, false, isColor) 
@@ -75,7 +75,7 @@ namespace Practicum.Tetris
         
         }
     }
-    class blockC:Block
+    class blockC:TetrisBlock
     {
         public blockC(bool isColor = false)
             : base(false, false, false, false, false, true, true, false, false, false, true, false, false, false, false, false, isColor) 
@@ -84,7 +84,7 @@ namespace Practicum.Tetris
         }
     
     }
-    class blockRoof:Block
+    class blockRoof:TetrisBlock
     {
         public blockRoof(bool isColor = false)
             : base(false, false, false, false, false, false, true, false, false, true, true, true, false, false, false, false, isColor) 
