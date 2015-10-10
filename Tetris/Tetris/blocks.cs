@@ -25,9 +25,9 @@ namespace Practicum.Tetris
 
         }
 
-        public override void turnLeft() { }
+        public override void turnClockwise(PlayingField field) { }
 
-        public override void turnRight() { }
+        public override void turnAntiClockwise(PlayingField field) { }
         
     }
     class blockLineH:TetrisBlock

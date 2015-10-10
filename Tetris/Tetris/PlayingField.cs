@@ -60,16 +60,20 @@ namespace Practicum.Tetris
                 i--;
             }
         }
-
-
+        
+        /// <summary>Checks if the block can move in a given direction.</summary>
+        /// <param name="blockToMove">The block that should be checked.</param>
+        /// <param name="direction">The direction of the displacement. 0 = down, 1 = left, 2 = right, default = stay</param>
         public bool canBlockMove(TetrisBlock blockToMove, sbyte direction = -1)
         {
             return canBlockMove(blockToMove.FieldStruct, blockToMove.OffsetX, blockToMove.OffsetY, direction);
         }
 
         /// <summary>Checks if the block can move in a given direction.</summary>
-        /// <param name="blockToMove">The block that should be checked.</param>
-        /// <param name="direction">The direction of the displacement. 0 = down, 1 = left, 2 = right</param>
+        /// <param name="block">The structure to check.</param>
+        /// <param name="offsetX">The block its x offset from the playing field.</param>
+        /// <param name="offsetX">The block its y offset from the playing field.</param>
+        /// <param name="direction">The direction of the displacement. 0 = down, 1 = left, 2 = right, default = stay</param>
         public bool canBlockMove(bool[][] block, sbyte offsetX, sbyte offsetY, sbyte direction = -1)
         {
             sbyte displaceX = 0, displaceY = 0;

@@ -30,6 +30,7 @@ namespace Practicum.Tetris
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Viewport view;
+        InputHelper input;
 
         //gamestate
         byte gameState, reserveGameState;
@@ -65,6 +66,8 @@ namespace Practicum.Tetris
         protected override void Initialize()
         { 
             base.Initialize();
+
+            input = new InputHelper();
 
             // window sizing
             view = GraphicsDevice.Viewport;
@@ -123,7 +126,29 @@ namespace Practicum.Tetris
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            // base updates
             gameState = reserveGameState;
+            input.Update(gameTime);
+
+            // handle user inputs
+            if (input.KeyPressed(Keys.A) && field.canBlockMove(tetrisBlock,1))
+            { tetrisBlock.move(1); }
+
+            if (input.KeyPressed(Keys.D) && field.canBlockMove(tetrisBlock, 2))
+            { tetrisBlock.move(2); }
+
+            if (input.IsKeyDown(Keys.S))
+            {
+                // move all the way down
+                while(field.canBlockMove(tetrisBlock, 0))
+                { tetrisBlock.move(); }
+
+                // TODO: code for copying block to field and reseting the block
+            }
+
+            if (input.KeyPressed(Keys.Q)) { tetrisBlock.turnAntiClockwise(field); }
+
+            if (input.KeyPressed(Keys.E)) { tetrisBlock.turnClockwise(field); }
 
             //movement tick
             if (moveTimer >= moveTimerLim)
@@ -132,13 +157,11 @@ namespace Practicum.Tetris
 
                 //move block
                 if(field.canBlockMove(tetrisBlock, 0))
-                { tetrisBlock.moveDown(); }
+                { tetrisBlock.move(); }
                 else
                 {
-                    // code for copying block to field and reseting the block
+                    // TODO: code for copying block to field and reseting the block
                 }
-                
-
             } else { moveTimer += gameTime.ElapsedGameTime.Milliseconds; }
 
             base.Update(gameTime);

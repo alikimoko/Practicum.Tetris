@@ -13,6 +13,8 @@ namespace Practicum.Tetris
         private byte color;
         public byte Color { get { return color; } }
 
+        Random rand = new Random();
+
         private static int prevBlock;
         public static TetrisBlock createBlock(byte color = 0, int blockKind = -1)
         {
@@ -86,12 +88,25 @@ namespace Practicum.Tetris
             colorBlock(color);
         }
 
-        public void moveDown()
+        /// <summary>Move in the given direction.</summary>
+        /// <param name="direction">0 = down, 1 = left, 2 = right, default = down</param>
+        public void move(byte direction = 0)
         {
-            offsetY += 1;
+            switch (direction)
+            {
+                case 0:
+                    offsetY += 1;
+                    break;
+                case 1:
+                    offsetX -= 1;
+                    break;
+                case 2:
+                    offsetX += 1;
+                    break;
+            }
         }
 
-        public virtual void turnLeft()
+        public virtual void turnClockwise(PlayingField field)
         {
             bool[][] tempBlockStruc = new bool[4][];
             for (int i = 0; i < 4; i++)
@@ -104,10 +119,31 @@ namespace Practicum.Tetris
             tempBlockStruc[0][2] = fieldStruc[1][0];    tempBlockStruc[1][2] = fieldStruc[1][1];    tempBlockStruc[2][2] = fieldStruc[1][2];    tempBlockStruc[3][2] = fieldStruc[1][3];
             tempBlockStruc[0][3] = fieldStruc[0][0];    tempBlockStruc[1][3] = fieldStruc[0][1];    tempBlockStruc[2][3] = fieldStruc[0][2];    tempBlockStruc[3][3] = fieldStruc[0][3];
 
-            fieldStruc = tempBlockStruc;
+            if(field.canBlockMove(tempBlockStruc, offsetX, offsetY))
+            { fieldStruc = tempBlockStruc; }
+            else
+            {
+                // check if the turn is posible if the block displaces one x
+                if (rand.Next(2) == 0)
+                {
+                    if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX - 1), offsetY))
+                    {
+                        fieldStruc = tempBlockStruc;
+                        offsetX -= 1;
+                    }
+                }
+                else
+                {
+                    if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX + 1), offsetY))
+                    {
+                        fieldStruc = tempBlockStruc;
+                        offsetX += 1;
+                    }
+                }
+            }
         }
 
-        public virtual void turnRight()
+        public virtual void turnAntiClockwise(PlayingField field)
         {
             bool[][] tempBlockStruc = new bool[4][];
             for (int i = 0; i < 4; i++)
@@ -120,7 +156,28 @@ namespace Practicum.Tetris
             tempBlockStruc[0][2] = fieldStruc[2][3]; tempBlockStruc[1][2] = fieldStruc[2][2]; tempBlockStruc[2][2] = fieldStruc[2][1]; tempBlockStruc[3][2] = fieldStruc[2][0];
             tempBlockStruc[0][3] = fieldStruc[3][3]; tempBlockStruc[1][3] = fieldStruc[3][2]; tempBlockStruc[2][3] = fieldStruc[3][1]; tempBlockStruc[3][3] = fieldStruc[3][0];
 
-            fieldStruc = tempBlockStruc;
+            if (field.canBlockMove(tempBlockStruc, offsetX, offsetY))
+            { fieldStruc = tempBlockStruc; }
+            else
+            {
+                // check if the turn is posible if the block displaces one x
+                if (rand.Next(2) == 0)
+                {
+                    if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX - 1), offsetY))
+                    {
+                        fieldStruc = tempBlockStruc;
+                        offsetX -= 1;
+                    }
+                }
+                else
+                {
+                    if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX + 1), offsetY))
+                    {
+                        fieldStruc = tempBlockStruc;
+                        offsetX += 1;
+                    }
+                }
+            }
         }
 
 
