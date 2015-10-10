@@ -1,13 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
 namespace Practicum.Tetris
 {
@@ -43,10 +36,13 @@ namespace Practicum.Tetris
         byte fieldWidth, fieldHeight;
         bool isColor;
         int score = 0;
+        bool newBlockNeeded;
 
         //timers
         int moveTimer = 0;
-        int moveTimerLim, moveTimerLimBase;
+        int moveTimerLim, newBlockTimer;
+        const int moveTimerLimBase = 1000,
+                  newBlockTimerLim = 250;
 
         //sprites
         Texture2D[] blockSprites;
@@ -83,11 +79,11 @@ namespace Practicum.Tetris
             fieldWidth = 12; fieldHeight = 20;
             field = new PlayingField(fieldWidth, fieldHeight);
 
-            // blocks
-            tetrisBlock = TetrisBlock.createBlock();
-
             //timers
-            moveTimerLim = 1000; moveTimerLimBase = 1000;
+            moveTimerLim = moveTimerLimBase;
+            newBlockTimer = newBlockTimerLim;
+
+            newBlockNeeded = true;
 
         }
 
@@ -130,39 +126,58 @@ namespace Practicum.Tetris
             gameState = reserveGameState;
             input.Update(gameTime);
 
-            // handle user inputs
-            if (input.KeyPressed(Keys.A) && field.canBlockMove(tetrisBlock,1))
-            { tetrisBlock.move(1); }
-
-            if (input.KeyPressed(Keys.D) && field.canBlockMove(tetrisBlock, 2))
-            { tetrisBlock.move(2); }
-
-            if (input.IsKeyDown(Keys.S))
+            // make new blocks
+            if (newBlockNeeded)
             {
-                // move all the way down
-                while(field.canBlockMove(tetrisBlock, 0))
-                { tetrisBlock.move(); }
-
-                // TODO: code for copying block to field and reseting the block
-            }
-
-            if (input.KeyPressed(Keys.Q)) { tetrisBlock.turnAntiClockwise(field); }
-
-            if (input.KeyPressed(Keys.E)) { tetrisBlock.turnClockwise(field); }
-
-            //movement tick
-            if (moveTimer >= moveTimerLim)
-            {
-                moveTimer = moveTimer % moveTimerLim;
-
-                //move block
-                if(field.canBlockMove(tetrisBlock, 0))
-                { tetrisBlock.move(); }
-                else
+                if (newBlockTimer >= newBlockTimerLim)
                 {
-                    // TODO: code for copying block to field and reseting the block
+                    tetrisBlock = TetrisBlock.createBlock();
+                    newBlockNeeded = false;
                 }
-            } else { moveTimer += gameTime.ElapsedGameTime.Milliseconds; }
+                else
+                { newBlockTimer += gameTime.ElapsedGameTime.Milliseconds; }
+            }
+            
+            if(tetrisBlock != null)
+            {
+                // handle user inputs
+                if (input.KeyPressed(Keys.A) && field.canBlockMove(tetrisBlock, 1))
+                { tetrisBlock.move(1); }
+
+                if (input.KeyPressed(Keys.D) && field.canBlockMove(tetrisBlock, 2))
+                { tetrisBlock.move(2); }
+
+                if (input.IsKeyDown(Keys.S))
+                {
+                    // move all the way down
+                    while (field.canBlockMove(tetrisBlock, 0))
+                    { tetrisBlock.move(); }
+
+                    field.placeBlock(tetrisBlock);
+                    resetBlock();
+                }
+
+                if (input.KeyPressed(Keys.Q)) { tetrisBlock.turnAntiClockwise(field); }
+
+                if (input.KeyPressed(Keys.E)) { tetrisBlock.turnClockwise(field); }
+
+                //movement tick
+                if (moveTimer >= moveTimerLim &&
+                    tetrisBlock != null) // if block gets placed by user letting the block fall (verry small chance, but would cause nullpointer exeptions)
+                {
+                    moveTimer = moveTimer % moveTimerLim;
+
+                    //move block
+                    if (field.canBlockMove(tetrisBlock, 0))
+                    { tetrisBlock.move(); }
+                    else
+                    {
+                        field.placeBlock(tetrisBlock);
+                        resetBlock();
+                    }
+                }
+                else { moveTimer += gameTime.ElapsedGameTime.Milliseconds; }
+            }
 
             base.Update(gameTime);
         }
@@ -189,14 +204,17 @@ namespace Practicum.Tetris
                 }
             }
             
-            for(int y = 0; y < 4; y++)
+            if(tetrisBlock != null)
             {
-                for (int x = 0; x < 4; x++)
+                for (int y = 0; y < 4; y++)
                 {
-                    if (tetrisBlock.checkGridStruct(y, x))
+                    for (int x = 0; x < 4; x++)
                     {
-                        if (isColor) { spriteBatch.Draw(blockSprites[tetrisBlock.checkGridCol(y, x)], new Vector2((tetrisBlock.OffsetX + x) * 20, (tetrisBlock.OffsetY + y) * 20), Color.White); }
-                        else { spriteBatch.Draw(blockSprites[1], new Vector2((tetrisBlock.OffsetX + x) * 20, (tetrisBlock.OffsetY + y) * 20), Color.White); }
+                        if (tetrisBlock.checkGridStruct(y, x))
+                        {
+                            if (isColor) { spriteBatch.Draw(blockSprites[tetrisBlock.checkGridCol(y, x)], new Vector2((tetrisBlock.OffsetX + x) * 20, (tetrisBlock.OffsetY + y) * 20), Color.White); }
+                            else { spriteBatch.Draw(blockSprites[1], new Vector2((tetrisBlock.OffsetX + x) * 20, (tetrisBlock.OffsetY + y) * 20), Color.White); }
+                        }
                     }
                 }
             }
@@ -213,6 +231,13 @@ namespace Practicum.Tetris
         {
             score += points;
             moveTimerLim = moveTimerLimBase - (score / 100);
+        }
+
+        private void resetBlock()
+        {
+            newBlockNeeded = true;
+            newBlockTimer = 0;
+            tetrisBlock = null;
         }
 
     }

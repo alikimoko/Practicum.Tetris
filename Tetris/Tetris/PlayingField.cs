@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Practicum.Tetris
+﻿namespace Practicum.Tetris
 {
     class PlayingField : GridObject
     {
@@ -120,6 +115,24 @@ namespace Practicum.Tetris
             return true;
         }
 
+        public void placeBlock(TetrisBlock block)
+        {
+            for(int y = 0; y < 4; y++)
+            {
+                for(int x = 0; x < 4; x++)
+                {
+                    if (block.checkGridStruct(y, x) &&
+                        block.OffsetX + x >= 0 &&
+                        block.OffsetX + x < width &&
+                        block.OffsetY + y < height)
+                    {
+                        fieldStruc[y + block.OffsetY][x + block.OffsetX] = true;
+                        if (isColor) { fieldCol[y + block.OffsetY][x + block.OffsetX] = block.Color; }
+                    }
+                }
+            }
+        }
+
         /// <summary>Completely cleares the playing field.</summary>
         public void reset()
         {
@@ -132,6 +145,5 @@ namespace Practicum.Tetris
                 }
             }
         }
-
     }
 }

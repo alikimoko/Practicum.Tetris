@@ -110,90 +110,28 @@ namespace Practicum.Tetris
         {
             bool[][] tempBlockStruc = new bool[4][];
             for (int i = 0; i < 4; i++)
-            {
-                tempBlockStruc[i] = new bool[4];
-            }
+            { tempBlockStruc[i] = new bool[4]; }
 
             tempBlockStruc[0][0] = fieldStruc[3][0];    tempBlockStruc[1][0] = fieldStruc[3][1];    tempBlockStruc[2][0] = fieldStruc[3][2];    tempBlockStruc[3][0] = fieldStruc[3][3];
             tempBlockStruc[0][1] = fieldStruc[2][0];    tempBlockStruc[1][1] = fieldStruc[2][1];    tempBlockStruc[2][1] = fieldStruc[2][2];    tempBlockStruc[3][1] = fieldStruc[2][3];
             tempBlockStruc[0][2] = fieldStruc[1][0];    tempBlockStruc[1][2] = fieldStruc[1][1];    tempBlockStruc[2][2] = fieldStruc[1][2];    tempBlockStruc[3][2] = fieldStruc[1][3];
             tempBlockStruc[0][3] = fieldStruc[0][0];    tempBlockStruc[1][3] = fieldStruc[0][1];    tempBlockStruc[2][3] = fieldStruc[0][2];    tempBlockStruc[3][3] = fieldStruc[0][3];
 
-            if(field.canBlockMove(tempBlockStruc, offsetX, offsetY))
-            { fieldStruc = tempBlockStruc; }
-            else
-            {
-                // check if the turn is posible if the block displaces one x
-                if (rand.Next(2) == 0)
-                {
-                    if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX - 1), offsetY))
-                    {
-                        fieldStruc = tempBlockStruc;
-                        offsetX -= 1;
-                    } else if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX + 1), offsetY))
-                    {
-                        fieldStruc = tempBlockStruc;
-                        offsetX += 1;
-                    }
-                }
-                else
-                {
-                    if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX + 1), offsetY))
-                    {
-                        fieldStruc = tempBlockStruc;
-                        offsetX += 1;
-                    } else if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX - 1), offsetY))
-                    {
-                        fieldStruc = tempBlockStruc;
-                        offsetX -= 1;
-                    }
-                }
-            }
+            checkRotation(field, tempBlockStruc);
         }
 
         public virtual void turnAntiClockwise(PlayingField field)
         {
             bool[][] tempBlockStruc = new bool[4][];
             for (int i = 0; i < 4; i++)
-            {
-                tempBlockStruc[i] = new bool[4];
-            }
+            { tempBlockStruc[i] = new bool[4]; }
 
             tempBlockStruc[0][0] = fieldStruc[0][3]; tempBlockStruc[1][0] = fieldStruc[0][2]; tempBlockStruc[2][0] = fieldStruc[0][1]; tempBlockStruc[3][0] = fieldStruc[0][0];
             tempBlockStruc[0][1] = fieldStruc[1][3]; tempBlockStruc[1][1] = fieldStruc[1][2]; tempBlockStruc[2][1] = fieldStruc[1][1]; tempBlockStruc[3][1] = fieldStruc[1][0];
             tempBlockStruc[0][2] = fieldStruc[2][3]; tempBlockStruc[1][2] = fieldStruc[2][2]; tempBlockStruc[2][2] = fieldStruc[2][1]; tempBlockStruc[3][2] = fieldStruc[2][0];
             tempBlockStruc[0][3] = fieldStruc[3][3]; tempBlockStruc[1][3] = fieldStruc[3][2]; tempBlockStruc[2][3] = fieldStruc[3][1]; tempBlockStruc[3][3] = fieldStruc[3][0];
 
-            if (field.canBlockMove(tempBlockStruc, offsetX, offsetY))
-            { fieldStruc = tempBlockStruc; }
-            else
-            {
-                // check if the turn is posible if the block displaces one x
-                if (rand.Next(2) == 0)
-                {
-                    if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX - 1), offsetY))
-                    {
-                        fieldStruc = tempBlockStruc;
-                        offsetX -= 1;
-                    } else if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX + 1), offsetY))
-                    {
-                        fieldStruc = tempBlockStruc;
-                        offsetX += 1;
-                    }
-                }
-                else
-                {
-                    if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX + 1), offsetY))
-                    {
-                        fieldStruc = tempBlockStruc;
-                        offsetX += 1;
-                    } else if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX - 1), offsetY))
-                    {
-                        fieldStruc = tempBlockStruc;
-                        offsetX -= 1;
-                    }
-                }
-            }
+            checkRotation(field, tempBlockStruc);
         }
 
 
@@ -213,6 +151,42 @@ namespace Practicum.Tetris
                 {
                     if (fieldStruc[i][j]) { fieldCol[i][j] = color; }
                     else { fieldCol[i][j] = 0; }
+                }
+            }
+        }
+
+        private void checkRotation(PlayingField field, bool[][] tempBlockStruc)
+        {
+            if (field.canBlockMove(tempBlockStruc, offsetX, offsetY))
+            { fieldStruc = tempBlockStruc; }
+            else
+            {
+                // check if the turn is posible if the block displaces one x
+                if (rand.Next(2) == 0)
+                {
+                    if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX - 1), offsetY))
+                    {
+                        fieldStruc = tempBlockStruc;
+                        offsetX -= 1;
+                    }
+                    else if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX + 1), offsetY))
+                    {
+                        fieldStruc = tempBlockStruc;
+                        offsetX += 1;
+                    }
+                }
+                else
+                {
+                    if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX + 1), offsetY))
+                    {
+                        fieldStruc = tempBlockStruc;
+                        offsetX += 1;
+                    }
+                    else if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX - 1), offsetY))
+                    {
+                        fieldStruc = tempBlockStruc;
+                        offsetX -= 1;
+                    }
                 }
             }
         }
