@@ -130,6 +130,10 @@ namespace Practicum.Tetris
                     {
                         fieldStruc = tempBlockStruc;
                         offsetX -= 1;
+                    } else if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX + 1), offsetY))
+                    {
+                        fieldStruc = tempBlockStruc;
+                        offsetX += 1;
                     }
                 }
                 else
@@ -138,6 +142,10 @@ namespace Practicum.Tetris
                     {
                         fieldStruc = tempBlockStruc;
                         offsetX += 1;
+                    } else if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX - 1), offsetY))
+                    {
+                        fieldStruc = tempBlockStruc;
+                        offsetX -= 1;
                     }
                 }
             }
@@ -167,6 +175,10 @@ namespace Practicum.Tetris
                     {
                         fieldStruc = tempBlockStruc;
                         offsetX -= 1;
+                    } else if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX + 1), offsetY))
+                    {
+                        fieldStruc = tempBlockStruc;
+                        offsetX += 1;
                     }
                 }
                 else
@@ -175,6 +187,10 @@ namespace Practicum.Tetris
                     {
                         fieldStruc = tempBlockStruc;
                         offsetX += 1;
+                    } else if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX - 1), offsetY))
+                    {
+                        fieldStruc = tempBlockStruc;
+                        offsetX -= 1;
                     }
                 }
             }
