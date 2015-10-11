@@ -154,7 +154,9 @@ namespace Practicum.Tetris
                     { tetrisBlock.move(); }
 
                     field.placeBlock(tetrisBlock);
+                    field.checkClearedRows(tetrisBlock.OffsetY);
                     resetBlock();
+                    // TODO: score
                 }
 
                 if (input.KeyPressed(Keys.Q)) { tetrisBlock.turnAntiClockwise(field); }
@@ -173,7 +175,9 @@ namespace Practicum.Tetris
                     else
                     {
                         field.placeBlock(tetrisBlock);
+                        field.checkClearedRows(tetrisBlock.OffsetY);
                         resetBlock();
+                        // TODO: score
                     }
                 }
                 else { moveTimer += gameTime.ElapsedGameTime.Milliseconds; }

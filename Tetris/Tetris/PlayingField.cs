@@ -1,4 +1,6 @@
-﻿namespace Practicum.Tetris
+﻿using System.Collections.Generic;
+
+namespace Practicum.Tetris
 {
     class PlayingField : GridObject
     {
@@ -15,47 +17,65 @@
             reset();
         }
 
-        /// <summary>
-        /// Moves the rows after the row has been cleared.
-        /// </summary>
-        /// <param name="rowNum">The row that has been cleared.</param>
-        public void moveRows(byte rowNum)
+        /// <summary>Checks if rows have been cleared.</summary>
+        /// <param name="blockOffset">The offset of the placed block.</param>
+        public void checkClearedRows(sbyte blockOffset)
         {
-            moveRows(rowNum, 1);
-        }
+            List<byte> clearedRows = new List<byte>();
 
-        /// <summary>
-        /// Moves the rows after a number of rows has been cleared.
-        /// </summary>
-        /// <param name="lowestRow">The row lowest in the field that has been cleared.</param>
-        /// <param name="numOfRows">The number of rows that has been cleared.</param>
-        public void moveRows(byte lowestRow, byte numOfRows)
-        {
-            //TODO: wat als 1 rij wel,1 rij niet dan weer wel?
-            int i;
-            
-            // move the rows to the new lowest position
-            for(i = lowestRow-numOfRows; i>=numOfRows; i--)
+            for(int y=3; y >= 0; y--) // only check the rows where the block has been placed
             {
-                fieldStruc[i + numOfRows] = fieldStruc[i];
-                fieldCol[i + numOfRows] = fieldCol[i];
+                if(blockOffset + y < height) // inside the field
+                {
+                    for(int x = 0; x < width; x++)
+                    {
+                        if(!fieldStruc[blockOffset + y][x])
+                        {
+                            // no block here -> row not complete
+                            break;
+                        }
+                        if(x == width - 1)
+                        {
+                            // entire row filled
+                            clearedRows.Add((byte)(blockOffset + y));
+                        }
+                    }
+                }
             }
 
-            // make empty rows at the top
-            while (i >= 0)
+            if (clearedRows.Count > 0)
             {
-                fieldStruc[i] = new bool[width];
-                fieldCol[i] = new byte[width];
+                // rows have been cleared
+                moveRows(clearedRows);
+            }
+
+        }
+
+        /// <summary>Moves the rows after the row has been cleared.</summary>
+        /// <param name="clearedRows">List of the rows that have been completed.</param>
+        private void moveRows(List<byte> clearedRows)
+        {
+            for(int rows = 0; rows < clearedRows.Count; rows++)
+            {
+                // move the rows to the new position
+                for (int rowNum = clearedRows[rows] + rows; rowNum > 0; rowNum--)
+                {
+                    fieldStruc[rowNum] = fieldStruc[rowNum - 1];
+                    if (isColor) { fieldCol[rowNum] = fieldCol[rowNum - 1]; }
+                }
+
+                // make a new empty row on top
+                fieldStruc[0] = new bool[width];
+                if (isColor) { fieldCol[0] = new byte[width]; }
 
                 for (int j = 0; j < width; j++)
                 {
-                    fieldStruc[i][j] = false;
-                    fieldCol[i][j] = 0;
+                    fieldStruc[0][j] = false;
+                    if (isColor) { fieldCol[0][j] = 0; }
                 }
-                i--;
             }
         }
-        
+
         /// <summary>Checks if the block can move in a given direction.</summary>
         /// <param name="blockToMove">The block that should be checked.</param>
         /// <param name="direction">The direction of the displacement. 0 = down, 1 = left, 2 = right, default = stay</param>
