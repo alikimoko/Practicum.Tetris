@@ -9,7 +9,7 @@ namespace Practicum.Tetris
                    false, true,  true,  false,
                    false, true,  true,  false,
                    false, false, false, false,
-                   blockSprites, field, moveTimerLim, isColor) { }
+                   blockSprites, field, moveTimerLim, BlockType.Square, isColor) { }
 
         public override void turnClockwise(PlayingField field) { }
         public override void turnAntiClockwise(PlayingField field) { }
@@ -19,10 +19,10 @@ namespace Practicum.Tetris
     {
         public blockLineH(Texture2D[] blockSprites, PlayingField field, int moveTimerLim, bool isColor)
             : base(false, false, false, false,
-                   false, false, false, false,
                    true,  true,  true,  true,
                    false, false, false, false,
-                   blockSprites, field, moveTimerLim, isColor) { }
+                   false, false, false, false,
+                   blockSprites, field, moveTimerLim, BlockType.LineH, isColor) { }
     }
 
     class blockZ:TetrisBlock
@@ -32,7 +32,7 @@ namespace Practicum.Tetris
                    false, true,  true,  false,
                    false, false, true,  true,
                    false, false, false, false,
-                   blockSprites, field, moveTimerLim, isColor) { }
+                   blockSprites, field, moveTimerLim, BlockType.Z, isColor) { }
     }
 
     class blockReverseZ : TetrisBlock
@@ -42,7 +42,7 @@ namespace Practicum.Tetris
                    false, false, true,  true,
                    false, true,  true,  false,
                    false, false, false, false,
-                   blockSprites, field, moveTimerLim, isColor) { }
+                   blockSprites, field, moveTimerLim, BlockType.ReverseZ, isColor) { }
     }
 
     class blockFlatReverseL:TetrisBlock
@@ -52,7 +52,7 @@ namespace Practicum.Tetris
                    false, true,  false, false,
                    false, true,  true,  true,
                    false, false, false, false,
-                   blockSprites, field, moveTimerLim, isColor) { }
+                   blockSprites, field, moveTimerLim, BlockType.FlatReverseL, isColor) { }
     }
 
     class blockFlatL:TetrisBlock
@@ -62,7 +62,7 @@ namespace Practicum.Tetris
                    false, false, true,  false,
                    true,  true,  true,  false,
                    false, false, false, false,
-                   blockSprites, field, moveTimerLim, isColor) { }
+                   blockSprites, field, moveTimerLim, BlockType.FlatL, isColor) { }
     }
 
     class blockLineV : TetrisBlock
@@ -72,7 +72,7 @@ namespace Practicum.Tetris
                    false, true, false, false,
                    false, true, false, false,
                    false, true, false, false,
-                   blockSprites, field, moveTimerLim, isColor) { }
+                   blockSprites, field, moveTimerLim, BlockType.LineV, isColor) { }
     }
 
     class blockRoof : TetrisBlock
@@ -82,6 +82,6 @@ namespace Practicum.Tetris
                    false, false, true,  false,
                    false, true,  true,  true,
                    false, false, false, false,
-                   blockSprites, field, moveTimerLim, isColor) { }
+                   blockSprites, field, moveTimerLim, BlockType.Roof, isColor) { }
     }
 }

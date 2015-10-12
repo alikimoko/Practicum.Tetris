@@ -6,7 +6,7 @@ namespace Practicum.Tetris
 {
 
     enum Colors : byte { Blank, Blue, Green, Orange, Purple, Red, Yellow }
-    enum GameStates : byte { Menu, Playing }
+    enum GameStates : byte { Menu, Playing, GameOver }
     enum Movement : byte { Stay, Down, Left, Right }
 
     /// <summary>
@@ -140,6 +140,7 @@ namespace Practicum.Tetris
                         // create the blocks
                         tetrisBlockCurrent = TetrisBlock.createBlock(blockSprites, field, moveTimerLim, isColor);
                         tetrisBlockNext = TetrisBlock.createBlock(blockSprites, field, moveTimerLim, isColor);
+                        tetrisBlockCurrent.placeBlock();
                     }
 
                     break;
@@ -153,6 +154,13 @@ namespace Practicum.Tetris
                         {
                             tetrisBlockCurrent = tetrisBlockNext;
                             tetrisBlockNext = TetrisBlock.createBlock(blockSprites, field, moveTimerLim, isColor);
+                            if (!tetrisBlockCurrent.placeBlock())
+                            {
+                                // could not place the block
+                                // GAME OVER
+                                reserveGameState = GameStates.GameOver;
+                                break;
+                            }
                         }
                         else
                         { newBlockTimer += gameTime.ElapsedGameTime.Milliseconds; }
@@ -175,9 +183,11 @@ namespace Practicum.Tetris
                     }
 
                     break;
-            }
 
-            
+                case GameStates.GameOver:
+                    // code for game over
+                    break;
+            }
 
             base.Update(gameTime);
         }
@@ -199,34 +209,15 @@ namespace Practicum.Tetris
 
                 case GameStates.Playing:
 
-                    for (int y = 0; y < fieldHeight; y++)
-                    {
-                        for (int x = 0; x < fieldWidth; x++)
-                        {
-                            if (field.checkGridStruct(y, x))
-                            {
-                                if (isColor) { spriteBatch.Draw(blockSprites[field.checkGridCol(y, x)], new Vector2(x * 20, y * 20), Color.White); }
-                                else { spriteBatch.Draw(blockSprites[1], new Vector2(x * 20, y * 20), Color.White); }
-                            }
-                            else { spriteBatch.Draw(blockSprites[0], new Vector2(x * 20, y * 20), Color.White); }
-                        }
-                    }
+                    field.Draw(gameTime, spriteBatch);
 
                     if (tetrisBlockCurrent != null)
-                    {
-                        for (int y = 0; y < 4; y++)
-                        {
-                            for (int x = 0; x < 4; x++)
-                            {
-                                if (tetrisBlockCurrent.checkGridStruct(y, x))
-                                {
-                                    if (isColor) { spriteBatch.Draw(blockSprites[tetrisBlockCurrent.checkGridCol(y, x)], new Vector2((tetrisBlockCurrent.OffsetX + x) * 20, (tetrisBlockCurrent.OffsetY + y) * 20), Color.White); }
-                                    else { spriteBatch.Draw(blockSprites[1], new Vector2((tetrisBlockCurrent.OffsetX + x) * 20, (tetrisBlockCurrent.OffsetY + y) * 20), Color.White); }
-                                }
-                            }
-                        }
-                    }
+                    { tetrisBlockCurrent.Draw(gameTime, spriteBatch); }
 
+                    break;
+
+                case GameStates.GameOver:
+                    spriteBatch.Draw(blockSprites[2], Vector2.Zero, Color.White);
                     break;
             }
 

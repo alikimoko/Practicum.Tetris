@@ -5,6 +5,8 @@ using System;
 
 namespace Practicum.Tetris
 {
+    enum BlockType : byte { Square, LineH, LineV, Roof, Z, ReverseZ, FlatL, FlatReverseL }
+
     class TetrisBlock : GridObject
     {
         private sbyte offsetX, offsetY;
@@ -18,7 +20,10 @@ namespace Practicum.Tetris
         int moveTimer = 0, moveTimerLim;
 
         private byte color;
-        public byte Color { get { return color; } }
+        public byte blockColor { get { return color; } }
+
+        private BlockType blockType;
+        public BlockType BlockType { get { return blockType; } }
 
         Random rand = new Random();
 
@@ -83,11 +88,12 @@ namespace Practicum.Tetris
                            bool x1y2, bool x2y2, bool x3y2, bool x4y2,
                            bool x1y3, bool x2y3, bool x3y3, bool x4y3,
                            bool x1y4, bool x2y4, bool x3y4, bool x4y4,
-                           Texture2D[] blockSprites, PlayingField field, int moveTimerLim, bool isColor) :
+                           Texture2D[] blockSprites, PlayingField field, int moveTimerLim, BlockType blockType, bool isColor) :
             base(4, 4, blockSprites, isColor)
         {
             this.field = field;
             this.moveTimerLim = moveTimerLim;
+            this.blockType = blockType;
 
             fillStruct(x1y1, x2y1, x3y1, x4y1, x1y2, x2y2, x3y2, x4y2, x1y3, x2y3, x3y3, x4y3, x1y4, x2y4, x3y4, x4y4);
             
@@ -96,7 +102,6 @@ namespace Practicum.Tetris
                 color = (byte)rand.Next(1, 7);
                 colorBlock();
             }
-            
         }
 
         /// <summary>Move in the given direction.</summary>
@@ -147,6 +152,92 @@ namespace Practicum.Tetris
             if (isColor) { colorBlock(); }
         }
 
+        /// <summary>Checks if the block can be placed. Places when posible, if not posible it's game over.</summary>
+        public bool placeBlock()
+        {
+            switch (blockType)
+            {
+                case BlockType.Roof:
+                    return placeBlock(1, 1, 3);
+
+                case BlockType.LineH:
+                    return placeBlock(1, 0, 3);
+
+                case BlockType.LineV:
+                    return placeBlock(0, 1, 1);
+
+                case BlockType.FlatL:
+                    return placeBlock(1, 0, 2);
+
+                case BlockType.FlatReverseL:
+                case BlockType.Z:
+                case BlockType.ReverseZ:
+                    return placeBlock(1, 1, 3);
+
+                case BlockType.Square:
+                default:
+                    // square
+                    return placeBlock(1, 1, 2);
+
+            }
+        }
+
+        private bool placeBlock(byte topmost, byte leftmost, byte rightmost)
+        {
+            offsetY = (sbyte)(0 - topmost);
+
+            if (field.canBlockMove(fieldStruc, (sbyte)((field.Width / 2) - 3), offsetY))
+            {
+                // first try the centre
+                offsetX = (sbyte)((field.Width / 2) - 3);
+            }
+            else
+            {
+                // check bounds
+                int leftBound = 0 - leftmost,
+                    rightBound = field.Width - 1 - rightmost;
+
+                if(rand.Next(2) == 0)
+                {
+                    // start checking from the left
+                    for(int i = leftBound; i <= rightBound; i++)
+                    {
+                        if(field.canBlockMove(fieldStruc, (sbyte)i, offsetY))
+                        {
+                            offsetX = (sbyte)i;
+                            break;
+                        }
+
+                        if(i == rightBound)
+                        {
+                            // couldn't place it
+                            // take this as game over
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    // start checking from the right
+                    for (int i = rightBound; i >= leftBound; i--)
+                    {
+                        if (field.canBlockMove(fieldStruc, (sbyte)i, offsetY))
+                        {
+                            offsetX = (sbyte)i;
+                            break;
+                        }
+
+                        if (i == leftBound)
+                        {
+                            // couldn't place it
+                            // take this as game over
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true; // successfully placed
+        }
 
         private void fillStruct(bool x1y1, bool x2y1, bool x3y1, bool x4y1, bool x1y2, bool x2y2, bool x3y2, bool x4y2, bool x1y3, bool x2y3, bool x3y3, bool x4y3, bool x1y4, bool x2y4, bool x3y4, bool x4y4)
         {
@@ -223,7 +314,10 @@ namespace Practicum.Tetris
             if (input.KeyPressed(Keys.S))
             {
                 if (field.canBlockMove(this, Movement.Down)) // can still go lower
-                { move(); }
+                {
+                    move();
+                    moveTimer = 0;
+                }
                 else
                 { return false; } // may no longer move
             }
@@ -233,8 +327,8 @@ namespace Practicum.Tetris
                 // move all the way down
                 while (field.canBlockMove(this, Movement.Down))
                 { move(); }
+                moveTimer = 0;
                 return false; // may no longer move
-                // TODO: score
             }
 
             if (input.KeyPressed(Keys.Q)) { turnAntiClockwise(field); }
@@ -254,7 +348,23 @@ namespace Practicum.Tetris
             }
             else { moveTimer += gameTime.ElapsedGameTime.Milliseconds; }
 
-            return true; // was able to go down
+            return true; // was able to go down if it had to
         }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                for (int x = 0; x < 4; x++)
+                {
+                    if (checkGridStruct(y, x))
+                    {
+                        if (isColor) { spriteBatch.Draw(blockSprites[checkGridCol(y, x)], new Vector2((OffsetX + x) * 20, (OffsetY + y) * 20), Color.White); }
+                        else { spriteBatch.Draw(blockSprites[1], new Vector2((OffsetX + x) * 20, (OffsetY + y) * 20), Color.White); }
+                    }
+                }
+            }
+        }
+
     }
 }

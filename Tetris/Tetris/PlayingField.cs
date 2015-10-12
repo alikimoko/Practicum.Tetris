@@ -26,7 +26,7 @@ namespace Practicum.Tetris
 
             for(int y=3; y >= 0; y--) // only check the rows where the block has been placed
             {
-                if(blockOffset + y < height) // inside the field
+                if(blockOffset + y < height && blockOffset >= 0) // inside the field
                 {
                     for(int x = 0; x < width; x++)
                     {
@@ -116,16 +116,20 @@ namespace Practicum.Tetris
                 for(int x = 0; x < 4; x++)
                 {
                     // at edge of playing field?
-                    if(checkGridStruct(block, y,x) && (offsetY + y + displaceY >= height ||
-                                                       offsetX + x + displaceX >= width ||
-                                                       offsetX + x + displaceX < 0))
+                    if(checkGridStruct(block, y, x) && (offsetY + y + displaceY < 0 || // cel above the field (can only happen after turning some blocks just after they were placed)
+                                                        offsetY + y + displaceY >= height || // cel below the field
+                                                        offsetX + x + displaceX >= width || // cel right of the field
+                                                        offsetX + x + displaceX < 0)) // cel left of the field
                     { return false; }
 
                     // already occupied?
-                    if (offsetY + y + displaceY < height &&
+                    if (offsetY + y + displaceY >= 0 &&
+                        offsetY + y + displaceY < height &&
                         offsetX + x + displaceX < width &&
                         offsetX + x + displaceX >= 0)
-                    { // only empty rows can get outside the field (index out of bounds exeption if this doesn't happen)
+                    {
+                        // only empty rows can get outside the field
+                        // (index out of bounds exeption if this check doesn't happen)
                         if (checkGridStruct(offsetY + y + displaceY, offsetX + x + displaceX) &&
                             checkGridStruct(block, y, x))
                         { return false; }
@@ -148,7 +152,7 @@ namespace Practicum.Tetris
                         block.OffsetY + y < height)
                     {
                         fieldStruc[y + block.OffsetY][x + block.OffsetX] = true;
-                        if (isColor) { fieldCol[y + block.OffsetY][x + block.OffsetX] = block.Color; }
+                        if (isColor) { fieldCol[y + block.OffsetY][x + block.OffsetX] = block.blockColor; }
                     }
                 }
             }
