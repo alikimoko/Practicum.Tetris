@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Practicum.Tetris
 {
@@ -15,77 +16,72 @@ namespace Practicum.Tetris
 
         Random rand = new Random();
 
-        private static int prevBlock;
-        public static TetrisBlock createBlock(byte color = 0, int blockKind = -1)
+        private static sbyte prevBlock = -1;
+        public static TetrisBlock createBlock(Texture2D[] blockSprites, bool isColor = false, sbyte blockKind = -1)
         {
             TetrisBlock block;
+            Random random = new Random();
 
             if (blockKind == -1)
             {
-                Random random = new Random();
-                
                 do
                 {
-                    blockKind = random.Next(9);
+                    blockKind = (sbyte)random.Next(8);
                 } while (blockKind == prevBlock);
             }
             prevBlock = blockKind;
+            
             switch (blockKind)
                 {
                     case 0:
-                    //square
-                        block = color == 0 ? new blockSquare() : new blockSquare(color);
+                        //square
+                        block = new blockSquare(blockSprites, isColor);
                         break;
                     case 1:
                         //horizontal line
-                        block = color == 0 ? new blockLineH() : new blockLineH(color);
+                        block = new blockLineH(blockSprites, isColor);
                         break;
                     case 2:
-                        //vertical line
-                        block = color == 0 ? new blockLineV() : new blockLineV(color);
+                        block = new blockZ(blockSprites, isColor);
                         break;
                     case 3:
-                        block = color == 0 ? new blockZ() : new blockZ(color);
+                        block = new blockReverseZ(blockSprites, isColor);
                         break;
                     case 4:
-                        block = color == 0 ? new blockReverseZ() : new blockReverseZ(color);
+                        block = new blockFlatL(blockSprites, isColor);
                         break;
                     case 5:
-                        block = color == 0 ? new blockFlatL() : new blockFlatL(color);
+                        block = new blockFlatReverseL(blockSprites, isColor);
                         break;
                     case 6:
-                        block = color == 0 ? new blockFlatReverseL() : new blockFlatReverseL(color);
+                        block = new blockLineV(blockSprites, isColor);
                         break;
                     case 7:
-                        block = color == 0 ? new blockC() : new blockC(color);
+                        block = new blockRoof(blockSprites, isColor);
                         break;
-                    case 8:
-                        block = color == 0 ? new blockRoof() : new blockRoof(color);
-                        break;
-                    
                     default:
-                        //default is square dus als er iets mis gaat wordt t een vierkant
-                        block = color == 0 ? new TetrisBlock(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false)
-                                           : new TetrisBlock(false, false, false, false, false, true, true, false, false, true, true, false, false, false, false, false, color);
+                        block = new blockSquare(blockSprites, isColor);
                         break;
-                    
                 }
-            
             
             return block;
         }
-
-        public TetrisBlock(bool x1y1, bool x2y1, bool x3y1, bool x4y1, bool x1y2, bool x2y2, bool x3y2, bool x4y2, bool x1y3, bool x2y3, bool x3y3, bool x4y3, bool x1y4, bool x2y4, bool x3y4, bool x4y4) : base(4, 4)
+        
+        public TetrisBlock(bool x1y1, bool x2y1, bool x3y1, bool x4y1,
+                           bool x1y2, bool x2y2, bool x3y2, bool x4y2,
+                           bool x1y3, bool x2y3, bool x3y3, bool x4y3,
+                           bool x1y4, bool x2y4, bool x3y4, bool x4y4,
+                           Texture2D[] blockSprites, bool isColor) :
+            base(4, 4, blockSprites, isColor)
         {
             fillStruct(x1y1, x2y1, x3y1, x4y1, x1y2, x2y2, x3y2, x4y2, x1y3, x2y3, x3y3, x4y3, x1y4, x2y4, x3y4, x4y4);
-        }
 
-        public TetrisBlock(bool x1y1, bool x2y1, bool x3y1, bool x4y1, bool x1y2, bool x2y2, bool x3y2, bool x4y2, bool x1y3, bool x2y3, bool x3y3, bool x4y3, bool x1y4, bool x2y4, bool x3y4, bool x4y4, byte color) : base(4, 4, true)
-        {
-            this.color = color;
-
-            fillStruct(x1y1, x2y1, x3y1, x4y1, x1y2, x2y2, x3y2, x4y2, x1y3, x2y3, x3y3, x4y3, x1y4, x2y4, x3y4, x4y4);
-            colorBlock(color);
+            if (isColor)
+            {
+                color = (byte)rand.Next(1, 7);
+                colorBlock(color);
+            }
+            
         }
 
         /// <summary>Move in the given direction.</summary>

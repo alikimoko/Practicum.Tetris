@@ -1,4 +1,6 @@
-﻿namespace Practicum.Tetris
+﻿using Microsoft.Xna.Framework.Graphics;
+
+namespace Practicum.Tetris
 {
     class GridObject
     {
@@ -9,11 +11,14 @@
         protected bool[][] fieldStruc;
         protected byte[][] fieldCol;
 
-        public GridObject(byte width, byte height, bool isColor = false)
+        Texture2D[] blockSprites;
+
+        public GridObject(byte width, byte height, Texture2D[] blockSprites, bool isColor = false)
         {
             this.width = width;
             this.height = height;
             this.isColor = isColor;
+            this.blockSprites = blockSprites;
             makeField();
             if (isColor) { makeColorField(); }
         }

@@ -1,198 +1,87 @@
-﻿namespace Practicum.Tetris
+﻿using Microsoft.Xna.Framework.Graphics;
+
+namespace Practicum.Tetris
 {
     class blockSquare:TetrisBlock
     {
-       
-        public blockSquare(byte color)
+        public blockSquare(Texture2D[] blockSprites, bool isColor)
             : base(false, false, false, false,
                    false, true,  true,  false,
                    false, true,  true,  false,
-                   false, false, false, false, color) 
-        {
-        
-        }
-        public blockSquare()
-            : base(false, false, false, false,
-                   false, true,  true,  false,
-                   false, true,  true,  false,
-                   false, false, false, false)
-        {
-
-        }
+                   false, false, false, false,
+                   blockSprites, isColor) { }
 
         public override void turnClockwise(PlayingField field) { }
-
         public override void turnAntiClockwise(PlayingField field) { }
-        
     }
+
     class blockLineH:TetrisBlock
     {
-        
-        public blockLineH(byte color)
+        public blockLineH(Texture2D[] blockSprites, bool isColor)
             : base(false, false, false, false,
                    false, false, false, false,
                    true,  true,  true,  true,
-                   false, false, false, false, color) 
-        {
-        
-        }
-
-        public blockLineH()
-            : base(false, false, false, false,
                    false, false, false, false,
-                   true,  true,  true,  true,
-                   false, false, false, false)
-        {
-
-        }
-
-
+                   blockSprites, isColor) { }
     }
-    class blockLineV:TetrisBlock
-    {
 
-        public blockLineV(byte color)
-            : base(false, true, false, false,
-                   false, true, false, false,
-                   false, true, false, false,
-                   false, true, false, false, color) 
-        {
-        
-        }
-
-        public blockLineV()
-            : base(false, true, false, false,
-                   false, true, false, false,
-                   false, true, false, false,
-                   false, true, false, false)
-        {
-
-        }
-    }
     class blockZ:TetrisBlock
     {
-    
-        public blockZ(byte color)
+        public blockZ(Texture2D[] blockSprites, bool isColor)
             : base(false, false, false, false,
                    false, true,  true,  false,
                    false, false, true,  true,
-                   false, false, false, false, color) 
-        {
-        
-        }
-
-        public blockZ()
-            : base(false, false, false, false,
-                   false, true,  true,  false,
-                   false, false, true,  true,
-                   false, false, false, false)
-        {
-
-        }
+                   false, false, false, false,
+                   blockSprites, isColor) { }
     }
+
     class blockReverseZ : TetrisBlock
     {
-        public blockReverseZ(byte color)
+        public blockReverseZ(Texture2D[] blockSprites, bool isColor)
             : base(false, false, false, false,
                    false, false, true,  true,
                    false, true,  true,  false,
-                   false, false, false, false, color)
-        {
-
-        }
-        
-        public blockReverseZ()
-            : base(false, false, false, false,
-                   false, false, true,  true,
-                   false, true,  true,  false,
-                   false, false, false, false)
-        {
-
-        }
-
-
+                   false, false, false, false,
+                   blockSprites, isColor) { }
     }
+
     class blockFlatReverseL:TetrisBlock
     {
-
-        public blockFlatReverseL(byte color)
+        public blockFlatReverseL(Texture2D[] blockSprites, bool isColor)
             : base(false, false, false, false,
                    false, true,  false, false,
                    false, true,  true,  true,
-                   false, false, false, false, color) 
-        {
-        
-        }
-        
-        public blockFlatReverseL()
-            : base(false, false, false, false,
-                   false, true,  false, false,
-                   false, true,  true,  true,
-                   false, false, false, false)
-        {
-
-        }
-
+                   false, false, false, false,
+                   blockSprites, isColor) { }
     }
+
     class blockFlatL:TetrisBlock
     {
-        public blockFlatL(byte color)
+        public blockFlatL(Texture2D[] blockSprites, bool isColor)
             : base(false, false, false, false,
                    false, false, true,  false,
                    true,  true,  true,  false,
-                   false, false, false, false, color) 
-        {
-        
-        }
-        
-        public blockFlatL()
-            : base(false, false, false, false,
-                   false, false, true,  false,
-                   true,  true,  true,  false,
-                   false, false, false, false)
-        {
-
-        }
+                   false, false, false, false,
+                   blockSprites, isColor) { }
     }
-    class blockC:TetrisBlock
+
+    class blockLineV : TetrisBlock
     {
-        public blockC(byte color)
-            : base(false, false, false, false, 
-                   false, true,  true,  false,
-                   false, false, true,  false,
-                   false, false, false, false, color) 
-        {
-        
-        }
-
-        public blockC()
-            : base(false, false, false, false,
-                   false, true,  true,  false,
-                   false, false, true,  false,
-                   false, false, false, false)
-        {
-
-        }
-    
+        public blockLineV(Texture2D[] blockSprites, bool isColor)
+            : base(false, true, false, false,
+                   false, true, false, false,
+                   false, true, false, false,
+                   false, true, false, false,
+                   blockSprites, isColor) { }
     }
-    class blockRoof:TetrisBlock
+
+    class blockRoof : TetrisBlock
     {
-        public blockRoof(byte color)
+        public blockRoof(Texture2D[] blockSprites, bool isColor)
             : base(false, false, false, false,
                    false, false, true,  false,
                    false, true,  true,  true,
-                   false, false, false, false, color) 
-        {
-        
-        }
-
-        public blockRoof()
-            : base(false, false, false, false,
-                   false, false, true,  false,
-                   false, true,  true,  true,
-                   false, false, false, false)
-        {
-
-        }
+                   false, false, false, false,
+                   blockSprites, isColor) { }
     }
 }

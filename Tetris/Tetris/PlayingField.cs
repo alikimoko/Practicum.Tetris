@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace Practicum.Tetris
 {
@@ -11,7 +12,8 @@ namespace Practicum.Tetris
         /// <param name="width">The width of the playing field in cels.</param>
         /// <param name="height">The height of the playing field in cels.</param>
         /// <param name="isColor">Are colors enabled?</param>
-        public PlayingField(byte width, byte height, bool isColor = false) : base(width, height, isColor)
+        public PlayingField(byte width, byte height, Texture2D[] blockSprites, bool isColor = false) :
+            base(width, height, blockSprites, isColor)
         {
             // get an empty playing field
             reset();

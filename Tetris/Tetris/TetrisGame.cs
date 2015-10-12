@@ -6,6 +6,7 @@ namespace Practicum.Tetris
 {
 
     enum Colors : byte { Blank, Blue, Green, Orange, Purple, Red, Yellow }
+    enum GameStates : byte { Menu, Playing }
     
     /// <summary>
     /// This is the main type for your game
@@ -26,17 +27,16 @@ namespace Practicum.Tetris
         InputHelper input;
 
         //gamestate
-        byte gameState, reserveGameState;
+        GameStates gameState, reserveGameState;
 
         // objects
         PlayingField field;
-        TetrisBlock tetrisBlock;
+        TetrisBlock tetrisBlockCurrent, tetrisBlockNext;
 
         //variables
         byte fieldWidth, fieldHeight;
         bool isColor;
         int score = 0;
-        bool newBlockNeeded;
 
         //timers
         int moveTimer = 0;
@@ -60,7 +60,7 @@ namespace Practicum.Tetris
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize()
-        { 
+        {
             base.Initialize();
 
             input = new InputHelper();
@@ -72,18 +72,15 @@ namespace Practicum.Tetris
             graphics.ApplyChanges();
 
             // gamestates
-            gameState = 0; reserveGameState = 0;
-            isColor = false;
+            gameState = GameStates.Menu; reserveGameState = GameStates.Menu;
+            //isColor = false;
 
             // field
             fieldWidth = 12; fieldHeight = 20;
-            field = new PlayingField(fieldWidth, fieldHeight);
 
             //timers
             moveTimerLim = moveTimerLimBase;
             newBlockTimer = newBlockTimerLim;
-
-            newBlockNeeded = true;
 
         }
 
@@ -103,7 +100,7 @@ namespace Practicum.Tetris
                                              Content.Load<Texture2D>("blockPurple"),
                                              Content.Load<Texture2D>("blockRed"),
                                              Content.Load<Texture2D>("blockYellow") };
-
+            
         }
 
         /// <summary>
@@ -126,62 +123,86 @@ namespace Practicum.Tetris
             gameState = reserveGameState;
             input.Update(gameTime);
 
-            // make new blocks
-            if (newBlockNeeded)
+            switch (gameState)
             {
-                if (newBlockTimer >= newBlockTimerLim)
-                {
-                    tetrisBlock = TetrisBlock.createBlock();
-                    newBlockNeeded = false;
-                }
-                else
-                { newBlockTimer += gameTime.ElapsedGameTime.Milliseconds; }
-            }
-            
-            if(tetrisBlock != null)
-            {
-                // handle user inputs
-                if (input.KeyPressed(Keys.A) && field.canBlockMove(tetrisBlock, 1))
-                { tetrisBlock.move(1); }
+                case (byte)GameStates.Menu:
 
-                if (input.KeyPressed(Keys.D) && field.canBlockMove(tetrisBlock, 2))
-                { tetrisBlock.move(2); }
-
-                if (input.IsKeyDown(Keys.S))
-                {
-                    // move all the way down
-                    while (field.canBlockMove(tetrisBlock, 0))
-                    { tetrisBlock.move(); }
-
-                    field.placeBlock(tetrisBlock);
-                    field.checkClearedRows(tetrisBlock.OffsetY);
-                    resetBlock();
-                    // TODO: score
-                }
-
-                if (input.KeyPressed(Keys.Q)) { tetrisBlock.turnAntiClockwise(field); }
-
-                if (input.KeyPressed(Keys.E)) { tetrisBlock.turnClockwise(field); }
-
-                //movement tick
-                if (moveTimer >= moveTimerLim &&
-                    tetrisBlock != null) // if block gets placed by user letting the block fall (verry small chance, but would cause nullpointer exeptions)
-                {
-                    moveTimer = moveTimer % moveTimerLim;
-
-                    //move block
-                    if (field.canBlockMove(tetrisBlock, 0))
-                    { tetrisBlock.move(); }
-                    else
+                    if (input.IsKeyDown(Keys.Space))
                     {
-                        field.placeBlock(tetrisBlock);
-                        field.checkClearedRows(tetrisBlock.OffsetY);
-                        resetBlock();
-                        // TODO: score
+                        reserveGameState = GameStates.Playing;
+
+                        isColor = true;
+                        field = new PlayingField(fieldWidth, fieldHeight, blockSprites, isColor);
+
+                        tetrisBlockCurrent = TetrisBlock.createBlock(blockSprites, isColor);
+                        tetrisBlockNext = TetrisBlock.createBlock(blockSprites, isColor);
                     }
-                }
-                else { moveTimer += gameTime.ElapsedGameTime.Milliseconds; }
+
+                    break;
+
+                case GameStates.Playing:
+
+                    // make new blocks
+                    if (tetrisBlockCurrent == null)
+                    {
+                        if (newBlockTimer >= newBlockTimerLim)
+                        {
+                            tetrisBlockCurrent = tetrisBlockNext;
+                            tetrisBlockNext = TetrisBlock.createBlock(blockSprites, isColor);
+                        }
+                        else
+                        { newBlockTimer += gameTime.ElapsedGameTime.Milliseconds; }
+                    }
+
+                    if (tetrisBlockCurrent != null)
+                    {
+                        // handle user inputs
+                        if (input.KeyPressed(Keys.A) && field.canBlockMove(tetrisBlockCurrent, 1))
+                        { tetrisBlockCurrent.move(1); }
+
+                        if (input.KeyPressed(Keys.D) && field.canBlockMove(tetrisBlockCurrent, 2))
+                        { tetrisBlockCurrent.move(2); }
+
+                        if (input.IsKeyDown(Keys.S))
+                        {
+                            // move all the way down
+                            while (field.canBlockMove(tetrisBlockCurrent, 0))
+                            { tetrisBlockCurrent.move(); }
+
+                            field.placeBlock(tetrisBlockCurrent);
+                            field.checkClearedRows(tetrisBlockCurrent.OffsetY);
+                            resetBlock();
+                            // TODO: score
+                        }
+
+                        if (input.KeyPressed(Keys.Q)) { tetrisBlockCurrent.turnAntiClockwise(field); }
+
+                        if (input.KeyPressed(Keys.E)) { tetrisBlockCurrent.turnClockwise(field); }
+
+                        //movement tick
+                        if (moveTimer >= moveTimerLim &&
+                            tetrisBlockCurrent != null) // if block gets placed by user letting the block fall (verry small chance, but would cause nullpointer exeptions)
+                        {
+                            moveTimer = moveTimer % moveTimerLim;
+
+                            //move block
+                            if (field.canBlockMove(tetrisBlockCurrent, 0))
+                            { tetrisBlockCurrent.move(); }
+                            else
+                            {
+                                field.placeBlock(tetrisBlockCurrent);
+                                field.checkClearedRows(tetrisBlockCurrent.OffsetY);
+                                resetBlock();
+                                // TODO: score
+                            }
+                        }
+                        else { moveTimer += gameTime.ElapsedGameTime.Milliseconds; }
+                    }
+
+                    break;
             }
+
+            
 
             base.Update(gameTime);
         }
@@ -195,33 +216,46 @@ namespace Practicum.Tetris
             GraphicsDevice.Clear(Color.LightGray);
             spriteBatch.Begin();
 
-            for(int y = 0; y < fieldHeight; y++)
+            switch (gameState)
             {
-                for(int x = 0; x < fieldWidth; x++)
-                {
-                    if (field.checkGridStruct(y, x))
+                case GameStates.Menu:
+                    // menu drawing
+                    break;
+
+                case GameStates.Playing:
+
+                    for (int y = 0; y < fieldHeight; y++)
                     {
-                        if (isColor) { spriteBatch.Draw(blockSprites[field.checkGridCol(y, x)], new Vector2(y * 20, x * 20), Color.White); }
-                        else { spriteBatch.Draw(blockSprites[1], new Vector2(x * 20, y * 20), Color.White); }
-                    }
-                    else { spriteBatch.Draw(blockSprites[0], new Vector2(x * 20, y * 20), Color.White); }
-                }
-            }
-            
-            if(tetrisBlock != null)
-            {
-                for (int y = 0; y < 4; y++)
-                {
-                    for (int x = 0; x < 4; x++)
-                    {
-                        if (tetrisBlock.checkGridStruct(y, x))
+                        for (int x = 0; x < fieldWidth; x++)
                         {
-                            if (isColor) { spriteBatch.Draw(blockSprites[tetrisBlock.checkGridCol(y, x)], new Vector2((tetrisBlock.OffsetX + x) * 20, (tetrisBlock.OffsetY + y) * 20), Color.White); }
-                            else { spriteBatch.Draw(blockSprites[1], new Vector2((tetrisBlock.OffsetX + x) * 20, (tetrisBlock.OffsetY + y) * 20), Color.White); }
+                            if (field.checkGridStruct(y, x))
+                            {
+                                if (isColor) { spriteBatch.Draw(blockSprites[field.checkGridCol(y, x)], new Vector2(y * 20, x * 20), Color.White); }
+                                else { spriteBatch.Draw(blockSprites[1], new Vector2(x * 20, y * 20), Color.White); }
+                            }
+                            else { spriteBatch.Draw(blockSprites[0], new Vector2(x * 20, y * 20), Color.White); }
                         }
                     }
-                }
+
+                    if (tetrisBlockCurrent != null)
+                    {
+                        for (int y = 0; y < 4; y++)
+                        {
+                            for (int x = 0; x < 4; x++)
+                            {
+                                if (tetrisBlockCurrent.checkGridStruct(y, x))
+                                {
+                                    if (isColor) { spriteBatch.Draw(blockSprites[tetrisBlockCurrent.checkGridCol(y, x)], new Vector2((tetrisBlockCurrent.OffsetX + x) * 20, (tetrisBlockCurrent.OffsetY + y) * 20), Color.White); }
+                                    else { spriteBatch.Draw(blockSprites[1], new Vector2((tetrisBlockCurrent.OffsetX + x) * 20, (tetrisBlockCurrent.OffsetY + y) * 20), Color.White); }
+                                }
+                            }
+                        }
+                    }
+
+                    break;
             }
+
+            
 
             spriteBatch.End();
             base.Draw(gameTime);
@@ -239,9 +273,8 @@ namespace Practicum.Tetris
 
         private void resetBlock()
         {
-            newBlockNeeded = true;
             newBlockTimer = 0;
-            tetrisBlock = null;
+            tetrisBlockCurrent = null;
         }
 
     }
