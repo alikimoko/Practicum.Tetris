@@ -3,34 +3,22 @@ using Microsoft.Xna.Framework.Input;
 
 class InputHelper
 {
-    /* 
-     * current and previous mouse/keyboard states
-     
-    MouseState currentMouseState, previousMouseState;*/
-    KeyboardState currentKeyboardState, previousKeyboardState;
-
-    /*
-     * time passed since the last key press
-     */
-    double timeSinceLastKeyPress;
-
-    /*
-     * time interval to read separate keypresses when holding a key
-     */
-    double keyPressInterval;
-
-    /*
-     * constructor method
-     */
-    public InputHelper()
+    /* MouseState currentMouseState, previousMouseState;*/
+    KeyboardState currentKeyboardState, previousKeyboardState; // current and previous keyboard states
+    
+    double timeSinceLastKeyPress, // time passed since the last key press
+           keyPressInterval; // time interval to read separate keypresses when holding a key
+    
+    /// <summary>Initialize input helper.</summary>
+    /// <param name="keyReCheckTime">The time after wich a key hold can trigger another action in milliseconds.</param>
+    public InputHelper(double keyReCheckTime = 100)
     {
-        keyPressInterval = 100;
+        keyPressInterval = keyReCheckTime;
         timeSinceLastKeyPress = 0;
     }
-
-    /*
-     * updates the input helper object by updating the mouse and keyboard states and updating the timeSinceLastKeyPress variable
-     */
+    
+    /// <summary>Update the input helper.</summary>
+    /// <param name="gameTime">The current game time.</param>
     public void Update(GameTime gameTime)
     {
         // check if keys are pressed and update the timeSinceLastKeyPress variable

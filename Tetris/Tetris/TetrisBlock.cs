@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace Practicum.Tetris
@@ -11,13 +13,17 @@ namespace Practicum.Tetris
         public bool[][] FieldStruct { get { return fieldStruc; } }
         public byte[][] FieldCol { get { return fieldCol; } }
 
+        private PlayingField field;
+        
+        int moveTimer = 0, moveTimerLim;
+
         private byte color;
         public byte Color { get { return color; } }
 
         Random rand = new Random();
 
         private static sbyte prevBlock = -1;
-        public static TetrisBlock createBlock(Texture2D[] blockSprites, bool isColor = false, sbyte blockKind = -1)
+        public static TetrisBlock createBlock(Texture2D[] blockSprites, PlayingField field, int moveTimerLim, bool isColor = false, sbyte blockKind = -1)
         {
             TetrisBlock block;
             Random random = new Random();
@@ -34,36 +40,42 @@ namespace Practicum.Tetris
             switch (blockKind)
                 {
                     case 0:
-                        //square
-                        block = new blockSquare(blockSprites, isColor);
+                        // square
+                        block = new blockSquare(blockSprites, field, moveTimerLim, isColor);
                         break;
                     case 1:
-                        //horizontal line
-                        block = new blockLineH(blockSprites, isColor);
+                        // horizontal line
+                        block = new blockLineH(blockSprites, field, moveTimerLim, isColor);
                         break;
                     case 2:
-                        block = new blockZ(blockSprites, isColor);
+                        // Z shape
+                        block = new blockZ(blockSprites, field, moveTimerLim, isColor);
                         break;
                     case 3:
-                        block = new blockReverseZ(blockSprites, isColor);
+                        // reverse Z shape
+                        block = new blockReverseZ(blockSprites, field, moveTimerLim, isColor);
                         break;
                     case 4:
-                        block = new blockFlatL(blockSprites, isColor);
+                        // L shape
+                        block = new blockFlatL(blockSprites, field, moveTimerLim, isColor);
                         break;
                     case 5:
-                        block = new blockFlatReverseL(blockSprites, isColor);
+                        // reverse L shape
+                        block = new blockFlatReverseL(blockSprites, field, moveTimerLim, isColor);
                         break;
                     case 6:
-                        block = new blockLineV(blockSprites, isColor);
+                        // vertical line
+                        block = new blockLineV(blockSprites, field, moveTimerLim, isColor);
                         break;
                     case 7:
-                        block = new blockRoof(blockSprites, isColor);
+                        // T shape
+                        block = new blockRoof(blockSprites, field, moveTimerLim, isColor);
                         break;
                     default:
-                        block = new blockSquare(blockSprites, isColor);
+                        // square
+                        block = new blockSquare(blockSprites, field, moveTimerLim, isColor);
                         break;
                 }
-            
             return block;
         }
         
@@ -71,32 +83,35 @@ namespace Practicum.Tetris
                            bool x1y2, bool x2y2, bool x3y2, bool x4y2,
                            bool x1y3, bool x2y3, bool x3y3, bool x4y3,
                            bool x1y4, bool x2y4, bool x3y4, bool x4y4,
-                           Texture2D[] blockSprites, bool isColor) :
+                           Texture2D[] blockSprites, PlayingField field, int moveTimerLim, bool isColor) :
             base(4, 4, blockSprites, isColor)
         {
-            fillStruct(x1y1, x2y1, x3y1, x4y1, x1y2, x2y2, x3y2, x4y2, x1y3, x2y3, x3y3, x4y3, x1y4, x2y4, x3y4, x4y4);
+            this.field = field;
+            this.moveTimerLim = moveTimerLim;
 
+            fillStruct(x1y1, x2y1, x3y1, x4y1, x1y2, x2y2, x3y2, x4y2, x1y3, x2y3, x3y3, x4y3, x1y4, x2y4, x3y4, x4y4);
+            
             if (isColor)
             {
                 color = (byte)rand.Next(1, 7);
-                colorBlock(color);
+                colorBlock();
             }
             
         }
 
         /// <summary>Move in the given direction.</summary>
         /// <param name="direction">0 = down, 1 = left, 2 = right, default = down</param>
-        public void move(byte direction = 0)
+        public void move(Movement direction = Movement.Down)
         {
             switch (direction)
             {
-                case 0:
+                case Movement.Down:
                     offsetY += 1;
                     break;
-                case 1:
+                case Movement.Left:
                     offsetX -= 1;
                     break;
-                case 2:
+                case Movement.Right:
                     offsetX += 1;
                     break;
             }
@@ -114,6 +129,7 @@ namespace Practicum.Tetris
             tempBlockStruc[0][3] = fieldStruc[0][0];    tempBlockStruc[1][3] = fieldStruc[0][1];    tempBlockStruc[2][3] = fieldStruc[0][2];    tempBlockStruc[3][3] = fieldStruc[0][3];
 
             checkRotation(field, tempBlockStruc);
+            if (isColor) { colorBlock(); }
         }
 
         public virtual void turnAntiClockwise(PlayingField field)
@@ -128,6 +144,7 @@ namespace Practicum.Tetris
             tempBlockStruc[0][3] = fieldStruc[3][3]; tempBlockStruc[1][3] = fieldStruc[3][2]; tempBlockStruc[2][3] = fieldStruc[3][1]; tempBlockStruc[3][3] = fieldStruc[3][0];
 
             checkRotation(field, tempBlockStruc);
+            if (isColor) { colorBlock(); }
         }
 
 
@@ -139,7 +156,7 @@ namespace Practicum.Tetris
             fieldStruc[3][0] = x1y4; fieldStruc[3][1] = x2y4; fieldStruc[3][2] = x3y4; fieldStruc[3][3] = x4y4;
         }
 
-        private void colorBlock(byte color)
+        private void colorBlock()
         {
             for (int i = 0; i < fieldStruc.Length; i++)
             {
@@ -151,7 +168,7 @@ namespace Practicum.Tetris
             }
         }
 
-        private void checkRotation(PlayingField field, bool[][] tempBlockStruc)
+        private bool checkRotation(PlayingField field, bool[][] tempBlockStruc)
         {
             if (field.canBlockMove(tempBlockStruc, offsetX, offsetY))
             { fieldStruc = tempBlockStruc; }
@@ -164,11 +181,13 @@ namespace Practicum.Tetris
                     {
                         fieldStruc = tempBlockStruc;
                         offsetX -= 1;
+                        return true;
                     }
                     else if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX + 1), offsetY))
                     {
                         fieldStruc = tempBlockStruc;
                         offsetX += 1;
+                        return true;
                     }
                 }
                 else
@@ -177,14 +196,65 @@ namespace Practicum.Tetris
                     {
                         fieldStruc = tempBlockStruc;
                         offsetX += 1;
+                        return true;
                     }
                     else if (field.canBlockMove(tempBlockStruc, (sbyte)(offsetX - 1), offsetY))
                     {
                         fieldStruc = tempBlockStruc;
                         offsetX -= 1;
+                        return true;
                     }
                 }
             }
+            return false; // could not rotate
+        }
+
+        public bool handleMovement(GameTime gameTime, InputHelper input)
+        {
+            // handle user inputs
+            // go left
+            if (input.KeyPressed(Keys.A) && field.canBlockMove(this, Movement.Left))
+            { move(Movement.Left); }
+
+            // go right
+            if (input.KeyPressed(Keys.D) && field.canBlockMove(this, Movement.Right))
+            { move(Movement.Right); }
+
+            if (input.KeyPressed(Keys.S))
+            {
+                if (field.canBlockMove(this, Movement.Down)) // can still go lower
+                { move(); }
+                else
+                { return false; } // may no longer move
+            }
+
+            if (input.IsKeyDown(Keys.W))
+            {
+                // move all the way down
+                while (field.canBlockMove(this, Movement.Down))
+                { move(); }
+                return false; // may no longer move
+                // TODO: score
+            }
+
+            if (input.KeyPressed(Keys.Q)) { turnAntiClockwise(field); }
+
+            if (input.KeyPressed(Keys.E)) { turnClockwise(field); }
+
+            //movement tick
+            if (moveTimer >= moveTimerLim)
+            {
+                moveTimer = moveTimer % moveTimerLim;
+
+                //move block
+                if (field.canBlockMove(this, Movement.Down))
+                { move(); }
+                else
+                { return false; } // may no longer move
+            }
+            else { moveTimer += gameTime.ElapsedGameTime.Milliseconds; }
+
+            return true; // was able to go down
         }
     }
 }

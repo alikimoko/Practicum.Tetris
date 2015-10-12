@@ -7,7 +7,8 @@ namespace Practicum.Tetris
 
     enum Colors : byte { Blank, Blue, Green, Orange, Purple, Red, Yellow }
     enum GameStates : byte { Menu, Playing }
-    
+    enum Movement : byte { Stay, Down, Left, Right }
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -36,10 +37,10 @@ namespace Practicum.Tetris
         //variables
         byte fieldWidth, fieldHeight;
         bool isColor;
+        bool couldGoDown;
         int score = 0;
 
         //timers
-        int moveTimer = 0;
         int moveTimerLim, newBlockTimer;
         const int moveTimerLimBase = 1000,
                   newBlockTimerLim = 250;
@@ -63,7 +64,7 @@ namespace Practicum.Tetris
         {
             base.Initialize();
 
-            input = new InputHelper();
+            input = new InputHelper(150);
 
             // window sizing
             view = GraphicsDevice.Viewport;
@@ -125,17 +126,20 @@ namespace Practicum.Tetris
 
             switch (gameState)
             {
-                case (byte)GameStates.Menu:
+                case GameStates.Menu:
 
                     if (input.IsKeyDown(Keys.Space))
                     {
                         reserveGameState = GameStates.Playing;
 
                         isColor = true;
+
+                        // create the field
                         field = new PlayingField(fieldWidth, fieldHeight, blockSprites, isColor);
 
-                        tetrisBlockCurrent = TetrisBlock.createBlock(blockSprites, isColor);
-                        tetrisBlockNext = TetrisBlock.createBlock(blockSprites, isColor);
+                        // create the blocks
+                        tetrisBlockCurrent = TetrisBlock.createBlock(blockSprites, field, moveTimerLim, isColor);
+                        tetrisBlockNext = TetrisBlock.createBlock(blockSprites, field, moveTimerLim, isColor);
                     }
 
                     break;
@@ -148,7 +152,7 @@ namespace Practicum.Tetris
                         if (newBlockTimer >= newBlockTimerLim)
                         {
                             tetrisBlockCurrent = tetrisBlockNext;
-                            tetrisBlockNext = TetrisBlock.createBlock(blockSprites, isColor);
+                            tetrisBlockNext = TetrisBlock.createBlock(blockSprites, field, moveTimerLim, isColor);
                         }
                         else
                         { newBlockTimer += gameTime.ElapsedGameTime.Milliseconds; }
@@ -156,47 +160,18 @@ namespace Practicum.Tetris
 
                     if (tetrisBlockCurrent != null)
                     {
-                        // handle user inputs
-                        if (input.KeyPressed(Keys.A) && field.canBlockMove(tetrisBlockCurrent, 1))
-                        { tetrisBlockCurrent.move(1); }
+                        // make the tetris block handle it's user inputs and movement
+                        couldGoDown = tetrisBlockCurrent.handleMovement(gameTime, input);
 
-                        if (input.KeyPressed(Keys.D) && field.canBlockMove(tetrisBlockCurrent, 2))
-                        { tetrisBlockCurrent.move(2); }
-
-                        if (input.IsKeyDown(Keys.S))
+                        if (!couldGoDown)
                         {
-                            // move all the way down
-                            while (field.canBlockMove(tetrisBlockCurrent, 0))
-                            { tetrisBlockCurrent.move(); }
-
+                            // reached bottom or hit existing block
                             field.placeBlock(tetrisBlockCurrent);
                             field.checkClearedRows(tetrisBlockCurrent.OffsetY);
                             resetBlock();
                             // TODO: score
                         }
 
-                        if (input.KeyPressed(Keys.Q)) { tetrisBlockCurrent.turnAntiClockwise(field); }
-
-                        if (input.KeyPressed(Keys.E)) { tetrisBlockCurrent.turnClockwise(field); }
-
-                        //movement tick
-                        if (moveTimer >= moveTimerLim &&
-                            tetrisBlockCurrent != null) // if block gets placed by user letting the block fall (verry small chance, but would cause nullpointer exeptions)
-                        {
-                            moveTimer = moveTimer % moveTimerLim;
-
-                            //move block
-                            if (field.canBlockMove(tetrisBlockCurrent, 0))
-                            { tetrisBlockCurrent.move(); }
-                            else
-                            {
-                                field.placeBlock(tetrisBlockCurrent);
-                                field.checkClearedRows(tetrisBlockCurrent.OffsetY);
-                                resetBlock();
-                                // TODO: score
-                            }
-                        }
-                        else { moveTimer += gameTime.ElapsedGameTime.Milliseconds; }
                     }
 
                     break;
@@ -230,7 +205,7 @@ namespace Practicum.Tetris
                         {
                             if (field.checkGridStruct(y, x))
                             {
-                                if (isColor) { spriteBatch.Draw(blockSprites[field.checkGridCol(y, x)], new Vector2(y * 20, x * 20), Color.White); }
+                                if (isColor) { spriteBatch.Draw(blockSprites[field.checkGridCol(y, x)], new Vector2(x * 20, y * 20), Color.White); }
                                 else { spriteBatch.Draw(blockSprites[1], new Vector2(x * 20, y * 20), Color.White); }
                             }
                             else { spriteBatch.Draw(blockSprites[0], new Vector2(x * 20, y * 20), Color.White); }

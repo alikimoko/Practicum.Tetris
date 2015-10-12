@@ -6,10 +6,9 @@ namespace Practicum.Tetris
     class PlayingField : GridObject
     {
 
-        /// <summary>
-        /// Create a new playing field.
-        /// </summary>
+        /// <summary>Create a new playing field.</summary>
         /// <param name="width">The width of the playing field in cels.</param>
+        /// <param name="blockSprites">The sprites for the blocks.</param>
         /// <param name="height">The height of the playing field in cels.</param>
         /// <param name="isColor">Are colors enabled?</param>
         public PlayingField(byte width, byte height, Texture2D[] blockSprites, bool isColor = false) :
@@ -81,7 +80,7 @@ namespace Practicum.Tetris
         /// <summary>Checks if the block can move in a given direction.</summary>
         /// <param name="blockToMove">The block that should be checked.</param>
         /// <param name="direction">The direction of the displacement. 0 = down, 1 = left, 2 = right, default = stay</param>
-        public bool canBlockMove(TetrisBlock blockToMove, sbyte direction = -1)
+        public bool canBlockMove(TetrisBlock blockToMove, Movement direction = Movement.Stay)
         {
             return canBlockMove(blockToMove.FieldStruct, blockToMove.OffsetX, blockToMove.OffsetY, direction);
         }
@@ -91,19 +90,19 @@ namespace Practicum.Tetris
         /// <param name="offsetX">The block its x offset from the playing field.</param>
         /// <param name="offsetX">The block its y offset from the playing field.</param>
         /// <param name="direction">The direction of the displacement. 0 = down, 1 = left, 2 = right, default = stay</param>
-        public bool canBlockMove(bool[][] block, sbyte offsetX, sbyte offsetY, sbyte direction = -1)
+        public bool canBlockMove(bool[][] block, sbyte offsetX, sbyte offsetY, Movement direction = Movement.Stay)
         {
             sbyte displaceX = 0, displaceY = 0;
 
             switch (direction)
             {
-                case 0:
+                case Movement.Down:
                     displaceY = 1;
                     break;
-                case 1:
+                case Movement.Left:
                     displaceX = -1;
                     break;
-                case 2:
+                case Movement.Right:
                     displaceX = 1;
                     break;
                 default:
