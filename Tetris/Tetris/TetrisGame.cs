@@ -46,9 +46,9 @@ namespace Practicum.Tetris
                   newBlockTimerLim = 250;
 
         //sprites
+        Texture2D nextBlockWindow;
         Texture2D[] blockSprites;
-        SpriteFont fontRegularMenu;
-        SpriteFont fontSelectedMenu;
+        SpriteFont fontRegularMenu, fontSelectedMenu;
 
         public TetrisGame()
         {
@@ -103,6 +103,9 @@ namespace Practicum.Tetris
                                              Content.Load<Texture2D>("blockPurple"),
                                              Content.Load<Texture2D>("blockRed"),
                                              Content.Load<Texture2D>("blockYellow") };
+
+            nextBlockWindow = Content.Load<Texture2D>("nextBlockWindow");
+
             fontRegularMenu = Content.Load<SpriteFont>("FontMenuRegular");
             fontSelectedMenu = Content.Load<SpriteFont>("FontMenuSelected");
 
@@ -195,7 +198,7 @@ namespace Practicum.Tetris
                     break;
             }
 
-            if (input.KeyPressed(Keys.Escape)) { this.Exit(); }
+            if (input.KeyPressed(Keys.Escape)) { Exit(); }
 
             base.Update(gameTime);
         }
@@ -222,15 +225,22 @@ namespace Practicum.Tetris
 
                 case GameStates.Playing:
 
-                    field.Draw(gameTime, spriteBatch);
-                    spriteBatch.DrawString(fontRegularMenu,
-                        " Controls: \n A to move left \n S to move down \n D to move left \n Q to turn left \n E to turn right \n <ESC> to Exit \n <SPACEBAR> to pause \n Enjoy! \n \n SCORE: " + score,
-                        new Vector2(250, 10), Color.White);
-                        // calculate a position in comparison to the field needed ^
-
+                    // field
+                    field.Draw(spriteBatch);
+                    
+                    // active block
                     if (tetrisBlockCurrent != null)
-                    { tetrisBlockCurrent.Draw(gameTime, spriteBatch); }
+                    { tetrisBlockCurrent.Draw(spriteBatch); }
 
+                    // next block
+                    spriteBatch.Draw(nextBlockWindow, new Vector2(field.Width * 20 + 20, 20), Color.White);
+                    tetrisBlockNext.Draw(spriteBatch);
+                    /*    
+                    spriteBatch.DrawString(fontRegularMenu,
+                                           " Controls: \n A to move left \n S to move down \n D to move left \n Q to turn left \n E to turn right \n <ESC> to Exit \n <SPACEBAR> to pause \n Enjoy! \n \n SCORE: " + score,
+                                           new Vector2(250, 10), Color.White);
+                                           // calculate a position in comparison to the field needed ^
+                    */
                     break;
 
                 case GameStates.GameOver:

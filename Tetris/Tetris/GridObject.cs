@@ -56,7 +56,7 @@ namespace Practicum.Tetris
         /// <summary>Get the value of a given color structure at a given x and y</summary>
         public static byte checkGridCol(byte[][] fieldCol, int y, int x) { return fieldCol[y][x]; }
 
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             for (int y = 0; y < height; y++)
             {

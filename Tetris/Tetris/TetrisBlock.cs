@@ -9,6 +9,7 @@ namespace Practicum.Tetris
 
     class TetrisBlock : GridObject
     {
+        private bool isNext;
         private sbyte offsetX, offsetY;
         public sbyte OffsetX { get { return offsetX; } }
         public sbyte OffsetY { get { return offsetY; } }
@@ -94,6 +95,7 @@ namespace Practicum.Tetris
             this.field = field;
             this.moveTimerLim = moveTimerLim;
             this.blockType = blockType;
+            isNext = true;
 
             fillStruct(x1y1, x2y1, x3y1, x4y1, x1y2, x2y2, x3y2, x4y2, x1y3, x2y3, x3y3, x4y3, x1y4, x2y4, x3y4, x4y4);
             
@@ -155,6 +157,8 @@ namespace Practicum.Tetris
         /// <summary>Checks if the block can be placed. Places when posible, if not posible it's game over.</summary>
         public bool placeBlock()
         {
+            isNext = false;
+
             switch (blockType)
             {
                 case BlockType.Roof:
@@ -351,16 +355,29 @@ namespace Practicum.Tetris
             return true; // was able to go down if it had to
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             for (int y = 0; y < 4; y++)
             {
                 for (int x = 0; x < 4; x++)
                 {
-                    if (checkGridStruct(y, x))
+                    if (!isNext)
                     {
-                        if (isColor) { spriteBatch.Draw(blockSprites[checkGridCol(y, x)], new Vector2((OffsetX + x) * 20, (OffsetY + y) * 20), Color.White); }
-                        else { spriteBatch.Draw(blockSprites[1], new Vector2((OffsetX + x) * 20, (OffsetY + y) * 20), Color.White); }
+                        if (checkGridStruct(y, x))
+                        {
+                            if (isColor) { spriteBatch.Draw(blockSprites[checkGridCol(y, x)], new Vector2((OffsetX + x) * 20, (OffsetY + y) * 20), Color.White); }
+                            else { spriteBatch.Draw(blockSprites[1], new Vector2((OffsetX + x) * 20, (OffsetY + y) * 20), Color.White); }
+                        }
+                    }
+                    else
+                    {
+                        if (checkGridStruct(y, x))
+                        {
+                            if (isColor) { spriteBatch.Draw(blockSprites[checkGridCol(y, x)], new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), Color.White); }
+                            else { spriteBatch.Draw(blockSprites[1], new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), Color.White); }
+                        }
+                        else
+                        { spriteBatch.Draw(blockSprites[0], new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), Color.White); }
                     }
                 }
             }
