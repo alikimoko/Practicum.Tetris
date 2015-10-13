@@ -38,7 +38,8 @@ namespace Practicum.Tetris
         byte fieldWidth, fieldHeight;
         bool isColor;
         bool couldGoDown;
-        int score = 0;
+        int screenWidth = 500,
+            score = 0;
 
         //timers
         int moveTimerLim, newBlockTimer;
@@ -55,6 +56,7 @@ namespace Practicum.Tetris
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            IsMouseVisible = true;
         }
 
         /// <summary>
@@ -70,7 +72,7 @@ namespace Practicum.Tetris
             input = new InputHelper(150);
 
             // window sizing
-            graphics.PreferredBackBufferHeight = 500;
+            graphics.PreferredBackBufferHeight = screenWidth;
             graphics.PreferredBackBufferWidth = 500;
             graphics.ApplyChanges();
 
@@ -83,12 +85,6 @@ namespace Practicum.Tetris
             //timers
             moveTimerLim = moveTimerLimBase;
             newBlockTimer = newBlockTimerLim;
-
-            // menu buttons
-            menuButtons = new Button[] { new Button(graphics, btnMono, MenuActions.Mono, 100),
-                                         new Button(graphics, btnColor, MenuActions.Color, 200),
-                                         new Button(graphics, btnInfo, MenuActions.Info, 300),
-                                         new Button(graphics, btnQuit, MenuActions.Quit, 350) };
         }
 
         /// <summary>
@@ -116,7 +112,12 @@ namespace Practicum.Tetris
             btnColor = Content.Load<Texture2D>("btnColor");
             btnInfo = Content.Load<Texture2D>("btnInfo");
             btnQuit = Content.Load<Texture2D>("btnQuit");
-            foreach(Button button in menuButtons) { button.placeButton(); }
+
+            // needs the textures, so placing here
+            menuButtons = new Button[] { new Button(screenWidth, btnMono, MenuActions.Mono, 150),
+                                         new Button(screenWidth, btnColor, MenuActions.Color, 250),
+                                         new Button(screenWidth, btnInfo, MenuActions.Info, 350),
+                                         new Button(screenWidth, btnQuit, MenuActions.Quit, 400) };
 
             // fonts
             fontRegularMenu = Content.Load<SpriteFont>("FontMenuRegular");
@@ -250,11 +251,11 @@ namespace Practicum.Tetris
             {
                 case GameStates.Menu:
                     // menu drawing
-                    
-                    
-                    spriteBatch.DrawString(fontRegularMenu, "Welcome to TheTetris, press <spacebar> to Play!", new Vector2(10,10), Color.White);
-                    spriteBatch.DrawString(fontRegularMenu, "Or press <ESC> to Exit.", new Vector2(10, 30), Color.White);
-                    
+                    // TODO: logo
+
+                    foreach(Button button in menuButtons)
+                    { button.Draw(spriteBatch); }
+
                     break;
 
                 case GameStates.Playing:
