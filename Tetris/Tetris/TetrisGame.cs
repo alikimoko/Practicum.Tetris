@@ -1,10 +1,11 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Practicum.Tetris
 {
-    enum MenuActions : byte { Mono, Color, Info, Quit }
+    enum MenuActions : byte { Mono, Color, Info, Quit, Menu }
     enum Colors : byte { Blank, Blue, Green, Orange, Purple, Red, Yellow }
     enum GameStates : byte { Menu, Playing, GameOver, Info }
     enum Movement : byte { Stay, Down, Left, Right }
@@ -25,6 +26,7 @@ namespace Practicum.Tetris
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         InputHelper input;
+        Random rand;
 
         //gamestate
         GameStates gameState, reserveGameState;
@@ -33,6 +35,7 @@ namespace Practicum.Tetris
         PlayingField field;
         TetrisBlock tetrisBlockCurrent, tetrisBlockNext;
         Button[] menuButtons;
+        Button backButton;
 
         //variables
         byte fieldWidth, fieldHeight;
@@ -48,7 +51,8 @@ namespace Practicum.Tetris
 
         //sprites
         Texture2D nextBlockWindow,
-                  btnMono, btnColor, btnInfo, btnQuit;
+                  btnMono, btnColor, btnInfo, btnQuit,
+                  controls, btnBack;
         Texture2D[] blockSprites;
         SpriteFont fontRegularMenu, fontSelectedMenu;
 
@@ -70,6 +74,7 @@ namespace Practicum.Tetris
             base.Initialize();
 
             input = new InputHelper(150);
+            rand = new Random();
 
             // window sizing
             graphics.PreferredBackBufferHeight = screenWidth;
@@ -112,12 +117,16 @@ namespace Practicum.Tetris
             btnColor = Content.Load<Texture2D>("btnColor");
             btnInfo = Content.Load<Texture2D>("btnInfo");
             btnQuit = Content.Load<Texture2D>("btnQuit");
+            btnBack = Content.Load<Texture2D>("btnBack");
 
-            // needs the textures, so placing here
+            controls = Content.Load<Texture2D>("controls");
+
+            // needs the textures, so placing here (prevents nullpointers)
             menuButtons = new Button[] { new Button(screenWidth, btnMono, MenuActions.Mono, 150),
                                          new Button(screenWidth, btnColor, MenuActions.Color, 250),
                                          new Button(screenWidth, btnInfo, MenuActions.Info, 350),
                                          new Button(screenWidth, btnQuit, MenuActions.Quit, 400) };
+            backButton = new Button(screenWidth, btnBack, MenuActions.Menu, 450);
 
             // fonts
             fontRegularMenu = Content.Load<SpriteFont>("FontMenuRegular");
@@ -189,6 +198,10 @@ namespace Practicum.Tetris
 
                     break;
 
+                case GameStates.Info:
+                    if (backButton.isClicked(input)) { reserveGameState = GameStates.Menu; }
+                    break;
+
                 case GameStates.Playing:
 
                     // make new blocks
@@ -256,6 +269,13 @@ namespace Practicum.Tetris
                     foreach(Button button in menuButtons)
                     { button.Draw(spriteBatch); }
 
+                    break;
+
+                case GameStates.Info:
+                    spriteBatch.Draw(controls, Vector2.Zero, Color.White);
+                    spriteBatch.DrawString(fontRegularMenu, "MONOCHROME MODE:\nPlay tetris like you\'re used to.", new Vector2(10, 350), Color.Black);
+                    spriteBatch.DrawString(fontRegularMenu, "RAINBOW MODE:\nColorfull tetris with color based scoring.", new Vector2(10, 400), Color.Purple);
+                    backButton.Draw(spriteBatch);
                     break;
 
                 case GameStates.Playing:
