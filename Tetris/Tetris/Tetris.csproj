@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Button.cs" />
     <Compile Include="InputHelper.cs" />
     <Compile Include="TetrisBlock.cs" />
     <Compile Include="Blocks.cs" />

@@ -4,9 +4,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Practicum.Tetris
 {
-
+    enum MenuActions : byte { Mono, Color, Info, Quit }
     enum Colors : byte { Blank, Blue, Green, Orange, Purple, Red, Yellow }
-    enum GameStates : byte { Menu, Playing, GameOver }
+    enum GameStates : byte { Menu, Playing, GameOver, Info }
     enum Movement : byte { Stay, Down, Left, Right }
 
     /// <summary>
@@ -24,7 +24,6 @@ namespace Practicum.Tetris
         // game
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Viewport view;
         InputHelper input;
 
         //gamestate
@@ -33,6 +32,7 @@ namespace Practicum.Tetris
         // objects
         PlayingField field;
         TetrisBlock tetrisBlockCurrent, tetrisBlockNext;
+        Button[] menuButtons;
 
         //variables
         byte fieldWidth, fieldHeight;
@@ -46,7 +46,8 @@ namespace Practicum.Tetris
                   newBlockTimerLim = 250;
 
         //sprites
-        Texture2D nextBlockWindow;
+        Texture2D nextBlockWindow,
+                  btnMono, btnColor, btnInfo, btnQuit;
         Texture2D[] blockSprites;
         SpriteFont fontRegularMenu, fontSelectedMenu;
 
@@ -69,14 +70,12 @@ namespace Practicum.Tetris
             input = new InputHelper(150);
 
             // window sizing
-            view = GraphicsDevice.Viewport;
             graphics.PreferredBackBufferHeight = 500;
             graphics.PreferredBackBufferWidth = 500;
             graphics.ApplyChanges();
 
             // gamestates
             gameState = GameStates.Menu; reserveGameState = GameStates.Menu;
-            //isColor = false;
 
             // field
             fieldWidth = 12; fieldHeight = 20;
@@ -85,6 +84,11 @@ namespace Practicum.Tetris
             moveTimerLim = moveTimerLimBase;
             newBlockTimer = newBlockTimerLim;
 
+            // menu buttons
+            menuButtons = new Button[] { new Button(graphics, btnMono, MenuActions.Mono, 100),
+                                         new Button(graphics, btnColor, MenuActions.Color, 200),
+                                         new Button(graphics, btnInfo, MenuActions.Info, 300),
+                                         new Button(graphics, btnQuit, MenuActions.Quit, 350) };
         }
 
         /// <summary>
@@ -96,6 +100,7 @@ namespace Practicum.Tetris
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            // block related textures
             blockSprites = new Texture2D[] { Content.Load<Texture2D>("noBlock"),
                                              Content.Load<Texture2D>("blockBlue"),
                                              Content.Load<Texture2D>("blockGreen"),
@@ -106,6 +111,14 @@ namespace Practicum.Tetris
 
             nextBlockWindow = Content.Load<Texture2D>("nextBlockWindow");
 
+            // menu buttons
+            btnMono = Content.Load<Texture2D>("btnMono");
+            btnColor = Content.Load<Texture2D>("btnColor");
+            btnInfo = Content.Load<Texture2D>("btnInfo");
+            btnQuit = Content.Load<Texture2D>("btnQuit");
+            foreach(Button button in menuButtons) { button.placeButton(); }
+
+            // fonts
             fontRegularMenu = Content.Load<SpriteFont>("FontMenuRegular");
             fontSelectedMenu = Content.Load<SpriteFont>("FontMenuSelected");
 
@@ -135,14 +148,35 @@ namespace Practicum.Tetris
             {
                 case GameStates.Menu:
 
-
-
-                    if (input.IsKeyDown(Keys.Space))
+                    // menu buttons
+                    foreach(Button button in menuButtons)
                     {
-                        reserveGameState = GameStates.Playing;
+                        if (button.isClicked(input))
+                        {
+                            switch (button.Action)
+                            {
+                                case MenuActions.Mono:
+                                    // start monochrome mode
+                                    reserveGameState = GameStates.Playing;
+                                    isColor = false;
+                                    break;
+                                case MenuActions.Color:
+                                    // start color mode
+                                    reserveGameState = GameStates.Playing;
+                                    isColor = true;
+                                    break;
+                                case MenuActions.Info:
+                                    reserveGameState = GameStates.Info;
+                                    break;
+                                case MenuActions.Quit:
+                                    Exit();
+                                    break;
+                            }
+                        }
+                    }
 
-                        isColor = true;
-
+                    if (reserveGameState == GameStates.Playing)
+                    {
                         // create the field
                         field = new PlayingField(fieldWidth, fieldHeight, blockSprites, isColor);
 

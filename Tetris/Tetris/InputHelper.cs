@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Input;
 
 class InputHelper
 {
-    /* MouseState currentMouseState, previousMouseState;*/
+    MouseState currentMouseState, previousMouseState;
     KeyboardState currentKeyboardState, previousKeyboardState; // current and previous keyboard states
     
     double timeSinceLastKeyPress, // time passed since the last key press
@@ -30,27 +30,27 @@ class InputHelper
             timeSinceLastKeyPress += gameTime.ElapsedGameTime.TotalMilliseconds;
 
         // update the mouse and keyboard states
-        //previousMouseState = currentMouseState;
+        previousMouseState = currentMouseState;
         previousKeyboardState = currentKeyboardState;
-        //currentMouseState = Mouse.GetState();
+        currentMouseState = Mouse.GetState();
         currentKeyboardState = Keyboard.GetState();
     }
 
     /*
      * returns the current mouse position
-     
+     */
     public Vector2 MousePosition
     {
         get { return new Vector2(currentMouseState.X, currentMouseState.Y); }
-    }*/
+    }
 
     /*
      * indicates whether the left mouse button is pressed
-     
+     */
     public bool MouseLeftButtonPressed()
     {
         return currentMouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released;
-    }*/
+    }
 
     /*
      * indicates whether the player has pressed the key k in the current update, a key press is detected
