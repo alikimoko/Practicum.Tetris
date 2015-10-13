@@ -47,6 +47,8 @@ namespace Practicum.Tetris
 
         //sprites
         Texture2D[] blockSprites;
+        SpriteFont fontRegularMenu;
+        SpriteFont fontSelectedMenu;
 
         public TetrisGame()
         {
@@ -101,7 +103,9 @@ namespace Practicum.Tetris
                                              Content.Load<Texture2D>("blockPurple"),
                                              Content.Load<Texture2D>("blockRed"),
                                              Content.Load<Texture2D>("blockYellow") };
-            
+            fontRegularMenu = Content.Load<SpriteFont>("FontMenuRegular");
+            fontSelectedMenu = Content.Load<SpriteFont>("FontMenuSelected");
+
         }
 
         /// <summary>
@@ -127,6 +131,8 @@ namespace Practicum.Tetris
             switch (gameState)
             {
                 case GameStates.Menu:
+
+
 
                     if (input.IsKeyDown(Keys.Space))
                     {
@@ -189,6 +195,8 @@ namespace Practicum.Tetris
                     break;
             }
 
+            if (input.KeyPressed(Keys.Escape)) { this.Exit(); }
+
             base.Update(gameTime);
         }
 
@@ -205,11 +213,20 @@ namespace Practicum.Tetris
             {
                 case GameStates.Menu:
                     // menu drawing
+                    
+                    
+                    spriteBatch.DrawString(fontRegularMenu, "Welcome to TheTetris, press <spacebar> to Play!", new Vector2(10,10), Color.White);
+                    spriteBatch.DrawString(fontRegularMenu, "Or press <ESC> to Exit.", new Vector2(10, 30), Color.White);
+                    
                     break;
 
                 case GameStates.Playing:
 
                     field.Draw(gameTime, spriteBatch);
+                    spriteBatch.DrawString(fontRegularMenu,
+                        " Controls: \n A to move left \n S to move down \n D to move left \n Q to turn left \n E to turn right \n <ESC> to Exit \n <SPACEBAR> to pause \n Enjoy! \n \n SCORE: " + score,
+                        new Vector2(250, 10), Color.White);
+                        // calculate a position in comparison to the field needed ^
 
                     if (tetrisBlockCurrent != null)
                     { tetrisBlockCurrent.Draw(gameTime, spriteBatch); }
