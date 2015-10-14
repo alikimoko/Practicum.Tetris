@@ -35,7 +35,7 @@ namespace Practicum.Tetris
         PlayingField field;
         TetrisBlock tetrisBlockCurrent, tetrisBlockNext;
         Button[] menuButtons;
-        Button backButton;
+        Button backButton, menuButton;
 
         //variables
         byte fieldWidth, fieldHeight;
@@ -52,15 +52,21 @@ namespace Practicum.Tetris
         //sprites
         Texture2D nextBlockWindow,
                   btnMono, btnColor, btnInfo, btnQuit,
-                  controls, btnBack;
+                  btnBack, btnMenu, controls;
         Texture2D[] blockSprites;
         SpriteFont fontRegularMenu, fontSelectedMenu;
 
+        /// <summary>Make a new tetris game.</summary>
         public TetrisGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            // window sizing
+            graphics.PreferredBackBufferHeight = screenWidth;
+            graphics.PreferredBackBufferWidth = 500;
+            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -75,12 +81,7 @@ namespace Practicum.Tetris
 
             input = new InputHelper(150);
             rand = new Random();
-
-            // window sizing
-            graphics.PreferredBackBufferHeight = screenWidth;
-            graphics.PreferredBackBufferWidth = 500;
-            graphics.ApplyChanges();
-
+            
             // gamestates
             gameState = GameStates.Menu; reserveGameState = GameStates.Menu;
 
@@ -92,10 +93,7 @@ namespace Practicum.Tetris
             newBlockTimer = newBlockTimerLim;
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
+        /// <summary>Load external content.</summary>
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -118,6 +116,7 @@ namespace Practicum.Tetris
             btnInfo = Content.Load<Texture2D>("btnInfo");
             btnQuit = Content.Load<Texture2D>("btnQuit");
             btnBack = Content.Load<Texture2D>("btnBack");
+            btnMenu = Content.Load<Texture2D>("btnMenu");
 
             controls = Content.Load<Texture2D>("controls");
 
@@ -127,6 +126,7 @@ namespace Practicum.Tetris
                                          new Button(screenWidth, btnInfo, MenuActions.Info, 350),
                                          new Button(screenWidth, btnQuit, MenuActions.Quit, 400) };
             backButton = new Button(screenWidth, btnBack, MenuActions.Menu, 450);
+            menuButton = new Button(screenWidth, btnMenu, MenuActions.Menu, 350);
 
             // fonts
             fontRegularMenu = Content.Load<SpriteFont>("FontMenuRegular");
@@ -134,19 +134,7 @@ namespace Practicum.Tetris
 
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
-        protected override void UnloadContent()
-        {
-            // TODO: Unload any non ContentManager content here
-        }
-
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
+        /// <summary>Updates the game.</summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
@@ -248,7 +236,12 @@ namespace Practicum.Tetris
                     break;
 
                 case GameStates.GameOver:
-                    // code for game over
+                    // TODO: GAME OVER text and score view
+
+                    // buttons
+                    if (menuButton.isClicked(input)) { reserveGameState = GameStates.Menu; } // back to menu
+                    if (menuButtons[3].isClicked(input)) { Exit(); } // quit game
+
                     break;
             }
 
@@ -305,11 +298,14 @@ namespace Practicum.Tetris
                     break;
 
                 case GameStates.GameOver:
-                    spriteBatch.Draw(blockSprites[2], Vector2.Zero, Color.White);
+                    // TODO: GAME OVER text and score view
+
+                    // buttons
+                    menuButton.Draw(spriteBatch);
+                    menuButtons[3].Draw(spriteBatch);
+
                     break;
             }
-
-            
 
             spriteBatch.End();
             base.Draw(gameTime);
@@ -330,6 +326,5 @@ namespace Practicum.Tetris
             newBlockTimer = 0;
             tetrisBlockCurrent = null;
         }
-
     }
 }
