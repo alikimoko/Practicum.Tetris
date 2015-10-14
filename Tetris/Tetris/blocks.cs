@@ -4,6 +4,7 @@ namespace Practicum.Tetris
 {
     class blockSquare:TetrisBlock
     {
+        /// <summary>Make a square block.</summary>
         public blockSquare(Texture2D[] blockSprites, PlayingField field, int moveTimerLim, bool isColor)
             : base(false, false, false, false,
                    false, true,  true,  false,
@@ -11,6 +12,7 @@ namespace Practicum.Tetris
                    false, false, false, false,
                    blockSprites, field, moveTimerLim, BlockType.Square, isColor) { }
 
+        // square doesn't need to turn
         public override void turnClockwise(PlayingField field) { }
         public override void turnAntiClockwise(PlayingField field) { }
     }
