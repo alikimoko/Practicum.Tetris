@@ -39,7 +39,8 @@ namespace Practicum.Tetris
         bool isColor;
         bool couldGoDown;
         int screenWidth = 500,
-            score = 0;
+            score = 0,
+            screenHeigth = 500;
 
         // timers
         int moveTimerLim, newBlockTimer;
@@ -63,7 +64,7 @@ namespace Practicum.Tetris
 
             // window sizing
             graphics.PreferredBackBufferHeight = screenWidth;
-            graphics.PreferredBackBufferWidth = 500;
+            graphics.PreferredBackBufferWidth = screenHeigth;
             graphics.ApplyChanges();
         }
 
@@ -284,7 +285,7 @@ namespace Practicum.Tetris
                     tetrisBlockNext.Draw(spriteBatch);
 
                     // TODO: in game info (not just text)
-
+                    spriteBatch.DrawString(fontRegularMenu, "Press <ESC> to exit", new Vector2(10,screenHeigth - 30), Color.Black);
 
                     // TODO: Show score
 
@@ -298,7 +299,7 @@ namespace Practicum.Tetris
 
                 case GameStates.GameOver:
                     // TODO: GAME OVER text and score view
-
+                    spriteBatch.DrawString(fontRegularMenu, "GAME OVER", new Vector2(170, 10), Color.Black);
                     // buttons
                     menuButton.Draw(spriteBatch);
                     menuButtons[3].Draw(spriteBatch);
