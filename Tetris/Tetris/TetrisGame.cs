@@ -41,6 +41,7 @@ namespace Practicum.Tetris
         int screenWidth = 500,
             score = 0,
             screenHeigth = 500;
+        float[] pointsPerColor;
 
         // timers
         int moveTimerLim, newBlockTimer;
@@ -83,9 +84,12 @@ namespace Practicum.Tetris
             // field
             fieldWidth = 12; fieldHeight = 20;
 
-            //timers
+            // timers
             moveTimerLim = moveTimerLimBase;
             newBlockTimer = newBlockTimerLim;
+
+            // score keeping
+            pointsPerColor = new float[] { 2.5f, 2.5f, 2.5f, 2.5f, 2.5f, 2.5f };
         }
 
         /// <summary>Load external content.</summary>
@@ -167,6 +171,9 @@ namespace Practicum.Tetris
                     if (reserveGameState == GameStates.Playing)
                     {
                         // set up for playing the selected mode
+                        // reset score
+                        score = 0;
+
                         // create the field
                         field = new PlayingField(fieldWidth, fieldHeight, blockSprites, isColor);
 
@@ -215,7 +222,7 @@ namespace Practicum.Tetris
                         {
                             // reached bottom or hit existing block
                             field.placeBlock(tetrisBlockCurrent);
-                            int[] scoreChange = field.checkClearedRows(tetrisBlockCurrent.OffsetY);
+                            scorePoints(field.checkClearedRows(tetrisBlockCurrent.OffsetY));
                             if (field.reachedTop())
                             {
                                 // the top of the field could not be cleared
@@ -288,6 +295,7 @@ namespace Practicum.Tetris
                     spriteBatch.DrawString(fontRegularMenu, "Press <ESC> to exit", new Vector2(10,screenHeigth - 30), Color.Black);
 
                     // TODO: Show score
+                    spriteBatch.DrawString(fontRegularMenu, score.ToString(), new Vector2(300, 400), Color.Black);
 
                     /*    
                     spriteBatch.DrawString(fontRegularMenu,
@@ -312,9 +320,29 @@ namespace Practicum.Tetris
         }
 
         /// <summary>Keeps score and fastens block movement.</summary>
-        /// <param name="points">The earned points.</param>
-        public void scorePoints(int points)
+        /// <param name="scoreChange">An array containing the cleared blocks and rows.</param>
+        public void scorePoints(int[] scoreChange)
         {
+            int points = 0;
+            if (scoreChange[0] != 0)
+            {
+                // award 50 points per cleared row
+                points = scoreChange[0] * 50;
+
+                if (isColor)
+                {
+                    // uni colored rows
+                    points += scoreChange[1] * 450;
+
+                    // points per color
+                    for(int color = 0; color < 6; color++)
+                    {
+                        points += (int)(scoreChange[color + 2] * pointsPerColor[color]);
+                        pointsPerColor[color] = MathHelper.Clamp(pointsPerColor[color] - scoreChange[color] * 0.1f + 0.2f, 1, 5);
+                    }
+                }
+            }
+
             score += points;
             moveTimerLim = moveTimerLimBase - (score / 100);
             if (moveTimerLim < moveTimerLimMin)
