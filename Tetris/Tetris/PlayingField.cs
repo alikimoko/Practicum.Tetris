@@ -11,7 +11,7 @@ namespace Practicum.Tetris
         /// <param name="blockSprites">The sprites for the blocks.</param>
         /// <param name="height">The height of the playing field in cels.</param>
         /// <param name="isColor">Are colors enabled?</param>
-        public PlayingField(byte width, byte height, Texture2D[] blockSprites, bool isColor = false) :
+        public PlayingField(byte width, byte height, Texture2D blockSprites, bool isColor = false) :
             base(width, height, blockSprites, isColor)
         {
             // get an empty playing field

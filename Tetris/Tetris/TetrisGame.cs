@@ -52,8 +52,8 @@ namespace Practicum.Tetris
         //sprites
         Texture2D nextBlockWindow,
                   btnMono, btnColor, btnInfo, btnQuit,
-                  btnBack, btnMenu, controls;
-        Texture2D[] blockSprites;
+                  btnBack, btnMenu, controls,
+                  blockSprites;
         SpriteFont fontRegularMenu, fontSelectedMenu;
 
         /// <summary>Make a new tetris game.</summary>
@@ -100,13 +100,7 @@ namespace Practicum.Tetris
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // block related textures
-            blockSprites = new Texture2D[] { Content.Load<Texture2D>("noBlock"),
-                                             Content.Load<Texture2D>("blockBlue"),
-                                             Content.Load<Texture2D>("blockGreen"),
-                                             Content.Load<Texture2D>("blockOrange"),
-                                             Content.Load<Texture2D>("blockPurple"),
-                                             Content.Load<Texture2D>("blockRed"),
-                                             Content.Load<Texture2D>("blockYellow") };
+            blockSprites = Content.Load<Texture2D>("blockStrip");
 
             nextBlockWindow = Content.Load<Texture2D>("nextBlockWindow");
 

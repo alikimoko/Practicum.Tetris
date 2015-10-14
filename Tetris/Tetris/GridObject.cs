@@ -14,9 +14,9 @@ namespace Practicum.Tetris
         protected bool[][] fieldStruc;
         protected byte[][] fieldCol;
 
-        protected Texture2D[] blockSprites;
+        protected Texture2D blockSprites;
 
-        public GridObject(byte width, byte height, Texture2D[] blockSprites, bool isColor = false)
+        public GridObject(byte width, byte height, Texture2D blockSprites, bool isColor = false)
         {
             this.width = width;
             this.height = height;
@@ -64,10 +64,10 @@ namespace Practicum.Tetris
                 {
                     if (checkGridStruct(y, x))
                     {
-                        if (isColor) { spriteBatch.Draw(blockSprites[checkGridCol(y, x)], new Vector2(x * 20, y * 20), Color.White); }
-                        else { spriteBatch.Draw(blockSprites[1], new Vector2(x * 20, y * 20), Color.White); }
+                        if (isColor) { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(checkGridCol(y, x) * 20, 0, 20, 20), Color.White); }
+                        else { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(20, 0, 20, 20), Color.White); }
                     }
-                    else { spriteBatch.Draw(blockSprites[0], new Vector2(x * 20, y * 20), Color.White); }
+                    else { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(0, 0, 20, 20), Color.White); }
                 }
             }
         }

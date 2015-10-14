@@ -29,7 +29,7 @@ namespace Practicum.Tetris
         Random rand = new Random();
 
         private static sbyte prevBlock = -1;
-        public static TetrisBlock createBlock(Texture2D[] blockSprites, PlayingField field, int moveTimerLim, bool isColor = false, sbyte blockKind = -1)
+        public static TetrisBlock createBlock(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor = false, sbyte blockKind = -1)
         {
             TetrisBlock block;
             Random random = new Random();
@@ -89,7 +89,7 @@ namespace Practicum.Tetris
                            bool x1y2, bool x2y2, bool x3y2, bool x4y2,
                            bool x1y3, bool x2y3, bool x3y3, bool x4y3,
                            bool x1y4, bool x2y4, bool x3y4, bool x4y4,
-                           Texture2D[] blockSprites, PlayingField field, int moveTimerLim, BlockType blockType, bool isColor) :
+                           Texture2D blockSprites, PlayingField field, int moveTimerLim, BlockType blockType, bool isColor) :
             base(4, 4, blockSprites, isColor)
         {
             this.field = field;
@@ -365,19 +365,22 @@ namespace Practicum.Tetris
                     {
                         if (checkGridStruct(y, x))
                         {
-                            if (isColor) { spriteBatch.Draw(blockSprites[checkGridCol(y, x)], new Vector2((OffsetX + x) * 20, (OffsetY + y) * 20), Color.White); }
-                            else { spriteBatch.Draw(blockSprites[1], new Vector2((OffsetX + x) * 20, (OffsetY + y) * 20), Color.White); }
+                            if (checkGridStruct(y, x))
+                            {
+                                if (isColor) { spriteBatch.Draw(blockSprites, new Vector2((OffsetX + x) * 20, (OffsetY + y) * 20), new Rectangle(checkGridCol(y, x) * 20, 0, 20, 20), Color.White); }
+                                else { spriteBatch.Draw(blockSprites, new Vector2((OffsetX + x) * 20, (OffsetY + y) * 20), new Rectangle(20, 0, 20, 20), Color.White); }
+                            }
                         }
                     }
                     else
                     {
                         if (checkGridStruct(y, x))
                         {
-                            if (isColor) { spriteBatch.Draw(blockSprites[checkGridCol(y, x)], new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), Color.White); }
-                            else { spriteBatch.Draw(blockSprites[1], new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), Color.White); }
+                            if (isColor) { spriteBatch.Draw(blockSprites, new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), new Rectangle(checkGridCol(y, x) * 20, 0, 20, 20), Color.White); }
+                            else { spriteBatch.Draw(blockSprites, new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), new Rectangle(20, 0, 20, 20), Color.White); }
                         }
                         else
-                        { spriteBatch.Draw(blockSprites[0], new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), Color.White); }
+                        { spriteBatch.Draw(blockSprites, new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), new Rectangle(0, 0, 20, 20), Color.White); }
                     }
                 }
             }

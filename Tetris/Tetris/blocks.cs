@@ -5,7 +5,7 @@ namespace Practicum.Tetris
     class blockSquare:TetrisBlock
     {
         /// <summary>Make a square block.</summary>
-        public blockSquare(Texture2D[] blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        public blockSquare(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
             : base(false, false, false, false,
                    false, true,  true,  false,
                    false, true,  true,  false,
@@ -19,7 +19,7 @@ namespace Practicum.Tetris
 
     class blockLineH:TetrisBlock
     {
-        public blockLineH(Texture2D[] blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        public blockLineH(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
             : base(false, false, false, false,
                    true,  true,  true,  true,
                    false, false, false, false,
@@ -29,7 +29,7 @@ namespace Practicum.Tetris
 
     class blockZ:TetrisBlock
     {
-        public blockZ(Texture2D[] blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        public blockZ(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
             : base(false, false, false, false,
                    false, true,  true,  false,
                    false, false, true,  true,
@@ -39,7 +39,7 @@ namespace Practicum.Tetris
 
     class blockReverseZ : TetrisBlock
     {
-        public blockReverseZ(Texture2D[] blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        public blockReverseZ(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
             : base(false, false, false, false,
                    false, false, true,  true,
                    false, true,  true,  false,
@@ -49,7 +49,7 @@ namespace Practicum.Tetris
 
     class blockFlatReverseL:TetrisBlock
     {
-        public blockFlatReverseL(Texture2D[] blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        public blockFlatReverseL(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
             : base(false, false, false, false,
                    false, true,  false, false,
                    false, true,  true,  true,
@@ -59,7 +59,7 @@ namespace Practicum.Tetris
 
     class blockFlatL:TetrisBlock
     {
-        public blockFlatL(Texture2D[] blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        public blockFlatL(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
             : base(false, false, false, false,
                    false, false, true,  false,
                    true,  true,  true,  false,
@@ -69,7 +69,7 @@ namespace Practicum.Tetris
 
     class blockLineV : TetrisBlock
     {
-        public blockLineV(Texture2D[] blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        public blockLineV(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
             : base(false, true, false, false,
                    false, true, false, false,
                    false, true, false, false,
@@ -79,7 +79,7 @@ namespace Practicum.Tetris
 
     class blockRoof : TetrisBlock
     {
-        public blockRoof(Texture2D[] blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        public blockRoof(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
             : base(false, false, false, false,
                    false, false, true,  false,
                    false, true,  true,  true,
