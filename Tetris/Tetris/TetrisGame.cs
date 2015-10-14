@@ -171,8 +171,6 @@ namespace Practicum.Tetris
                     if (reserveGameState == GameStates.Playing)
                     {
                         // set up for playing the selected mode
-                        // reset score
-                        score = 0;
 
                         // create the field
                         field = new PlayingField(fieldWidth, fieldHeight, blockSprites, isColor);
@@ -240,7 +238,12 @@ namespace Practicum.Tetris
                     // TODO: GAME OVER text and score view
 
                     // buttons
-                    if (menuButton.isClicked(input)) { reserveGameState = GameStates.Menu; } // back to menu
+                    if (menuButton.isClicked(input))
+                    {
+                        // back to menu
+                        reserveGameState = GameStates.Menu;
+                        score = 0;
+                    }
                     if (menuButtons[3].isClicked(input)) { Exit(); } // quit game
 
                     break;
