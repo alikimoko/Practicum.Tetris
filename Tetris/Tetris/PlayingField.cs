@@ -158,6 +158,15 @@ namespace Practicum.Tetris
             }
         }
 
+        public bool reachedTop()
+        {
+            for(int x = 0; x < width; x++)
+            {
+                if (fieldStruc[0][x]) { return true; }
+            }
+            return false;
+        }
+
         /// <summary>Completely cleares the playing field.</summary>
         public void reset()
         {

@@ -233,6 +233,12 @@ namespace Practicum.Tetris
                             // reached bottom or hit existing block
                             field.placeBlock(tetrisBlockCurrent);
                             field.checkClearedRows(tetrisBlockCurrent.OffsetY);
+                            if (field.reachedTop())
+                            {
+                                // the top of the field could not be cleared
+                                // GAME OVER
+                                reserveGameState = GameStates.GameOver;
+                            }
                             resetBlock();
                             // TODO: score
                         }
