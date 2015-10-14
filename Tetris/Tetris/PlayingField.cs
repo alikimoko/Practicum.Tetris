@@ -20,9 +20,11 @@ namespace Practicum.Tetris
 
         /// <summary>Checks if rows have been cleared.</summary>
         /// <param name="blockOffset">The offset of the placed block.</param>
-        public void checkClearedRows(sbyte blockOffset)
+        public int[] checkClearedRows(sbyte blockOffset)
         {
             List<byte> clearedRows = new List<byte>();
+            int[] scoreChange = new int[] { 0, 0, // completed rows, rows with only one color
+                                            0, 0, 0, 0, 0, 0 }; // blocks of each color
 
             for(int y=3; y >= 0; y--) // only check the rows where the block has been placed
             {
@@ -39,6 +41,22 @@ namespace Practicum.Tetris
                         {
                             // entire row filled
                             clearedRows.Add((byte)(blockOffset + y));
+                            scoreChange[0] += 1;
+                            if (isColor)
+                            {
+                                // get the colors of the block
+                                for (int X = 0; X < width; X++)
+                                { scoreChange[fieldCol[y][X] + 1] += 1; }
+
+                                // is the entire row 1 color?
+                                for (int X = 0; X < width; X++)
+                                {
+                                    byte rowColorCheck = 0;
+                                    if (X == 0) { rowColorCheck = fieldCol[y][X]; }
+                                    else if (X == width - 1) { scoreChange[1] += 1; }
+                                    else if (rowColorCheck != fieldCol[y][X]) { break; }
+                                }
+                            }
                         }
                     }
                 }
@@ -50,6 +68,7 @@ namespace Practicum.Tetris
                 moveRows(clearedRows);
             }
 
+            return scoreChange;
         }
 
         /// <summary>Moves the rows after the row has been cleared.</summary>

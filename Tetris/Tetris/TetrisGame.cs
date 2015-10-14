@@ -215,7 +215,7 @@ namespace Practicum.Tetris
                         {
                             // reached bottom or hit existing block
                             field.placeBlock(tetrisBlockCurrent);
-                            field.checkClearedRows(tetrisBlockCurrent.OffsetY);
+                            int[] scoreChange = field.checkClearedRows(tetrisBlockCurrent.OffsetY);
                             if (field.reachedTop())
                             {
                                 // the top of the field could not be cleared
