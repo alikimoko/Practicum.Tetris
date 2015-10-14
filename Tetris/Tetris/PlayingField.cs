@@ -140,6 +140,8 @@ namespace Practicum.Tetris
             return true;
         }
 
+        /// <summary>Copies the block data to the field data uppon placement.</summary>
+        /// <param name="block">The block to place.</param>
         public void placeBlock(TetrisBlock block)
         {
             for(int y = 0; y < 4; y++)
@@ -151,6 +153,7 @@ namespace Practicum.Tetris
                         block.OffsetX + x < width &&
                         block.OffsetY + y < height)
                     {
+                        // within the field
                         fieldStruc[y + block.OffsetY][x + block.OffsetX] = true;
                         if (isColor) { fieldCol[y + block.OffsetY][x + block.OffsetX] = block.blockColor; }
                     }
@@ -158,6 +161,7 @@ namespace Practicum.Tetris
             }
         }
 
+        /// <summary>Has the field been filled to the top?</summary>
         public bool reachedTop()
         {
             for(int x = 0; x < width; x++)

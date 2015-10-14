@@ -5,17 +5,23 @@ namespace Practicum.Tetris
 {
     class GridObject
     {
-
+        // base atributes
         protected bool isColor;
         protected byte width, height;
         public byte Width { get { return width; } }
         public byte Height { get { return height; } }
 
+        // field data
         protected bool[][] fieldStruc;
         protected byte[][] fieldCol;
 
         protected Texture2D blockSprites;
 
+        /// <summary>Make a new grid based object.</summary>
+        /// <param name="width">The ammount of cels next to each other.</param>
+        /// <param name="height">The ammount of cels below each other.</param>
+        /// <param name="blockSprites">The sprite string containing the block sprites.</param>
+        /// <param name="isColor">Are colors enabled?</param>
         public GridObject(byte width, byte height, Texture2D blockSprites, bool isColor = false)
         {
             this.width = width;
@@ -26,6 +32,7 @@ namespace Practicum.Tetris
             if (isColor) { makeColorField(); }
         }
 
+        /// <summary>Create the field structure.</summary>
         private void makeField()
         {
             fieldStruc = new bool[height][];
@@ -35,6 +42,7 @@ namespace Practicum.Tetris
             }
         }
 
+        /// <summary>Create the field color data structure.</summary>
         private void makeColorField()
         {
             fieldCol = new byte[height][];
@@ -56,6 +64,7 @@ namespace Practicum.Tetris
         /// <summary>Get the value of a given color structure at a given x and y</summary>
         public static byte checkGridCol(byte[][] fieldCol, int y, int x) { return fieldCol[y][x]; }
 
+        /// <summary>Draw the field.</summary>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             for (int y = 0; y < height; y++)
@@ -71,6 +80,5 @@ namespace Practicum.Tetris
                 }
             }
         }
-
     }
 }

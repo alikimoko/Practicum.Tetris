@@ -10,12 +10,9 @@ namespace Practicum.Tetris
     enum GameStates : byte { Menu, Playing, GameOver, Info }
     enum Movement : byte { Stay, Down, Left, Right }
 
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class TetrisGame : Game
     {
-        
+        // Start the program
         static void Main()
         {
             TetrisGame game = new TetrisGame();
@@ -37,16 +34,17 @@ namespace Practicum.Tetris
         Button[] menuButtons;
         Button backButton, menuButton;
 
-        //variables
+        // game variables
         byte fieldWidth, fieldHeight;
         bool isColor;
         bool couldGoDown;
         int screenWidth = 500,
             score = 0;
 
-        //timers
+        // timers
         int moveTimerLim, newBlockTimer;
         const int moveTimerLimBase = 1000,
+                  moveTimerLimMin = 50,
                   newBlockTimerLim = 250;
 
         //sprites
@@ -69,12 +67,7 @@ namespace Practicum.Tetris
             graphics.ApplyChanges();
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
+        /// <summary>Initialize non-content related variables and objects.</summary>
         protected override void Initialize()
         {
             base.Initialize();
@@ -83,7 +76,8 @@ namespace Practicum.Tetris
             rand = new Random();
             
             // gamestates
-            gameState = GameStates.Menu; reserveGameState = GameStates.Menu;
+            gameState = GameStates.Menu;
+            reserveGameState = GameStates.Menu;
 
             // field
             fieldWidth = 12; fieldHeight = 20;
@@ -158,9 +152,11 @@ namespace Practicum.Tetris
                                     isColor = true;
                                     break;
                                 case MenuActions.Info:
+                                    // open info screen
                                     reserveGameState = GameStates.Info;
                                     break;
                                 case MenuActions.Quit:
+                                    // quir the game
                                     Exit();
                                     break;
                             }
@@ -169,18 +165,21 @@ namespace Practicum.Tetris
 
                     if (reserveGameState == GameStates.Playing)
                     {
+                        // set up for playing the selected mode
                         // create the field
                         field = new PlayingField(fieldWidth, fieldHeight, blockSprites, isColor);
 
                         // create the blocks
-                        tetrisBlockCurrent = TetrisBlock.createBlock(blockSprites, field, moveTimerLim, isColor);
-                        tetrisBlockNext = TetrisBlock.createBlock(blockSprites, field, moveTimerLim, isColor);
+                        tetrisBlockCurrent = TetrisBlock.createBlock(blockSprites, field, isColor);
+                        tetrisBlockNext = TetrisBlock.createBlock(blockSprites, field, isColor);
                         tetrisBlockCurrent.placeBlock();
+                        tetrisBlockCurrent.setMoveTimer(moveTimerLim);
                     }
 
                     break;
 
                 case GameStates.Info:
+                    // button for going back to the menu
                     if (backButton.isClicked(input)) { reserveGameState = GameStates.Menu; }
                     break;
 
@@ -192,7 +191,7 @@ namespace Practicum.Tetris
                         if (newBlockTimer >= newBlockTimerLim)
                         {
                             tetrisBlockCurrent = tetrisBlockNext;
-                            tetrisBlockNext = TetrisBlock.createBlock(blockSprites, field, moveTimerLim, isColor);
+                            tetrisBlockNext = TetrisBlock.createBlock(blockSprites, field, isColor);
                             if (!tetrisBlockCurrent.placeBlock())
                             {
                                 // could not place the block
@@ -200,6 +199,7 @@ namespace Practicum.Tetris
                                 reserveGameState = GameStates.GameOver;
                                 break;
                             }
+                            tetrisBlockCurrent.setMoveTimer(moveTimerLim);
                         }
                         else
                         { newBlockTimer += gameTime.ElapsedGameTime.Milliseconds; }
@@ -224,7 +224,6 @@ namespace Practicum.Tetris
                             resetBlock();
                             // TODO: score
                         }
-
                     }
 
                     break;
@@ -239,14 +238,13 @@ namespace Practicum.Tetris
                     break;
             }
 
+            // you can always exit the game
             if (input.KeyPressed(Keys.Escape)) { Exit(); }
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
+        /// <summary>Draw the game</summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
@@ -265,6 +263,7 @@ namespace Practicum.Tetris
                     break;
 
                 case GameStates.Info:
+                    // info screen
                     spriteBatch.Draw(controls, Vector2.Zero, Color.White);
                     spriteBatch.DrawString(fontRegularMenu, "MONOCHROME MODE:\nPlay tetris like you\'re used to.", new Vector2(10, 350), Color.Black);
                     spriteBatch.DrawString(fontRegularMenu, "RAINBOW MODE:\nColorfull tetris with color based scoring.", new Vector2(10, 400), Color.Purple);
@@ -283,6 +282,12 @@ namespace Practicum.Tetris
                     // next block
                     spriteBatch.Draw(nextBlockWindow, new Vector2(field.Width * 20 + 20, 20), Color.White);
                     tetrisBlockNext.Draw(spriteBatch);
+
+                    // TODO: in game info (not just text)
+
+
+                    // TODO: Show score
+
                     /*    
                     spriteBatch.DrawString(fontRegularMenu,
                                            " Controls: \n A to move left \n S to move down \n D to move left \n Q to turn left \n E to turn right \n <ESC> to Exit \n <SPACEBAR> to pause \n Enjoy! \n \n SCORE: " + score,
@@ -305,16 +310,17 @@ namespace Practicum.Tetris
             base.Draw(gameTime);
         }
 
-        /// <summary>
-        /// Keeps score and fastens block movement.
-        /// </summary>
+        /// <summary>Keeps score and fastens block movement.</summary>
         /// <param name="points">The earned points.</param>
         public void scorePoints(int points)
         {
             score += points;
             moveTimerLim = moveTimerLimBase - (score / 100);
+            if (moveTimerLim < moveTimerLimMin)
+            { moveTimerLim = moveTimerLimMin; }
         }
 
+        /// <summary>Clears placer blocks and starts timer for the next block.</summary>
         private void resetBlock()
         {
             newBlockTimer = 0;

@@ -5,12 +5,12 @@ namespace Practicum.Tetris
     class blockSquare:TetrisBlock
     {
         /// <summary>Make a square block.</summary>
-        public blockSquare(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        public blockSquare(Texture2D blockSprites, PlayingField field, bool isColor)
             : base(false, false, false, false,
                    false, true,  true,  false,
                    false, true,  true,  false,
                    false, false, false, false,
-                   blockSprites, field, moveTimerLim, BlockType.Square, isColor) { }
+                   blockSprites, field, BlockType.Square, isColor) { }
 
         // square doesn't need to turn
         public override void turnClockwise(PlayingField field) { }
@@ -19,71 +19,78 @@ namespace Practicum.Tetris
 
     class blockLineH:TetrisBlock
     {
-        public blockLineH(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        /// <summary>Make a horizontal line.</summary>
+        public blockLineH(Texture2D blockSprites, PlayingField field, bool isColor)
             : base(false, false, false, false,
                    true,  true,  true,  true,
                    false, false, false, false,
                    false, false, false, false,
-                   blockSprites, field, moveTimerLim, BlockType.LineH, isColor) { }
+                   blockSprites, field, BlockType.LineH, isColor) { }
     }
 
     class blockZ:TetrisBlock
     {
-        public blockZ(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        /// <summary>Make a Z shaped block.</summary>
+        public blockZ(Texture2D blockSprites, PlayingField field, bool isColor)
             : base(false, false, false, false,
                    false, true,  true,  false,
                    false, false, true,  true,
                    false, false, false, false,
-                   blockSprites, field, moveTimerLim, BlockType.Z, isColor) { }
+                   blockSprites, field, BlockType.Z, isColor) { }
     }
 
     class blockReverseZ : TetrisBlock
     {
-        public blockReverseZ(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        /// <summary>Make a reversed Z shape block.</summary>
+        public blockReverseZ(Texture2D blockSprites, PlayingField field, bool isColor)
             : base(false, false, false, false,
                    false, false, true,  true,
                    false, true,  true,  false,
                    false, false, false, false,
-                   blockSprites, field, moveTimerLim, BlockType.ReverseZ, isColor) { }
+                   blockSprites, field, BlockType.ReverseZ, isColor) { }
     }
 
     class blockFlatReverseL:TetrisBlock
     {
-        public blockFlatReverseL(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        /// <summary>Make a reversed L shaped block.</summary>
+        public blockFlatReverseL(Texture2D blockSprites, PlayingField field, bool isColor)
             : base(false, false, false, false,
                    false, true,  false, false,
                    false, true,  true,  true,
                    false, false, false, false,
-                   blockSprites, field, moveTimerLim, BlockType.FlatReverseL, isColor) { }
+                   blockSprites, field, BlockType.FlatReverseL, isColor) { }
     }
 
     class blockFlatL:TetrisBlock
     {
-        public blockFlatL(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        /// <summary>Make an L shaped block.</summary>
+        public blockFlatL(Texture2D blockSprites, PlayingField field, bool isColor)
             : base(false, false, false, false,
                    false, false, true,  false,
                    true,  true,  true,  false,
                    false, false, false, false,
-                   blockSprites, field, moveTimerLim, BlockType.FlatL, isColor) { }
+                   blockSprites, field, BlockType.FlatL, isColor) { }
     }
 
     class blockLineV : TetrisBlock
     {
-        public blockLineV(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        /// <summary>Make a vertical line.</summary>
+        public blockLineV(Texture2D blockSprites, PlayingField field, bool isColor)
             : base(false, true, false, false,
                    false, true, false, false,
                    false, true, false, false,
                    false, true, false, false,
-                   blockSprites, field, moveTimerLim, BlockType.LineV, isColor) { }
+                   blockSprites, field, BlockType.LineV, isColor) { }
     }
 
     class blockRoof : TetrisBlock
     {
-        public blockRoof(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor)
+        /// <summary>Make a T shaped block.</summary>
+        public blockRoof(Texture2D blockSprites, PlayingField field, bool isColor)
             : base(false, false, false, false,
                    false, false, true,  false,
                    false, true,  true,  true,
                    false, false, false, false,
-                   blockSprites, field, moveTimerLim, BlockType.Roof, isColor) { }
+                   blockSprites, field, BlockType.Roof, isColor) { }
     }
 }

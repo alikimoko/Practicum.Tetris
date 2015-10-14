@@ -24,12 +24,17 @@ namespace Practicum.Tetris
         public byte blockColor { get { return color; } }
 
         private BlockType blockType;
-        public BlockType BlockType { get { return blockType; } }
 
         Random rand = new Random();
 
         private static sbyte prevBlock = -1;
-        public static TetrisBlock createBlock(Texture2D blockSprites, PlayingField field, int moveTimerLim, bool isColor = false, sbyte blockKind = -1)
+
+        /// <summary>Make a new tetris block.</summary>
+        /// <param name="blockSprites">The sprite string containing the block sprites.</param>
+        /// <param name="field">The field that the block is in.</param>
+        /// <param name="isColor">Are colors enabled?</param>
+        /// <param name="blockType">The shape of the block</param>
+        public static TetrisBlock createBlock(Texture2D blockSprites, PlayingField field, bool isColor = false, sbyte blockKind = -1)
         {
             TetrisBlock block;
             Random random = new Random();
@@ -47,53 +52,57 @@ namespace Practicum.Tetris
                 {
                     case 0:
                         // square
-                        block = new blockSquare(blockSprites, field, moveTimerLim, isColor);
+                        block = new blockSquare(blockSprites, field, isColor);
                         break;
                     case 1:
                         // horizontal line
-                        block = new blockLineH(blockSprites, field, moveTimerLim, isColor);
+                        block = new blockLineH(blockSprites, field, isColor);
                         break;
                     case 2:
                         // Z shape
-                        block = new blockZ(blockSprites, field, moveTimerLim, isColor);
+                        block = new blockZ(blockSprites, field, isColor);
                         break;
                     case 3:
                         // reverse Z shape
-                        block = new blockReverseZ(blockSprites, field, moveTimerLim, isColor);
+                        block = new blockReverseZ(blockSprites, field, isColor);
                         break;
                     case 4:
                         // L shape
-                        block = new blockFlatL(blockSprites, field, moveTimerLim, isColor);
+                        block = new blockFlatL(blockSprites, field, isColor);
                         break;
                     case 5:
                         // reverse L shape
-                        block = new blockFlatReverseL(blockSprites, field, moveTimerLim, isColor);
+                        block = new blockFlatReverseL(blockSprites, field, isColor);
                         break;
                     case 6:
                         // vertical line
-                        block = new blockLineV(blockSprites, field, moveTimerLim, isColor);
+                        block = new blockLineV(blockSprites, field, isColor);
                         break;
                     case 7:
                         // T shape
-                        block = new blockRoof(blockSprites, field, moveTimerLim, isColor);
+                        block = new blockRoof(blockSprites, field, isColor);
                         break;
                     default:
                         // square
-                        block = new blockSquare(blockSprites, field, moveTimerLim, isColor);
+                        block = new blockSquare(blockSprites, field, isColor);
                         break;
                 }
             return block;
         }
-        
+
+        /// <summary>Make a new tetris block. (first 16 parameters are the internal positions)</summary>
+        /// <param name="blockSprites">The sprite string containing the block sprites.</param>
+        /// <param name="field">The field that the block is in.</param>
+        /// <param name="isColor">Are colors enabled?</param>
+        /// <param name="blockType">The shape of the block</param>
         public TetrisBlock(bool x1y1, bool x2y1, bool x3y1, bool x4y1,
                            bool x1y2, bool x2y2, bool x3y2, bool x4y2,
                            bool x1y3, bool x2y3, bool x3y3, bool x4y3,
                            bool x1y4, bool x2y4, bool x3y4, bool x4y4,
-                           Texture2D blockSprites, PlayingField field, int moveTimerLim, BlockType blockType, bool isColor) :
+                           Texture2D blockSprites, PlayingField field, BlockType blockType, bool isColor) :
             base(4, 4, blockSprites, isColor)
         {
             this.field = field;
-            this.moveTimerLim = moveTimerLim;
             this.blockType = blockType;
             isNext = true;
 
@@ -124,6 +133,8 @@ namespace Practicum.Tetris
             }
         }
 
+        /// <summary>Turn clockwise.</summary>
+        /// <param name="field">The field the block is in.</param>
         public virtual void turnClockwise(PlayingField field)
         {
             bool[][] tempBlockStruc = new bool[4][];
@@ -139,6 +150,8 @@ namespace Practicum.Tetris
             if (isColor) { colorBlock(); }
         }
 
+        /// <summary>Turn anti clockwise.</summary>
+        /// <param name="field">The field the block is in.</param>
         public virtual void turnAntiClockwise(PlayingField field)
         {
             bool[][] tempBlockStruc = new bool[4][];
@@ -186,6 +199,10 @@ namespace Practicum.Tetris
             }
         }
 
+        /// <summary>Can a new block be placed? If posible it will.</summary>
+        /// <param name="topmost">Highest internaly filled block.</param>
+        /// <param name="leftmost">Most left internaly filled block.</param>
+        /// <param name="rightmost">Most right internaly filled block.</param>
         private bool placeBlock(byte topmost, byte leftmost, byte rightmost)
         {
             offsetY = (sbyte)(0 - topmost);
@@ -243,6 +260,7 @@ namespace Practicum.Tetris
             return true; // successfully placed
         }
 
+        /// <summary>Shape the block to the specified shape.</summary>
         private void fillStruct(bool x1y1, bool x2y1, bool x3y1, bool x4y1, bool x1y2, bool x2y2, bool x3y2, bool x4y2, bool x1y3, bool x2y3, bool x3y3, bool x4y3, bool x1y4, bool x2y4, bool x3y4, bool x4y4)
         {
             fieldStruc[0][0] = x1y1; fieldStruc[0][1] = x2y1; fieldStruc[0][2] = x3y1; fieldStruc[0][3] = x4y1;
@@ -251,6 +269,7 @@ namespace Practicum.Tetris
             fieldStruc[3][0] = x1y4; fieldStruc[3][1] = x2y4; fieldStruc[3][2] = x3y4; fieldStruc[3][3] = x4y4;
         }
 
+        /// <summary>Give the block a color.</summary>
         private void colorBlock()
         {
             for (int i = 0; i < fieldStruc.Length; i++)
@@ -263,6 +282,9 @@ namespace Practicum.Tetris
             }
         }
 
+        /// <summary>Is rotation posible?</summary>
+        /// <param name="tempBlockStruc">The structure to check.</param>
+        /// <returns></returns>
         private bool checkRotation(PlayingField field, bool[][] tempBlockStruc)
         {
             if (field.canBlockMove(tempBlockStruc, offsetX, offsetY))
@@ -304,6 +326,7 @@ namespace Practicum.Tetris
             return false; // could not rotate
         }
 
+        /// <summary>Handle user inputs and automatic movement.</summary>
         public bool handleMovement(GameTime gameTime, InputHelper input)
         {
             // handle user inputs
@@ -315,6 +338,7 @@ namespace Practicum.Tetris
             if (input.KeyPressed(Keys.D) && field.canBlockMove(this, Movement.Right))
             { move(Movement.Right); }
 
+            // go down
             if (input.KeyPressed(Keys.S))
             {
                 if (field.canBlockMove(this, Movement.Down)) // can still go lower
@@ -326,6 +350,7 @@ namespace Practicum.Tetris
                 { return false; } // may no longer move
             }
 
+            // go all the way down
             if (input.IsKeyDown(Keys.W))
             {
                 // move all the way down
@@ -335,8 +360,8 @@ namespace Practicum.Tetris
                 return false; // may no longer move
             }
 
+            // rotate
             if (input.KeyPressed(Keys.Q)) { turnAntiClockwise(field); }
-
             if (input.KeyPressed(Keys.E)) { turnClockwise(field); }
 
             //movement tick
@@ -355,6 +380,7 @@ namespace Practicum.Tetris
             return true; // was able to go down if it had to
         }
 
+        /// <summary>Draw the block.</summary>
         public override void Draw(SpriteBatch spriteBatch)
         {
             for (int y = 0; y < 4; y++)
@@ -363,6 +389,7 @@ namespace Practicum.Tetris
                 {
                     if (!isNext)
                     {
+                        // active block
                         if (checkGridStruct(y, x))
                         {
                             if (checkGridStruct(y, x))
@@ -374,6 +401,7 @@ namespace Practicum.Tetris
                     }
                     else
                     {
+                        // next block
                         if (checkGridStruct(y, x))
                         {
                             if (isColor) { spriteBatch.Draw(blockSprites, new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), new Rectangle(checkGridCol(y, x) * 20, 0, 20, 20), Color.White); }
@@ -386,5 +414,10 @@ namespace Practicum.Tetris
             }
         }
 
+        /// <summary>Set the automatic movement speed.</summary>
+        public void setMoveTimer(int moveTimerLim)
+        {
+            this.moveTimerLim = moveTimerLim;
+        }
     }
 }
