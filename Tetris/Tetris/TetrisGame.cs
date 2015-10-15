@@ -242,7 +242,10 @@ namespace Practicum.Tetris
                     {
                         // back to menu
                         reserveGameState = GameStates.Menu;
+
+                        // reset for next playthrough
                         score = 0;
+                        moveTimerLim = moveTimerLimBase;
                     }
                     if (menuButtons[3].isClicked(input)) { Exit(); } // quit game
 
