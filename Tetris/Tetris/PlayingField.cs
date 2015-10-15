@@ -46,7 +46,7 @@ namespace Practicum.Tetris
                             {
                                 // get the colors of the block
                                 for (int X = 0; X < width; X++)
-                                { scoreChange[fieldCol[y][X] + 1] += 1; }
+                                { scoreChange[fieldCol[y][X] + 2] += 1; }
 
                                 // is the entire row 1 color?
                                 for (int X = 0; X < width; X++)
