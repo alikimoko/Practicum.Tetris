@@ -46,15 +46,17 @@ namespace Practicum.Tetris
                             {
                                 // get the colors of the block
                                 for (int X = 0; X < width; X++)
-                                { scoreChange[fieldCol[y][X] + 2] += 1; }
+                                {
+                                    scoreChange[fieldCol[blockOffset + y][X] + 1] += 1;
+                                }
 
+                                byte rowColorCheck = 0;
                                 // is the entire row 1 color?
                                 for (int X = 0; X < width; X++)
                                 {
-                                    byte rowColorCheck = 0;
-                                    if (X == 0) { rowColorCheck = fieldCol[y][X]; }
+                                    if (X == 0) { rowColorCheck = fieldCol[blockOffset + y][X]; }
                                     else if (X == width - 1) { scoreChange[1] += 1; }
-                                    else if (rowColorCheck != fieldCol[y][X]) { break; }
+                                    else if (rowColorCheck != fieldCol[blockOffset + y][X]) { break; }
                                 }
                             }
                         }
@@ -67,7 +69,7 @@ namespace Practicum.Tetris
                 // rows have been cleared
                 moveRows(clearedRows);
             }
-
+            
             return scoreChange;
         }
 
