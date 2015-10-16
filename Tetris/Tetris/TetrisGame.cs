@@ -279,8 +279,8 @@ namespace Practicum.Tetris
                 case GameStates.Info:
                     // info screen
                     spriteBatch.Draw(controls, Vector2.Zero, Color.White);
-                    spriteBatch.DrawString(fontRegularMenu, "MONOCHROME MODE:\nPlay tetris like you\'re used to.", new Vector2(10, 350), Color.Black);
-                    spriteBatch.DrawString(fontRegularMenu, "RAINBOW MODE:\nColorfull tetris with color based scoring.", new Vector2(10, 400), Color.Purple);
+                    spriteBatch.DrawString(fontSelectedMenu, "MONOCHROME MODE:\nPlay tetris like you\'re used to.", new Vector2(10, 350), Color.Black);
+                    spriteBatch.DrawString(fontSelectedMenu, "RAINBOW MODE:\nColorfull tetris with color based scoring.", new Vector2(10, 400), Color.Purple);
                     backButton.Draw(spriteBatch);
                     break;
 
