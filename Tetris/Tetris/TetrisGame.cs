@@ -42,6 +42,7 @@ namespace Practicum.Tetris
             screenHeigth = 500,
             score = 0,
             finishedRows = 0;
+        int[] scoreTracker = new int[7];
         float[] pointsPerColor;
 
         // timers
@@ -51,13 +52,12 @@ namespace Practicum.Tetris
                   newBlockTimerLim = 250;
 
         //sprites
-        Texture2D nextBlockWindow,
-                  btnMono, btnColor, btnInfo, btnQuit,
-                  btnBack, btnMenu, controls,
-                  blockSprites,
-                  fade;
         SpriteFont fontRegularMenu, fontSelectedMenu;
-
+        Texture2D nextBlockWindow, controls, fade, // special items
+                  btnMono, btnColor, btnInfo, btnQuit, btnBack, btnMenu, // buttons
+                  blockSprites, // blocks
+                  scoreViewerMono, scoreViewerColor, scoreViewerCurrent, numbersMono, numbersColor, numbersCurrent; // score
+        
         /// <summary>Make a new tetris game.</summary>
         public TetrisGame()
         {
@@ -130,6 +130,13 @@ namespace Practicum.Tetris
             // misc
             fade = Content.Load<Texture2D>("fade");
 
+            // score view
+            scoreViewerMono = Content.Load<Texture2D>("scoreViewerMono");
+            scoreViewerColor = Content.Load<Texture2D>("scoreViewerColor");
+
+            numbersMono = Content.Load<Texture2D>("numbersMono");
+            numbersColor = Content.Load<Texture2D>("numbersColor");
+
         }
 
         /// <summary>Updates the game.</summary>
@@ -185,6 +192,11 @@ namespace Practicum.Tetris
                         tetrisBlockNext = TetrisBlock.createBlock(blockSprites, field, isColor);
                         tetrisBlockCurrent.placeBlock();
                         tetrisBlockCurrent.setMoveTimer(moveTimerLim);
+
+                        // score viewer
+                        scoreViewerCurrent = isColor ? scoreViewerColor : scoreViewerMono;
+                        numbersCurrent = isColor ? numbersColor : numbersMono;
+                        scoreStringify();
                     }
 
                     break;
@@ -233,7 +245,6 @@ namespace Practicum.Tetris
                                 reserveGameState = GameStates.GameOver;
                             }
                             resetBlock();
-                            // TODO: score
                         }
                     }
 
@@ -285,9 +296,11 @@ namespace Practicum.Tetris
                 case GameStates.Info:
                     // info screen
                     spriteBatch.Draw(controls, Vector2.Zero, Color.White);
-                    spriteBatch.DrawString(fontSelectedMenu, "MONOCHROME MODE:\nPlay tetris like you\'re used to.", new Vector2(10, 350), Color.Black);
-                    spriteBatch.DrawString(fontSelectedMenu, "RAINBOW MODE:\nColorfull tetris with color based scoring.", new Vector2(10, 400), Color.Purple);
                     backButton.Draw(spriteBatch);
+                    
+                    // game mode base info
+                    spriteBatch.DrawString(fontSelectedMenu, "MONOCHROME MODE:\nPlay tetris like you\'re used to.", new Vector2(10, 360), Color.Black);
+                    spriteBatch.DrawString(fontSelectedMenu, "RAINBOW MODE:\nColorfull tetris with color based scoring.", new Vector2(10, 405), Color.Purple);
                     break;
 
                 case GameStates.Playing:
@@ -304,20 +317,26 @@ namespace Practicum.Tetris
                     tetrisBlockNext.Draw(spriteBatch);
 
                     // TODO: in game info (not just text)
-                    spriteBatch.DrawString(fontRegularMenu, "Press <ESC> to exit", new Vector2(10,screenHeigth - 30), Color.Black);
 
-                    // TODO: Show fancy score
-                    spriteBatch.DrawString(fontRegularMenu, score.ToString(), new Vector2(300, 400), Color.Black);
-
+                    // show fancy score
+                    spriteBatch.Draw(scoreViewerCurrent, new Vector2(20, field.Height * 20 + 20), Color.White);
+                    for(int i = 0; i < 7; i++)
+                    { spriteBatch.Draw(numbersCurrent, new Vector2(25 + i * 20, field.Height * 20 + 50), new Rectangle(scoreTracker[i] * 20, 0, 20, 30), Color.White); }
+                    
                     break;
 
                 case GameStates.GameOver:
-                    // draw the last playing field faded at the background
+                    // draw the last playing field at the background
                     field.Draw(spriteBatch);
                     spriteBatch.Draw(nextBlockWindow, new Vector2(field.Width * 20 + 20, 20), Color.White);
                     tetrisBlockNext.Draw(spriteBatch);
+                    spriteBatch.Draw(scoreViewerCurrent, new Vector2(20, field.Height * 20 + 20), Color.White);
+                    for (int i = 0; i < 7; i++)
+                    { spriteBatch.Draw(numbersCurrent, new Vector2(25 + i * 20, field.Height * 20 + 50), new Rectangle(scoreTracker[i] * 20, 0, 20, 30), Color.White); }
+                    
+                    // fade it away
                     spriteBatch.Draw(fade, new Rectangle(0,0,screenWidth, screenHeigth), Color.White); // add a semitransparent gray layer
-
+                    
                     // TODO: GAME OVER text and score view
                     spriteBatch.DrawString(fontRegularMenu, "GAME OVER", new Vector2(170, 10), Color.Black);
                     
@@ -333,12 +352,13 @@ namespace Practicum.Tetris
         }
 
         /// <summary>Keeps score and fastens block movement.</summary>
-        /// <param name="scoreChange">An array containing the cleared blocks and rows.</param>
+        /// <param name="scoreChange">An array containing the cleared rows and blocks (rainbow mode only).</param>
         public void scorePoints(int[] scoreChange)
         {
-            float points = 0;
             if (scoreChange[0] != 0)
             {
+                float points = 0;
+
                 // total rows cleared increses
                 finishedRows += scoreChange[0];
 
@@ -358,13 +378,27 @@ namespace Practicum.Tetris
                         pointsPerColor[color] = MathHelper.Clamp(pointsPerColor[color] - scoreChange[color] * 0.1f + 0.2f, 1, 5);
                     }
                 }
-            }
 
-            score += (int)points;
-            moveTimerLim = (int)MathHelper.Max(moveTimerLimBase - finishedRows * 2, moveTimerLimMin); // go down faster by 2 msec per cleared row to a min of 50 msec per step (realy fast)
+                // update score
+                score += (int)points;
+                scoreStringify();
+
+                // update block falling speed
+                moveTimerLim = (int)MathHelper.Max(moveTimerLimBase - finishedRows * 2, moveTimerLimMin); // go down faster by 2 msec per cleared row to a min of 50 msec per step (realy fast)
+            }
         }
 
-        /// <summary>Clears placer blocks and starts timer for the next block.</summary>
+        private void scoreStringify()
+        {
+            string tmp = score.ToString();
+            
+            // make sure there are 7 symbols for the score (score in the milions)
+            tmp = tmp.PadLeft(7, '0');
+            for(int i = 0; i < 7; i++)
+            { scoreTracker[i] = tmp[i] - 48; }
+        }
+
+        /// <summary>Clears placed blocks and starts timer for the next block.</summary>
         private void resetBlock()
         {
             newBlockTimer = 0;
