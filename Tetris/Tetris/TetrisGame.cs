@@ -320,9 +320,10 @@ namespace Practicum.Tetris
 
                     // TODO: GAME OVER text and score view
                     spriteBatch.DrawString(fontRegularMenu, "GAME OVER", new Vector2(170, 10), Color.Black);
+                    
                     // buttons
                     menuButton.Draw(spriteBatch);
-                    menuButtons[3].Draw(spriteBatch);
+                    menuButtons[3].Draw(spriteBatch); // Quit button
 
                     break;
             }
@@ -338,13 +339,17 @@ namespace Practicum.Tetris
             float points = 0;
             if (scoreChange[0] != 0)
             {
-                // award 50 points per cleared row
-                points = scoreChange[0] * 50;
+                // total rows cleared increses
+                finishedRows += scoreChange[0];
+
+                // award points per cleared row
+                for(int i = 1; i <= scoreChange[0]; i++)
+                { points += 100 * i; } // get more points for each cleared row
 
                 if (isColor)
                 {
-                    // uni colored rows
-                    points += scoreChange[1] * 450;
+                    // uni colored rows get bonus points
+                    points += scoreChange[1] * 400;
 
                     // points per color
                     for(int color = 0; color < 6; color++)
@@ -356,9 +361,7 @@ namespace Practicum.Tetris
             }
 
             score += (int)points;
-            moveTimerLim = moveTimerLimBase - (score / 100);
-            if (moveTimerLim < moveTimerLimMin)
-            { moveTimerLim = moveTimerLimMin; }
+            moveTimerLim = (int)MathHelper.Max(moveTimerLimBase - finishedRows * 2, moveTimerLimMin); // go down faster by 2 msec per cleared row to a min of 50 msec per step (realy fast)
         }
 
         /// <summary>Clears placer blocks and starts timer for the next block.</summary>
