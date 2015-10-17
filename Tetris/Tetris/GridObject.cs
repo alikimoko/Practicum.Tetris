@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Practicum.Tetris
 {
-    class GridObject
+    abstract class GridObject
     {
         // base atributes
         protected bool isColor;
@@ -65,20 +65,6 @@ namespace Practicum.Tetris
         public static byte checkGridCol(byte[][] fieldCol, int y, int x) { return fieldCol[y][x]; }
 
         /// <summary>Draw the field.</summary>
-        public virtual void Draw(SpriteBatch spriteBatch)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    if (checkGridStruct(y, x))
-                    {
-                        if (isColor) { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(checkGridCol(y, x) * 20, 0, 20, 20), Color.White); }
-                        else { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(20, 0, 20, 20), Color.White); }
-                    }
-                    else { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(0, 0, 20, 20), Color.White); }
-                }
-            }
-        }
+        public abstract void Draw(SpriteBatch spriteBatch);
     }
 }

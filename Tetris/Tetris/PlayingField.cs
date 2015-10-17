@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace Practicum.Tetris
@@ -201,6 +202,23 @@ namespace Practicum.Tetris
                 {
                     fieldStruc[y][x] = false;
                     if(isColor) { fieldCol[y][x] = 0; }
+                }
+            }
+        }
+
+        /// <summary>Draw the field.</summary>
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (checkGridStruct(y, x))
+                    {
+                        if (isColor) { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(checkGridCol(y, x) * 20, 0, 20, 20), Color.White); }
+                        else { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(20, 0, 20, 20), Color.White); }
+                    }
+                    else { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(0, 0, 20, 20), Color.White); }
                 }
             }
         }

@@ -39,8 +39,9 @@ namespace Practicum.Tetris
         bool isColor;
         bool couldGoDown;
         int screenWidth = 500,
+            screenHeigth = 500,
             score = 0,
-            screenHeigth = 500;
+            finishedRows = 0;
         float[] pointsPerColor;
 
         // timers
@@ -53,7 +54,8 @@ namespace Practicum.Tetris
         Texture2D nextBlockWindow,
                   btnMono, btnColor, btnInfo, btnQuit,
                   btnBack, btnMenu, controls,
-                  blockSprites;
+                  blockSprites,
+                  fade;
         SpriteFont fontRegularMenu, fontSelectedMenu;
 
         /// <summary>Make a new tetris game.</summary>
@@ -124,6 +126,9 @@ namespace Practicum.Tetris
             // fonts
             fontRegularMenu = Content.Load<SpriteFont>("FontMenuRegular");
             fontSelectedMenu = Content.Load<SpriteFont>("FontMenuSelected");
+
+            // misc
+            fade = Content.Load<Texture2D>("fade");
 
         }
 
@@ -245,6 +250,7 @@ namespace Practicum.Tetris
 
                         // reset for next playthrough
                         score = 0;
+                        finishedRows = 0;
                         moveTimerLim = moveTimerLimBase;
                     }
                     if (menuButtons[3].isClicked(input)) { Exit(); } // quit game
@@ -300,18 +306,18 @@ namespace Practicum.Tetris
                     // TODO: in game info (not just text)
                     spriteBatch.DrawString(fontRegularMenu, "Press <ESC> to exit", new Vector2(10,screenHeigth - 30), Color.Black);
 
-                    // TODO: Show score
+                    // TODO: Show fancy score
                     spriteBatch.DrawString(fontRegularMenu, score.ToString(), new Vector2(300, 400), Color.Black);
 
-                    /*    
-                    spriteBatch.DrawString(fontRegularMenu,
-                                           " Controls: \n A to move left \n S to move down \n D to move left \n Q to turn left \n E to turn right \n <ESC> to Exit \n <SPACEBAR> to pause \n Enjoy! \n \n SCORE: " + score,
-                                           new Vector2(250, 10), Color.White);
-                                           // calculate a position in comparison to the field needed ^
-                    */
                     break;
 
                 case GameStates.GameOver:
+                    // draw the last playing field faded at the background
+                    field.Draw(spriteBatch);
+                    spriteBatch.Draw(nextBlockWindow, new Vector2(field.Width * 20 + 20, 20), Color.White);
+                    tetrisBlockNext.Draw(spriteBatch);
+                    spriteBatch.Draw(fade, new Rectangle(0,0,screenWidth, screenHeigth), Color.White); // add a semitransparent gray layer
+
                     // TODO: GAME OVER text and score view
                     spriteBatch.DrawString(fontRegularMenu, "GAME OVER", new Vector2(170, 10), Color.Black);
                     // buttons
@@ -329,7 +335,7 @@ namespace Practicum.Tetris
         /// <param name="scoreChange">An array containing the cleared blocks and rows.</param>
         public void scorePoints(int[] scoreChange)
         {
-            int points = 0;
+            float points = 0;
             if (scoreChange[0] != 0)
             {
                 // award 50 points per cleared row
@@ -343,13 +349,13 @@ namespace Practicum.Tetris
                     // points per color
                     for(int color = 0; color < 6; color++)
                     {
-                        points += (int)(scoreChange[color + 2] * pointsPerColor[color]);
+                        points += scoreChange[color + 2] * pointsPerColor[color];
                         pointsPerColor[color] = MathHelper.Clamp(pointsPerColor[color] - scoreChange[color] * 0.1f + 0.2f, 1, 5);
                     }
                 }
             }
 
-            score += points;
+            score += (int)points;
             moveTimerLim = moveTimerLimBase - (score / 100);
             if (moveTimerLim < moveTimerLimMin)
             { moveTimerLim = moveTimerLimMin; }
