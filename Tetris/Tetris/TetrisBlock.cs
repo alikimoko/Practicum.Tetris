@@ -25,9 +25,7 @@ namespace Practicum.Tetris
 
         private BlockType blockType;
 
-        Random rand = new Random();
-
-        private static sbyte prevBlock = -1;
+        static Random rand = new Random();
 
         /// <summary>Make a new tetris block.</summary>
         /// <param name="blockSprites">The sprite string containing the block sprites.</param>
@@ -37,16 +35,9 @@ namespace Practicum.Tetris
         public static TetrisBlock createBlock(Texture2D blockSprites, PlayingField field, bool isColor = false, sbyte blockKind = -1)
         {
             TetrisBlock block;
-            Random random = new Random();
 
             if (blockKind == -1)
-            {
-                do
-                {
-                    blockKind = (sbyte)random.Next(8);
-                } while (blockKind == prevBlock);
-            }
-            prevBlock = blockKind;
+            { blockKind = (sbyte)rand.Next(8); }
             
             switch (blockKind)
                 {

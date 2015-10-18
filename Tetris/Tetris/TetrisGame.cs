@@ -52,7 +52,7 @@ namespace Practicum.Tetris
                   newBlockTimerLim = 250;
 
         //sprites
-        SpriteFont fontRegularMenu, fontSelectedMenu;
+        SpriteFont fontRegularMenu, fontInfo, fontGameInfo;
         Texture2D nextBlockWindow, controls, fade, // special items
                   btnMono, btnColor, btnInfo, btnQuit, btnBack, btnMenu, // buttons
                   blockSprites, // blocks
@@ -125,7 +125,8 @@ namespace Practicum.Tetris
 
             // fonts
             fontRegularMenu = Content.Load<SpriteFont>("FontMenuRegular");
-            fontSelectedMenu = Content.Load<SpriteFont>("FontMenuSelected");
+            fontInfo = Content.Load<SpriteFont>("fontInfo");
+            fontGameInfo = Content.Load<SpriteFont>("gameInfo");
 
             // misc
             fade = Content.Load<Texture2D>("fade");
@@ -299,8 +300,8 @@ namespace Practicum.Tetris
                     backButton.Draw(spriteBatch);
                     
                     // game mode base info
-                    spriteBatch.DrawString(fontSelectedMenu, "MONOCHROME MODE:\nPlay tetris like you\'re used to.", new Vector2(10, 360), Color.Black);
-                    spriteBatch.DrawString(fontSelectedMenu, "RAINBOW MODE:\nColorfull tetris with color based scoring.", new Vector2(10, 405), Color.Purple);
+                    spriteBatch.DrawString(fontInfo, "MONOCHROME MODE:\nPlay tetris like you\'re used to.", new Vector2(10, 360), Color.Black);
+                    spriteBatch.DrawString(fontInfo, "RAINBOW MODE:\nColorfull tetris with color based scoring.", new Vector2(10, 405), Color.Purple);
                     break;
 
                 case GameStates.Playing:
@@ -351,7 +352,7 @@ namespace Practicum.Tetris
                     for(int color = 0; color < 6; color++)
                     {
                         points += scoreChange[color + 2] * pointsPerColor[color];
-                        pointsPerColor[color] = MathHelper.Clamp(pointsPerColor[color] - scoreChange[color] * 0.1f + 0.2f, 1, 5);
+                        pointsPerColor[color] = MathHelper.Clamp(pointsPerColor[color] - scoreChange[color + 2] * 0.1f + 0.2f, 1, 5);
                     }
                 }
 
@@ -390,15 +391,39 @@ namespace Practicum.Tetris
             tetrisBlockNext.Draw(spriteBatch);
 
             // in game info (how to get points)
-            
+            drawInfo(spriteBatch, field.Width * 20 + 20, 190);
 
             // show fancy score
             drawScore(spriteBatch, 20, field.Height * 20 + 20);
         }
 
+        /// <summary>Draws the in game info.</summary>
         private void drawInfo(SpriteBatch spriteBatch, int offsetX, int offsetY)
         {
+            spriteBatch.DrawString(fontGameInfo, "HOW TO EARN POINTS", new Vector2(offsetX, offsetY), Color.Black);
 
+            // rows
+            for(int i = 0; i < 8; i++)
+            { spriteBatch.Draw(blockSprites, new Vector2(offsetX + 20 * i, offsetY + 25), new Rectangle(20, 0, 20, 20), Color.White); }
+
+            spriteBatch.DrawString(fontGameInfo,
+                                  "Clearing rows:\n1x = 100, 2x = 300\n3x = 600, 4x = 1000" + (isColor ? "\nUni colored rows:\n400 bonus" : ""),
+                                  new Vector2(offsetX, offsetY + 45), Color.Black);
+
+            // rainbow mode block bonus
+            if (isColor)
+            {
+                for (int i = 1; i < 4; i++)
+                {
+                    spriteBatch.Draw(blockSprites, new Vector2(offsetX, offsetY + 125 + i * 25), new Rectangle(i * 20, 0, 20, 20), Color.White);
+                    spriteBatch.DrawString(fontGameInfo, (Math.Round(pointsPerColor[i - 1], 1)).ToString(), new Vector2(offsetX + 30, offsetY + 125 + i * 25), Color.Black);
+                }
+                for (int i = 4; i < 7; i++)
+                {
+                    spriteBatch.Draw(blockSprites, new Vector2(offsetX + 100, offsetY + 50 + i * 25), new Rectangle(i * 20, 0, 20, 20), Color.White);
+                    spriteBatch.DrawString(fontGameInfo, (Math.Round(pointsPerColor[i - 1], 1)).ToString(), new Vector2(offsetX + 130, offsetY + 50 + i * 25), Color.Black);
+                }
+            }
         }
 
         /// <summary>Draws the score window at specified position.</summary>
