@@ -62,7 +62,7 @@ namespace Practicum.Tetris
                   btnMono, btnColor, btnInfo, btnQuit, btnBack, btnMenu, // buttons
                   blockSprites, // blocks
                   scoreViewerMono, scoreViewerColor, scoreViewerCurrent, numbersMono, numbersColor, numbersCurrent, speedLevelWindow, // score and level
-                  gameOverLogo;
+                  gameLogo, gameOverLogo;
 
         // sound
         SoundEffect blockHitSound;
@@ -139,6 +139,7 @@ namespace Practicum.Tetris
 
             // misc
             fade = Content.Load<Texture2D>("fade");
+            gameLogo = Content.Load<Texture2D>("gameLogo");
             gameOverLogo = Content.Load<Texture2D>("gameOverLogo");
 
             // score and level view
@@ -310,8 +311,10 @@ namespace Practicum.Tetris
             {
                 case GameStates.Menu:
                     // menu drawing
-                    // TODO: logo
+                    // logo
+                    spriteBatch.Draw(gameLogo, new Vector2((screenWidth - 380) / 2, 60), white);
 
+                    // buttons
                     foreach(Button button in menuButtons)
                     { button.Draw(spriteBatch); }
 
@@ -341,7 +344,7 @@ namespace Practicum.Tetris
                     // logo
                     spriteBatch.Draw(gameOverLogo, new Vector2((screenWidth - 460) / 2, 20), white);
                     // centered game over text
-                    spriteBatch.DrawString(fontGameOver, gameOverString1, new Vector2(screenWidth / 2, 275), black, 0, new Vector2(fontGameOver.MeasureString(gameOverString1).X / 2, 0), 1, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(fontGameOver, gameOverString1, new Vector2(screenWidth / 2, 265), black, 0, new Vector2(fontGameOver.MeasureString(gameOverString1).X / 2, 0), 1, SpriteEffects.None, 0);
                     spriteBatch.DrawString(fontGameOver, gameOverString2, new Vector2(screenWidth / 2, 300), black, 0, new Vector2(fontGameOver.MeasureString(gameOverString2).X / 2, 0), 1, SpriteEffects.None, 0);
                     
                     // buttons
