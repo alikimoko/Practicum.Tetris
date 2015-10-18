@@ -196,7 +196,7 @@ namespace Practicum.Tetris
                         // score viewer
                         scoreViewerCurrent = isColor ? scoreViewerColor : scoreViewerMono;
                         numbersCurrent = isColor ? numbersColor : numbersMono;
-                        scoreStringify();
+                        scoreSplicer();
                     }
 
                     break;
@@ -304,36 +304,12 @@ namespace Practicum.Tetris
                     break;
 
                 case GameStates.Playing:
-
-                    // field
-                    field.Draw(spriteBatch);
-                    
-                    // active block
-                    if (tetrisBlockCurrent != null)
-                    { tetrisBlockCurrent.Draw(spriteBatch); }
-
-                    // next block
-                    spriteBatch.Draw(nextBlockWindow, new Vector2(field.Width * 20 + 20, 20), Color.White);
-                    tetrisBlockNext.Draw(spriteBatch);
-
-                    // TODO: in game info (not just text)
-
-                    // show fancy score
-                    spriteBatch.Draw(scoreViewerCurrent, new Vector2(20, field.Height * 20 + 20), Color.White);
-                    for(int i = 0; i < 7; i++)
-                    { spriteBatch.Draw(numbersCurrent, new Vector2(25 + i * 20, field.Height * 20 + 50), new Rectangle(scoreTracker[i] * 20, 0, 20, 30), Color.White); }
-                    
+                    drawGameField(spriteBatch);
                     break;
 
                 case GameStates.GameOver:
                     // draw the last playing field at the background
-                    field.Draw(spriteBatch);
-                    spriteBatch.Draw(nextBlockWindow, new Vector2(field.Width * 20 + 20, 20), Color.White);
-                    tetrisBlockNext.Draw(spriteBatch);
-                    spriteBatch.Draw(scoreViewerCurrent, new Vector2(20, field.Height * 20 + 20), Color.White);
-                    for (int i = 0; i < 7; i++)
-                    { spriteBatch.Draw(numbersCurrent, new Vector2(25 + i * 20, field.Height * 20 + 50), new Rectangle(scoreTracker[i] * 20, 0, 20, 30), Color.White); }
-                    
+                    drawGameField(spriteBatch);
                     // fade it away
                     spriteBatch.Draw(fade, new Rectangle(0,0,screenWidth, screenHeigth), Color.White); // add a semitransparent gray layer
                     
@@ -381,14 +357,15 @@ namespace Practicum.Tetris
 
                 // update score
                 score += (int)points;
-                scoreStringify();
+                scoreSplicer();
 
                 // update block falling speed
                 moveTimerLim = (int)MathHelper.Max(moveTimerLimBase - finishedRows * 2, moveTimerLimMin); // go down faster by 2 msec per cleared row to a min of 50 msec per step (realy fast)
             }
         }
 
-        private void scoreStringify()
+        /// <summary>Splices the score into an array for the score counter to use.</summary>
+        private void scoreSplicer()
         {
             string tmp = score.ToString();
             
@@ -396,6 +373,43 @@ namespace Practicum.Tetris
             tmp = tmp.PadLeft(7, '0');
             for(int i = 0; i < 7; i++)
             { scoreTracker[i] = tmp[i] - 48; }
+        }
+
+        /// <summary>Draws the components of the game field.</summary>
+        private void drawGameField(SpriteBatch spriteBatch)
+        {
+            // field
+            field.Draw(spriteBatch);
+
+            // active block
+            if (tetrisBlockCurrent != null)
+            { tetrisBlockCurrent.Draw(spriteBatch); }
+
+            // next block
+            spriteBatch.Draw(nextBlockWindow, new Vector2(field.Width * 20 + 20, 20), Color.White);
+            tetrisBlockNext.Draw(spriteBatch);
+
+            // in game info (how to get points)
+            
+
+            // show fancy score
+            drawScore(spriteBatch, 20, field.Height * 20 + 20);
+        }
+
+        private void drawInfo(SpriteBatch spriteBatch, int offsetX, int offsetY)
+        {
+
+        }
+
+        /// <summary>Draws the score window at specified position.</summary>
+        private void drawScore(SpriteBatch spriteBatch, int offsetX, int offsetY)
+        {
+            // score window
+            spriteBatch.Draw(scoreViewerCurrent, new Vector2(offsetX, offsetY), Color.White);
+
+            // score itself
+            for (int i = 0; i < 7; i++)
+            { spriteBatch.Draw(numbersCurrent, new Vector2(offsetX + 5 + i * 20, offsetY + 30), new Rectangle(scoreTracker[i] * 20, 0, 20, 30), Color.White); }
         }
 
         /// <summary>Clears placed blocks and starts timer for the next block.</summary>

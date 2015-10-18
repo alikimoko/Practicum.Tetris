@@ -7,7 +7,7 @@ namespace Practicum.Tetris
 {
     enum BlockType : byte { Square, LineH, LineV, Roof, Z, ReverseZ, FlatL, FlatReverseL }
 
-    class TetrisBlock : GridObject
+    abstract class TetrisBlock : GridObject
     {
         private bool isNext;
         private sbyte offsetX, offsetY;
@@ -134,37 +134,65 @@ namespace Practicum.Tetris
         }
 
         /// <summary>Turn clockwise.</summary>
-        /// <param name="field">The field the block is in.</param>
-        public virtual void turnClockwise(PlayingField field)
+        public abstract void turnClockwise();
+
+        protected bool[][] turnClockwise4()
         {
             bool[][] tempBlockStruc = new bool[4][];
             for (int i = 0; i < 4; i++)
             { tempBlockStruc[i] = new bool[4]; }
 
-            tempBlockStruc[0][0] = fieldStruc[3][0];    tempBlockStruc[1][0] = fieldStruc[3][1];    tempBlockStruc[2][0] = fieldStruc[3][2];    tempBlockStruc[3][0] = fieldStruc[3][3];
-            tempBlockStruc[0][1] = fieldStruc[2][0];    tempBlockStruc[1][1] = fieldStruc[2][1];    tempBlockStruc[2][1] = fieldStruc[2][2];    tempBlockStruc[3][1] = fieldStruc[2][3];
-            tempBlockStruc[0][2] = fieldStruc[1][0];    tempBlockStruc[1][2] = fieldStruc[1][1];    tempBlockStruc[2][2] = fieldStruc[1][2];    tempBlockStruc[3][2] = fieldStruc[1][3];
-            tempBlockStruc[0][3] = fieldStruc[0][0];    tempBlockStruc[1][3] = fieldStruc[0][1];    tempBlockStruc[2][3] = fieldStruc[0][2];    tempBlockStruc[3][3] = fieldStruc[0][3];
+            tempBlockStruc[0][0] = fieldStruc[3][0];    tempBlockStruc[0][1] = fieldStruc[2][0];    tempBlockStruc[0][2] = fieldStruc[1][0];    tempBlockStruc[0][3] = fieldStruc[0][0];
+            tempBlockStruc[1][0] = fieldStruc[3][1];    tempBlockStruc[1][1] = fieldStruc[2][1];    tempBlockStruc[1][2] = fieldStruc[1][1];    tempBlockStruc[1][3] = fieldStruc[0][1];
+            tempBlockStruc[2][0] = fieldStruc[3][2];    tempBlockStruc[2][1] = fieldStruc[2][2];    tempBlockStruc[2][2] = fieldStruc[1][2];    tempBlockStruc[2][3] = fieldStruc[0][2];
+            tempBlockStruc[3][0] = fieldStruc[3][3];    tempBlockStruc[3][1] = fieldStruc[2][3];    tempBlockStruc[3][2] = fieldStruc[1][3];    tempBlockStruc[3][3] = fieldStruc[0][3];
 
-            checkRotation(field, tempBlockStruc);
-            if (isColor) { colorBlock(); }
+            return tempBlockStruc;
+        }
+
+        protected bool[][] turnClockwise3()
+        {
+            bool[][] tempBlockStruc = new bool[4][];
+            for (int i = 0; i < 4; i++)
+            { tempBlockStruc[i] = new bool[4]; }
+
+            tempBlockStruc[0][0] = fieldStruc[2][0]; tempBlockStruc[0][1] = fieldStruc[1][0]; tempBlockStruc[0][2] = fieldStruc[0][0]; tempBlockStruc[0][3] = false;
+            tempBlockStruc[1][0] = fieldStruc[2][1]; tempBlockStruc[1][1] = fieldStruc[1][1]; tempBlockStruc[1][2] = fieldStruc[0][1]; tempBlockStruc[1][3] = false;
+            tempBlockStruc[2][0] = fieldStruc[2][2]; tempBlockStruc[2][1] = fieldStruc[1][2]; tempBlockStruc[2][2] = fieldStruc[0][2]; tempBlockStruc[2][3] = false;
+            tempBlockStruc[3][0] = false; tempBlockStruc[3][1] = false; tempBlockStruc[3][2] = false; tempBlockStruc[3][3] = false;
+
+            return tempBlockStruc;
         }
 
         /// <summary>Turn anti clockwise.</summary>
-        /// <param name="field">The field the block is in.</param>
-        public virtual void turnAntiClockwise(PlayingField field)
+        public abstract void turnAntiClockwise();
+        
+        protected bool[][] turnAntiClockwise4()
         {
             bool[][] tempBlockStruc = new bool[4][];
             for (int i = 0; i < 4; i++)
             { tempBlockStruc[i] = new bool[4]; }
 
-            tempBlockStruc[0][0] = fieldStruc[0][3]; tempBlockStruc[1][0] = fieldStruc[0][2]; tempBlockStruc[2][0] = fieldStruc[0][1]; tempBlockStruc[3][0] = fieldStruc[0][0];
-            tempBlockStruc[0][1] = fieldStruc[1][3]; tempBlockStruc[1][1] = fieldStruc[1][2]; tempBlockStruc[2][1] = fieldStruc[1][1]; tempBlockStruc[3][1] = fieldStruc[1][0];
-            tempBlockStruc[0][2] = fieldStruc[2][3]; tempBlockStruc[1][2] = fieldStruc[2][2]; tempBlockStruc[2][2] = fieldStruc[2][1]; tempBlockStruc[3][2] = fieldStruc[2][0];
-            tempBlockStruc[0][3] = fieldStruc[3][3]; tempBlockStruc[1][3] = fieldStruc[3][2]; tempBlockStruc[2][3] = fieldStruc[3][1]; tempBlockStruc[3][3] = fieldStruc[3][0];
+            tempBlockStruc[0][0] = fieldStruc[0][3];    tempBlockStruc[0][1] = fieldStruc[1][3];    tempBlockStruc[0][2] = fieldStruc[2][3];    tempBlockStruc[0][3] = fieldStruc[3][3];
+            tempBlockStruc[1][0] = fieldStruc[0][2];    tempBlockStruc[1][1] = fieldStruc[1][2];    tempBlockStruc[1][2] = fieldStruc[2][2];    tempBlockStruc[1][3] = fieldStruc[3][2];
+            tempBlockStruc[2][0] = fieldStruc[0][1];    tempBlockStruc[2][1] = fieldStruc[1][1];    tempBlockStruc[2][2] = fieldStruc[2][1];    tempBlockStruc[2][3] = fieldStruc[3][1];
+            tempBlockStruc[3][0] = fieldStruc[0][0];    tempBlockStruc[3][1] = fieldStruc[1][0];    tempBlockStruc[3][2] = fieldStruc[2][0];    tempBlockStruc[3][3] = fieldStruc[3][0];
 
-            checkRotation(field, tempBlockStruc);
-            if (isColor) { colorBlock(); }
+            return tempBlockStruc;
+        }
+
+        protected bool[][] turnAntiClockwise3()
+        {
+            bool[][] tempBlockStruc = new bool[4][];
+            for (int i = 0; i < 4; i++)
+            { tempBlockStruc[i] = new bool[4]; }
+
+            tempBlockStruc[0][0] = fieldStruc[0][2]; tempBlockStruc[0][1] = fieldStruc[1][2]; tempBlockStruc[0][2] = fieldStruc[2][2]; tempBlockStruc[0][3] = false;
+            tempBlockStruc[1][0] = fieldStruc[0][1]; tempBlockStruc[1][1] = fieldStruc[1][1]; tempBlockStruc[1][2] = fieldStruc[2][1]; tempBlockStruc[1][3] = false;
+            tempBlockStruc[2][0] = fieldStruc[0][0]; tempBlockStruc[2][1] = fieldStruc[1][0]; tempBlockStruc[2][2] = fieldStruc[2][0]; tempBlockStruc[2][3] = false;
+            tempBlockStruc[3][0] = false; tempBlockStruc[3][1] = false; tempBlockStruc[3][2] = false; tempBlockStruc[3][3] = false;
+
+            return tempBlockStruc;
         }
 
         /// <summary>Checks if the block can be placed. Places when posible, if not posible it's game over.</summary>
@@ -175,21 +203,17 @@ namespace Practicum.Tetris
             switch (blockType)
             {
                 case BlockType.Roof:
-                    return placeBlock(1, 1, 3);
+                case BlockType.FlatL:
+                case BlockType.FlatReverseL:
+                case BlockType.Z:
+                case BlockType.ReverseZ:
+                    return placeBlock(0, 0, 2);
 
                 case BlockType.LineH:
                     return placeBlock(1, 0, 3);
 
                 case BlockType.LineV:
                     return placeBlock(0, 1, 1);
-
-                case BlockType.FlatL:
-                    return placeBlock(1, 0, 2);
-
-                case BlockType.FlatReverseL:
-                case BlockType.Z:
-                case BlockType.ReverseZ:
-                    return placeBlock(1, 1, 3);
 
                 case BlockType.Square:
                 default:
@@ -270,7 +294,7 @@ namespace Practicum.Tetris
         }
 
         /// <summary>Give the block a color.</summary>
-        private void colorBlock()
+        protected void colorBlock()
         {
             for (int i = 0; i < fieldStruc.Length; i++)
             {
@@ -284,11 +308,13 @@ namespace Practicum.Tetris
 
         /// <summary>Is rotation posible?</summary>
         /// <param name="tempBlockStruc">The structure to check.</param>
-        /// <returns></returns>
-        private bool checkRotation(PlayingField field, bool[][] tempBlockStruc)
+        protected bool checkRotation(bool[][] tempBlockStruc)
         {
             if (field.canBlockMove(tempBlockStruc, offsetX, offsetY))
-            { fieldStruc = tempBlockStruc; }
+            {
+                fieldStruc = tempBlockStruc;
+                return true;
+            }
             else
             {
                 // check if the turn is posible if the block displaces one x
@@ -361,8 +387,8 @@ namespace Practicum.Tetris
             }
 
             // rotate
-            if (input.KeyPressed(Keys.Q)) { turnAntiClockwise(field); }
-            if (input.KeyPressed(Keys.E)) { turnClockwise(field); }
+            if (input.KeyPressed(Keys.Q)) { turnAntiClockwise(); }
+            if (input.KeyPressed(Keys.E)) { turnClockwise(); }
 
             //movement tick
             if (moveTimer >= moveTimerLim)
