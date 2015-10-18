@@ -42,8 +42,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FontMenuRegular.spritefont">
-      <Name>FontMenuRegular</Name>
+    <Compile Include="fontGameOver.spritefont">
+      <Name>fontGameOver</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
@@ -165,6 +165,13 @@
   <ItemGroup>
     <Compile Include="speedLevelWindow.png">
       <Name>speedLevelWindow</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="gameOverLogo.png">
+      <Name>gameOverLogo</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

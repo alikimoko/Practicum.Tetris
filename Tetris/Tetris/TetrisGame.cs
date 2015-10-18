@@ -47,6 +47,7 @@ namespace Practicum.Tetris
         int[] scoreTracker = new int[7];
         int[] speedLvl = new int[3];
         float[] pointsPerColor;
+        string gameOverString1, gameOverString2;
         Color black = Color.Black, white = Color.White;
 
         // timers
@@ -56,11 +57,12 @@ namespace Practicum.Tetris
                   newBlockTimerLim = 250;
 
         // sprites
-        SpriteFont fontRegularMenu, fontInfo, fontGameInfo;
+        SpriteFont fontInfo, fontGameInfo, fontGameOver;
         Texture2D nextBlockWindow, controls, fade, // special items
                   btnMono, btnColor, btnInfo, btnQuit, btnBack, btnMenu, // buttons
                   blockSprites, // blocks
-                  scoreViewerMono, scoreViewerColor, scoreViewerCurrent, numbersMono, numbersColor, numbersCurrent, speedLevelWindow; // score and level
+                  scoreViewerMono, scoreViewerColor, scoreViewerCurrent, numbersMono, numbersColor, numbersCurrent, speedLevelWindow, // score and level
+                  gameOverLogo;
 
         // sound
         SoundEffect blockHitSound;
@@ -131,12 +133,13 @@ namespace Practicum.Tetris
             menuButton = new Button(screenWidth, btnMenu, MenuActions.Menu, 350);
 
             // fonts
-            fontRegularMenu = Content.Load<SpriteFont>("FontMenuRegular");
+            fontGameOver = Content.Load<SpriteFont>("fontGameOver");
             fontInfo = Content.Load<SpriteFont>("fontInfo");
             fontGameInfo = Content.Load<SpriteFont>("gameInfo");
 
             // misc
             fade = Content.Load<Texture2D>("fade");
+            gameOverLogo = Content.Load<Texture2D>("gameOverLogo");
 
             // score and level view
             scoreViewerMono = Content.Load<Texture2D>("scoreViewerMono");
@@ -262,6 +265,8 @@ namespace Practicum.Tetris
                                 // the top of the field could not be cleared
                                 // GAME OVER
                                 reserveGameState = GameStates.GameOver;
+                                gameOverString1 = "You made it to speed level " + (Math.Min(finishedRows, (moveTimerLimBase - moveTimerLimMin) / 2)).ToString();
+                                gameOverString2 = "and earned " + score.ToString() + " points!";
                             }
                             resetBlock();
                         }
@@ -331,9 +336,13 @@ namespace Practicum.Tetris
                     drawGameField(spriteBatch);
                     // fade it away
                     spriteBatch.Draw(fade, new Rectangle(0,0,screenWidth, screenHeigth), white); // add a semitransparent gray layer
-                    
-                    // TODO: GAME OVER text and score view
-                    spriteBatch.DrawString(fontRegularMenu, "GAME OVER", new Vector2(170, 10), black);
+
+                    // GAME OVER drawing
+                    // logo
+                    spriteBatch.Draw(gameOverLogo, new Vector2((screenWidth - 460) / 2, 20), white);
+                    // centered game over text
+                    spriteBatch.DrawString(fontGameOver, gameOverString1, new Vector2(screenWidth / 2, 275), black, 0, new Vector2(fontGameOver.MeasureString(gameOverString1).X / 2, 0), 1, SpriteEffects.None, 0);
+                    spriteBatch.DrawString(fontGameOver, gameOverString2, new Vector2(screenWidth / 2, 300), black, 0, new Vector2(fontGameOver.MeasureString(gameOverString2).X / 2, 0), 1, SpriteEffects.None, 0);
                     
                     // buttons
                     menuButton.Draw(spriteBatch);
@@ -379,7 +388,7 @@ namespace Practicum.Tetris
                 scoreSplicer();
 
                 // update block falling speed
-                moveTimerLim = (int)MathHelper.Max(moveTimerLimBase - finishedRows * 2, moveTimerLimMin); // go down faster by 2 msec per cleared row to a min of 50 msec per step (realy fast)
+                moveTimerLim = Math.Max(moveTimerLimBase - finishedRows * 2, moveTimerLimMin); // go down faster by 2 msec per cleared row to a min of 50 msec per step (realy fast)
                 speedLvlSplicer();
             }
         }
