@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Media;
 namespace Practicum.Tetris
 {
     enum MenuActions : byte { Mono, Color, Info, Quit, Menu }
-    enum Colors : byte { Blank, Blue, Green, Orange, Purple, Red, Yellow }
     enum GameStates : byte { Menu, Playing, GameOver, Info }
     enum Movement : byte { Stay, Down, Left, Right }
 
@@ -25,8 +24,7 @@ namespace Practicum.Tetris
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         InputHelper input;
-        Random rand;
-
+        
         //gamestate
         GameStates gameState, reserveGameState;
 
@@ -87,7 +85,6 @@ namespace Practicum.Tetris
             base.Initialize();
 
             input = new InputHelper(150);
-            rand = new Random();
             
             // gamestates
             gameState = GameStates.Menu;

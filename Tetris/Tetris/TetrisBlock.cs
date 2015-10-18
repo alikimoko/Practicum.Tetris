@@ -434,8 +434,6 @@ namespace Practicum.Tetris
 
         /// <summary>Set the automatic movement speed.</summary>
         public void setMoveTimer(int moveTimerLim)
-        {
-            this.moveTimerLim = moveTimerLim;
-        }
+        { this.moveTimerLim = moveTimerLim; }
     }
 }
