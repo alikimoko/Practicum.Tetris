@@ -1,11 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace Practicum.Tetris
 {
     class PlayingField : GridObject
     {
+        Color white = Color.White;
 
         /// <summary>Create a new playing field.</summary>
         /// <param name="width">The width of the playing field in cels.</param>
@@ -215,10 +216,10 @@ namespace Practicum.Tetris
                 {
                     if (checkGridStruct(y, x))
                     {
-                        if (isColor) { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(checkGridCol(y, x) * 20, 0, 20, 20), Color.White); }
-                        else { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(20, 0, 20, 20), Color.White); }
+                        if (isColor) { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(checkGridCol(y, x) * 20, 0, 20, 20), white); }
+                        else { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(20, 0, 20, 20), white); }
                     }
-                    else { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(0, 0, 20, 20), Color.White); }
+                    else { spriteBatch.Draw(blockSprites, new Vector2(x * 20, y * 20), new Rectangle(0, 0, 20, 20), white); }
                 }
             }
         }

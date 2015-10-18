@@ -149,8 +149,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="soundBackground.mp3">
-      <Name>soundBackground</Name>
+    <Compile Include="bgMusic.mp3">
+      <Name>bgMusic</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
     </Compile>
@@ -160,6 +160,13 @@
       <Name>soundHit</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="speedLevelWindow.png">
+      <Name>speedLevelWindow</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

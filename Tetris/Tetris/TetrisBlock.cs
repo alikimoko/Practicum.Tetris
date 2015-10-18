@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace Practicum.Tetris
 {
@@ -15,6 +15,7 @@ namespace Practicum.Tetris
         public sbyte OffsetY { get { return offsetY; } }
         public bool[][] FieldStruct { get { return fieldStruc; } }
         public byte[][] FieldCol { get { return fieldCol; } }
+        private Color white = Color.White;
 
         private PlayingField field;
         
@@ -411,8 +412,8 @@ namespace Practicum.Tetris
                         {
                             if (checkGridStruct(y, x))
                             {
-                                if (isColor) { spriteBatch.Draw(blockSprites, new Vector2((OffsetX + x) * 20, (OffsetY + y) * 20), new Rectangle(checkGridCol(y, x) * 20, 0, 20, 20), Color.White); }
-                                else { spriteBatch.Draw(blockSprites, new Vector2((OffsetX + x) * 20, (OffsetY + y) * 20), new Rectangle(20, 0, 20, 20), Color.White); }
+                                if (isColor) { spriteBatch.Draw(blockSprites, new Vector2((OffsetX + x) * 20, (OffsetY + y) * 20), new Rectangle(checkGridCol(y, x) * 20, 0, 20, 20), white); }
+                                else { spriteBatch.Draw(blockSprites, new Vector2((OffsetX + x) * 20, (OffsetY + y) * 20), new Rectangle(20, 0, 20, 20), white); }
                             }
                         }
                     }
@@ -421,11 +422,11 @@ namespace Practicum.Tetris
                         // next block
                         if (checkGridStruct(y, x))
                         {
-                            if (isColor) { spriteBatch.Draw(blockSprites, new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), new Rectangle(checkGridCol(y, x) * 20, 0, 20, 20), Color.White); }
-                            else { spriteBatch.Draw(blockSprites, new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), new Rectangle(20, 0, 20, 20), Color.White); }
+                            if (isColor) { spriteBatch.Draw(blockSprites, new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), new Rectangle(checkGridCol(y, x) * 20, 0, 20, 20), white); }
+                            else { spriteBatch.Draw(blockSprites, new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), new Rectangle(20, 0, 20, 20), white); }
                         }
                         else
-                        { spriteBatch.Draw(blockSprites, new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), new Rectangle(0, 0, 20, 20), Color.White); }
+                        { spriteBatch.Draw(blockSprites, new Vector2(field.Width * 20 + 40 + x * 20, 70 + y * 20), new Rectangle(0, 0, 20, 20), white); }
                     }
                 }
             }

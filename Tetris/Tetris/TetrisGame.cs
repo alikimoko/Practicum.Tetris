@@ -1,9 +1,9 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
-using System;
 
 namespace Practicum.Tetris
 {
@@ -45,7 +45,9 @@ namespace Practicum.Tetris
             score = 0,
             finishedRows = 0;
         int[] scoreTracker = new int[7];
+        int[] speedLvl = new int[3];
         float[] pointsPerColor;
+        Color black = Color.Black, white = Color.White;
 
         // timers
         int moveTimerLim, newBlockTimer;
@@ -53,14 +55,16 @@ namespace Practicum.Tetris
                   moveTimerLimMin = 50,
                   newBlockTimerLim = 250;
 
-        //sprites
+        // sprites
         SpriteFont fontRegularMenu, fontInfo, fontGameInfo;
         Texture2D nextBlockWindow, controls, fade, // special items
                   btnMono, btnColor, btnInfo, btnQuit, btnBack, btnMenu, // buttons
                   blockSprites, // blocks
-                  scoreViewerMono, scoreViewerColor, scoreViewerCurrent, numbersMono, numbersColor, numbersCurrent; // score
+                  scoreViewerMono, scoreViewerColor, scoreViewerCurrent, numbersMono, numbersColor, numbersCurrent, speedLevelWindow; // score and level
+
+        // sound
         SoundEffect blockHitSound;
-        Song backgroundMusic;
+        Song bgMusic;
         
         /// <summary>Make a new tetris game.</summary>
         public TetrisGame()
@@ -134,18 +138,19 @@ namespace Practicum.Tetris
             // misc
             fade = Content.Load<Texture2D>("fade");
 
-            // score view
+            // score and level view
             scoreViewerMono = Content.Load<Texture2D>("scoreViewerMono");
             scoreViewerColor = Content.Load<Texture2D>("scoreViewerColor");
+
+            speedLevelWindow = Content.Load<Texture2D>("speedLevelWindow");
 
             numbersMono = Content.Load<Texture2D>("numbersMono");
             numbersColor = Content.Load<Texture2D>("numbersColor");
 
-            //music and soundeffects
-
-            backgroundMusic = Content.Load<Song>("soundBackground");
+            // music and soundeffects
+            bgMusic = Content.Load<Song>("bgMusic");
             blockHitSound = Content.Load<SoundEffect>("soundHit");
-            MediaPlayer.Play(backgroundMusic);
+            MediaPlayer.Play(bgMusic);
             MediaPlayer.Volume = 0.4f;
             MediaPlayer.IsRepeating = true;
 
@@ -209,6 +214,7 @@ namespace Practicum.Tetris
                         scoreViewerCurrent = isColor ? scoreViewerColor : scoreViewerMono;
                         numbersCurrent = isColor ? numbersColor : numbersMono;
                         scoreSplicer();
+                        speedLvlSplicer();
                     }
 
                     break;
@@ -308,11 +314,11 @@ namespace Practicum.Tetris
 
                 case GameStates.Info:
                     // info screen
-                    spriteBatch.Draw(controls, Vector2.Zero, Color.White);
+                    spriteBatch.Draw(controls, Vector2.Zero, white);
                     backButton.Draw(spriteBatch);
                     
                     // game mode base info
-                    spriteBatch.DrawString(fontInfo, "MONOCHROME MODE:\nPlay tetris like you\'re used to.", new Vector2(10, 360), Color.Black);
+                    spriteBatch.DrawString(fontInfo, "MONOCHROME MODE:\nPlay tetris like you\'re used to.", new Vector2(10, 360), black);
                     spriteBatch.DrawString(fontInfo, "RAINBOW MODE:\nColorfull tetris with color based scoring.", new Vector2(10, 405), Color.Purple);
                     break;
 
@@ -324,10 +330,10 @@ namespace Practicum.Tetris
                     // draw the last playing field at the background
                     drawGameField(spriteBatch);
                     // fade it away
-                    spriteBatch.Draw(fade, new Rectangle(0,0,screenWidth, screenHeigth), Color.White); // add a semitransparent gray layer
+                    spriteBatch.Draw(fade, new Rectangle(0,0,screenWidth, screenHeigth), white); // add a semitransparent gray layer
                     
                     // TODO: GAME OVER text and score view
-                    spriteBatch.DrawString(fontRegularMenu, "GAME OVER", new Vector2(170, 10), Color.Black);
+                    spriteBatch.DrawString(fontRegularMenu, "GAME OVER", new Vector2(170, 10), black);
                     
                     // buttons
                     menuButton.Draw(spriteBatch);
@@ -374,6 +380,7 @@ namespace Practicum.Tetris
 
                 // update block falling speed
                 moveTimerLim = (int)MathHelper.Max(moveTimerLimBase - finishedRows * 2, moveTimerLimMin); // go down faster by 2 msec per cleared row to a min of 50 msec per step (realy fast)
+                speedLvlSplicer();
             }
         }
 
@@ -388,6 +395,17 @@ namespace Practicum.Tetris
             { scoreTracker[i] = tmp[i] - 48; }
         }
 
+        /// <summary>Splices the faling speed into an array fot the level viewer to use.</summary>
+        private void speedLvlSplicer()
+        {
+            string tmp = Math.Min(finishedRows, (moveTimerLimBase - moveTimerLimMin) / 2).ToString();
+
+            // make sure there are 3 symbols for the level (level in the hundreds)
+            tmp = tmp.PadLeft(3, '0');
+            for (int i = 0; i < 3; i++)
+            { speedLvl[i] = tmp[i] - 48; }
+        }
+
         /// <summary>Draws the components of the game field.</summary>
         private void drawGameField(SpriteBatch spriteBatch)
         {
@@ -399,7 +417,7 @@ namespace Practicum.Tetris
             { tetrisBlockCurrent.Draw(spriteBatch); }
 
             // next block
-            spriteBatch.Draw(nextBlockWindow, new Vector2(field.Width * 20 + 20, 20), Color.White);
+            spriteBatch.Draw(nextBlockWindow, new Vector2(field.Width * 20 + 20, 20), white);
             tetrisBlockNext.Draw(spriteBatch);
 
             // in game info (how to get points)
@@ -407,33 +425,36 @@ namespace Practicum.Tetris
 
             // show fancy score
             drawScore(spriteBatch, 20, field.Height * 20 + 20);
+
+            // show speed level
+            drawLevelCounter(spriteBatch, field.Width * 20 + 160, 20);
         }
 
         /// <summary>Draws the in game info.</summary>
         private void drawInfo(SpriteBatch spriteBatch, int offsetX, int offsetY)
         {
-            spriteBatch.DrawString(fontGameInfo, "HOW TO EARN POINTS", new Vector2(offsetX, offsetY), Color.Black);
+            spriteBatch.DrawString(fontGameInfo, "HOW TO EARN POINTS", new Vector2(offsetX, offsetY), black);
 
             // rows
             for(int i = 0; i < 8; i++)
-            { spriteBatch.Draw(blockSprites, new Vector2(offsetX + 20 * i, offsetY + 25), new Rectangle(20, 0, 20, 20), Color.White); }
+            { spriteBatch.Draw(blockSprites, new Vector2(offsetX + 20 * i, offsetY + 25), new Rectangle(20, 0, 20, 20), white); }
 
             spriteBatch.DrawString(fontGameInfo,
                                   "Clearing rows:\n1x = 100, 2x = 300\n3x = 600, 4x = 1000" + (isColor ? "\nUni colored rows:\n400 bonus" : ""),
-                                  new Vector2(offsetX, offsetY + 45), Color.Black);
+                                  new Vector2(offsetX, offsetY + 45), black);
 
             // rainbow mode block bonus
             if (isColor)
             {
                 for (int i = 1; i < 4; i++)
                 {
-                    spriteBatch.Draw(blockSprites, new Vector2(offsetX, offsetY + 125 + i * 25), new Rectangle(i * 20, 0, 20, 20), Color.White);
-                    spriteBatch.DrawString(fontGameInfo, (Math.Round(pointsPerColor[i - 1], 1)).ToString(), new Vector2(offsetX + 30, offsetY + 125 + i * 25), Color.Black);
+                    spriteBatch.Draw(blockSprites, new Vector2(offsetX, offsetY + 125 + i * 25), new Rectangle(i * 20, 0, 20, 20), white);
+                    spriteBatch.DrawString(fontGameInfo, (Math.Round(pointsPerColor[i - 1], 1)).ToString(), new Vector2(offsetX + 30, offsetY + 125 + i * 25), black);
                 }
                 for (int i = 4; i < 7; i++)
                 {
-                    spriteBatch.Draw(blockSprites, new Vector2(offsetX + 100, offsetY + 50 + i * 25), new Rectangle(i * 20, 0, 20, 20), Color.White);
-                    spriteBatch.DrawString(fontGameInfo, (Math.Round(pointsPerColor[i - 1], 1)).ToString(), new Vector2(offsetX + 130, offsetY + 50 + i * 25), Color.Black);
+                    spriteBatch.Draw(blockSprites, new Vector2(offsetX + 100, offsetY + 50 + i * 25), new Rectangle(i * 20, 0, 20, 20), white);
+                    spriteBatch.DrawString(fontGameInfo, (Math.Round(pointsPerColor[i - 1], 1)).ToString(), new Vector2(offsetX + 130, offsetY + 50 + i * 25), black);
                 }
             }
         }
@@ -442,11 +463,22 @@ namespace Practicum.Tetris
         private void drawScore(SpriteBatch spriteBatch, int offsetX, int offsetY)
         {
             // score window
-            spriteBatch.Draw(scoreViewerCurrent, new Vector2(offsetX, offsetY), Color.White);
+            spriteBatch.Draw(scoreViewerCurrent, new Vector2(offsetX, offsetY), white);
 
             // score itself
             for (int i = 0; i < 7; i++)
-            { spriteBatch.Draw(numbersCurrent, new Vector2(offsetX + 5 + i * 20, offsetY + 30), new Rectangle(scoreTracker[i] * 20, 0, 20, 30), Color.White); }
+            { spriteBatch.Draw(numbersCurrent, new Vector2(offsetX + 5 + i * 20, offsetY + 30), new Rectangle(scoreTracker[i] * 20, 0, 20, 30), white); }
+        }
+
+        /// <summary>Draws the level counter at specified position.</summary>
+        private void drawLevelCounter(SpriteBatch spriteBatch, int offsetX, int offsetY)
+        {
+            // level window
+            spriteBatch.Draw(speedLevelWindow, new Vector2(offsetX, offsetY), white);
+
+            // level itself
+            for (int i = 0; i < 3; i++)
+            { spriteBatch.Draw(numbersMono, new Vector2(offsetX + 10 + 20 * i, offsetY + 50), new Rectangle(speedLvl[i] * 20, 0, 20, 30), white); }
         }
 
         /// <summary>Clears placed blocks and starts timer for the next block.</summary>
