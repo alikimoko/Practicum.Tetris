@@ -117,6 +117,7 @@
     <Compile Include="TetrisGame.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="backgroundMusic.mp3" />
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
   </ItemGroup>

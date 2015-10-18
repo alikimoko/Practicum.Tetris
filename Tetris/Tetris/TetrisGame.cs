@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using System;
 
 namespace Practicum.Tetris
@@ -57,6 +59,8 @@ namespace Practicum.Tetris
                   btnMono, btnColor, btnInfo, btnQuit, btnBack, btnMenu, // buttons
                   blockSprites, // blocks
                   scoreViewerMono, scoreViewerColor, scoreViewerCurrent, numbersMono, numbersColor, numbersCurrent; // score
+        SoundEffect blockHitSound;
+        Song backgroundMusic;
         
         /// <summary>Make a new tetris game.</summary>
         public TetrisGame()
@@ -112,7 +116,6 @@ namespace Practicum.Tetris
             btnQuit = Content.Load<Texture2D>("btnQuit");
             btnBack = Content.Load<Texture2D>("btnBack");
             btnMenu = Content.Load<Texture2D>("btnMenu");
-
             controls = Content.Load<Texture2D>("controls");
 
             // needs the textures, so placing here (prevents nullpointers)
@@ -137,6 +140,14 @@ namespace Practicum.Tetris
 
             numbersMono = Content.Load<Texture2D>("numbersMono");
             numbersColor = Content.Load<Texture2D>("numbersColor");
+
+            //music and soundeffects
+
+            backgroundMusic = Content.Load<Song>("soundBackground");
+            blockHitSound = Content.Load<SoundEffect>("soundHit");
+            MediaPlayer.Play(backgroundMusic);
+            MediaPlayer.Volume = 0.4f;
+            MediaPlayer.IsRepeating = true;
 
         }
 
@@ -237,6 +248,7 @@ namespace Practicum.Tetris
                         if (!couldGoDown)
                         {
                             // reached bottom or hit existing block
+                            blockHitSound.Play();
                             field.placeBlock(tetrisBlockCurrent);
                             scorePoints(field.checkClearedRows(tetrisBlockCurrent.OffsetY));
                             if (field.reachedTop())
